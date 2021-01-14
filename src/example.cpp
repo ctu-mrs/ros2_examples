@@ -48,8 +48,8 @@ Example::Example(rclcpp::NodeOptions options) : Node("ros2_uav_example", options
 
   RCLCPP_INFO(this->get_logger(), "initializing");
 
-  this->declare_parameter("timer_rate");
-  if (!this->get_parameter("timer_rate", timer_rate_)) {
+  this->declare_parameter("timer/rate");
+  if (!this->get_parameter("timer/rate", timer_rate_)) {
     RCLCPP_ERROR(this->get_logger(), "could not load param");
   }
 
