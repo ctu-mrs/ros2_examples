@@ -1,0 +1,2 @@
+timer_rate: 5.0 # [Hz]
+publish_string: "dog is barking"
