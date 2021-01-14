@@ -59,11 +59,12 @@ Example::Example(rclcpp::NodeOptions options) : Node("ros2_uav_example", options
   }
 
   // parameter from the launch file
-  this->declare_parameter("launch_param");
-  std::string launch_param_;
-  if (!this->get_parameter("publish_string", launch_param_)) {
+  this->declare_parameter("uav_type");
+  std::string uav_type;
+  if (!this->get_parameter("uav_type", uav_type)) {
     RCLCPP_ERROR(this->get_logger(), "could not load param");
   }
+  RCLCPP_ERROR(this->get_logger(), "UAV_TYPE: %s", uav_type.c_str());
 
   // | ------------------------ publisher ----------------------- |
 
