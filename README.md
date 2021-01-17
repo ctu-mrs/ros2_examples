@@ -22,7 +22,7 @@
   * [X] somehow work from _yaml_ and _launch_
 * [.] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
-  * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise **madness**
+  * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
   * [ ] ROS2 rqt_reconfigure is super buggy and wonky
 * [ ] why is the terminal output monochromatic? I want my colors back...
 * [ ] **ROS Time**
