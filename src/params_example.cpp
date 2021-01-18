@@ -31,12 +31,12 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
   RCLCPP_INFO(this->get_logger(), "[ParamsExample]: initializing");
 
   {
-    const std::string param = "param_namespace/floating_number";
+    const std::string param = "param_namespace.floating_number";
     this->declare_parameter(param);
     if (!this->get_parameter(param, floating_point_number_)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
-      RCLCPP_INFO(this->get_logger(), "[ParamsExample]: LOADED '%s'", param.c_str());
+      RCLCPP_INFO_STREAM(this->get_logger(), "[ParamsExample]: LOADED '" << param << "' = '" << floating_point_number_ << "'");
     }
   }
 
@@ -46,7 +46,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
     if (!this->get_parameter(param, some_string_)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
-      RCLCPP_INFO(this->get_logger(), "[ParamsExample]: LOADED '%s'", param.c_str());
+      RCLCPP_INFO_STREAM(this->get_logger(), "[ParamsExample]: LOADED '" << param << "' = '" << some_string_ << "'");
     }
   }
 
@@ -58,7 +58,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
     if (!this->get_parameter(param, uav_type)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
-      RCLCPP_INFO(this->get_logger(), "[ParamsExample]: LOADED '%s'", param.c_str());
+      RCLCPP_INFO_STREAM(this->get_logger(), "[ParamsExample]: LOADED '" << param << "' = '" << uav_type << "'");
     }
   }
 
