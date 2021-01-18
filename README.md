@@ -2,21 +2,23 @@
 
 ## Examples
 
-* [ ] **ServiceClientExample** - periodically calls a service
+* [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
   * [ ] TODO retrieving result synchronously, more solutions available, none work for me within a component
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
-* [ ] **PublisherExample** - periodically publishes
+* [ ] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
-* [X] **ServiceServerExample** - getting called
-* [X] **SubscriberExample** - subscribes
-* [ ] **TimerExample** - runs multiple timers in parallel
+* [X] [**ServiceServerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_server_example.cpp) - getting called
+* [X] [**SubscriberExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/subscriber_example.cpp) - subscribes
+* [ ] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
   * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
-* [ ] **ParamsExample** - load params from yaml and launch file
+* [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO nested params do not work
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
 
 ### Running examples
+
+* [tmuxinator](https://github.com/tmuxinator/tmuxinator) [session](https://github.com/ctu-mrs/ros2_examples/blob/master/tmux/session.yml)
 
 `./tmux/start.sh` (change the sourced workspace path in `tmux/session.yml`)
 
@@ -37,7 +39,7 @@
   * [ ] TODO building (and using) custom libraries
   * [ ] TODO building standalone executable nodelets (should be possible)
 * [ ] **Launch files**
-  * [X] they are in python
+  * [X] they are in python now [link](https://index.ros.org/doc/ros2/Tutorials/Launch-Files/Creating-Launch-Files/)
   * [X] remapping, params, nodelets
   * [ ] TODO launching and connecting to nodelet managers
   * [ ] TODO launch prefixes
@@ -55,7 +57,7 @@
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
-  * [ ] ROS2 rqt_reconfigure is super buggy and wonky
+  * [ ] ROS2 rqt_reconfigure is super buggy and wonky, this [issue](https://github.com/ros-visualization/rqt_reconfigure/issues/97) is specially hellish
 * [X] why is the terminal output monochromatic? I want my colors back...
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
