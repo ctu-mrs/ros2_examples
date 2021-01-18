@@ -79,9 +79,9 @@ void ServiceClientExample::callService(void) {
   request->data = true;
 
   {
-    // TODO THIS IS HOW YOU ARE SUPPOSED TO WAIT FOR THE SERVICE TO BECOME READY
-    // TODO IT MESSES UP SOMETHING WITH THE GRANULARITY OF PUBLISHING
-    // TODO THIS IS FROM AN EXAMPLE
+    // THIS IS HOW YOU ARE SUPPOSED TO WAIT FOR THE SERVICE TO BECOME READY
+    // IT MESSES UP SOMETHING WITH THE GRANULARITY OF PUBLISHING
+    // THIS IS FROM AN EXAMPLE
 
     /* while (!service_client_->wait_for_service(1s)) { */
     /*   if (!rclcpp::ok()) { */
@@ -105,8 +105,8 @@ void ServiceClientExample::callService(void) {
   /* auto result = service_client_->async_send_request(request); // without a callback */
 
   {
-      // TODO ONE WAY OF WAITING FOR THE RESULT IS TO CHECK THE std::future
-      // TODO THIS BLOCKS THE WHOLE NODE FROM GETTING CALLBACKS, THEREFORE, NOTHING WORKS
+      // ONE WAY OF WAITING FOR THE RESULT IS TO CHECK THE std::future
+      // THIS BLOCKS THE WHOLE NODE FROM GETTING CALLBACKS, THEREFORE, NOTHING WORKS
 
       /* std::future_status status; */
       /* do { */
@@ -124,15 +124,15 @@ void ServiceClientExample::callService(void) {
   }
 
   {
-    // TODO ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
+    // ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
 
-    // TODO THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
-    // TODO BUT WE DON'T HAVE THE "NODE"
+    // THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
+    // BUT WE DON'T HAVE THE "NODE"
 
     /* rclcpp::spin_until_future_complete(node, result); */
 
-    // TODO THIS IS how we can get the "node" from our component, but it crashes
-    // TODO BECAUSE WE ARE "ADDING THE COMPONENT AGAIN TO AN EXECUTOR"
+    // THIS IS how we can get the "node" from our component, but it crashes
+    // BECAUSE WE ARE "ADDING THE COMPONENT AGAIN TO AN EXECUTOR"
 
     /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
   }
