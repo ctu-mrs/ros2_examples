@@ -6,7 +6,7 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 ## Examples
 
 * [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
-  * [ ] TODO retrieving result synchronously, more solutions available, none work for me within a component
+  * [ ] TODO retrieving result synchronously. Some solutions are available, none work for me within a component
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
 * [ ] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
