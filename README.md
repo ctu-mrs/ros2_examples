@@ -16,7 +16,7 @@
   * [ ] TODO nested params do not work
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
 
-### Running examples
+### Running the examples
 
 * [tmuxinator](https://github.com/tmuxinator/tmuxinator) [session](https://github.com/ctu-mrs/ros2_examples/blob/master/tmux/session.yml)
 
