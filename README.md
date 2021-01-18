@@ -23,7 +23,7 @@
 ## First ROS2 impressions
 
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs) were ported to **ROS2**
-* [ ] **ROS bridge** runs, install, compile and run [here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2)
+* [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
   * [ ] TODO performance with images?
   * [ ] TODO performance high data rates?
 * [ ] **Why are most examples on standalone node with `main()` when "everything in ROS2 should be a component (nodelet)?**
