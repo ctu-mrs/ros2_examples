@@ -28,7 +28,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 
 ## First ROS2 impressions
 
-* [.] **colcon**, the build system... is it really the best we have got? I want catkin back.
+* [ ] **colcon**, the build system... is it really the best we have got? I want catkin back.
   * [ ] creates workspace wherever `colcon build` is called
   * [ ] therefore, cannot build in subdirectories
   * [ ] no `colcon clean`
