@@ -8,6 +8,8 @@
   * [ ] TODO slow and irregular with multi-threaded executor
 * [X] *ServiceServerExample* - getting called
 * [X] *SubscriberExample* - subscribes
+* [ ] *TimerExample* - runs multiple timers in parallel
+  * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
 * [ ] *ParamsExample* - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO nested params do not work
