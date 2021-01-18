@@ -6,18 +6,18 @@ windows:
   - params:
       layout: tiled
       panes:
-        - ros2 launch ros2_uav_example params_example.py
+        - ros2 launch ros2_examples params_example.py
   - timers:
       layout: tiled
       panes:
-        - ros2 launch ros2_uav_example timer_example.py
+        - ros2 launch ros2_examples timer_example.py
   - publisher_subscriber:
       layout: tiled
       panes:
-        - ros2 launch ros2_uav_example publisher_example.py
-        - ros2 launch ros2_uav_example subscriber_example.py
+        - ros2 launch ros2_examples publisher_example.py
+        - ros2 launch ros2_examples subscriber_example.py
   - services:
       layout: horizontal
       panes:
-        - ros2 launch ros2_uav_example service_client_example.py
-        - ros2 launch ros2_uav_example service_server_example.py
+        - ros2 launch ros2_examples service_client_example.py
+        - ros2 launch ros2_examples service_server_example.py

@@ -4,7 +4,7 @@
 
 using namespace std::chrono_literals;
 
-namespace ros2_uav_example
+namespace ros2_examples
 {
 
 /* class ServiceServerExample //{ */
@@ -59,7 +59,7 @@ void ServiceServerExample::callbackSetBool(const std::shared_ptr<std_srvs::srv::
 
 //}
 
-}  // namespace ros2_uav_example
+}  // namespace ros2_examples
 
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(ros2_uav_example::ServiceServerExample)
+RCLCPP_COMPONENTS_REGISTER_NODE(ros2_examples::ServiceServerExample)

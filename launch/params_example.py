@@ -10,7 +10,7 @@ def generate_launch_description():
 
     ld = launch.LaunchDescription()
 
-    pkg_name = "ros2_uav_example"
+    pkg_name = "ros2_examples"
     pkg_share_path = get_package_share_directory(pkg_name)
 
     UAV_TYPE=os.getenv('UAV_TYPE')
@@ -24,7 +24,7 @@ def generate_launch_description():
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
-                plugin='ros2_uav_example::ParamsExample',
+                plugin='ros2_examples::ParamsExample',
                 namespace=namespace,
                 name='params_example',
                 parameters=[

@@ -4,7 +4,7 @@
 
 using namespace std::chrono_literals;
 
-namespace ros2_uav_example
+namespace ros2_examples
 {
 
 /* class SubscriberExample //{ */
@@ -57,7 +57,7 @@ void SubscriberExample::callbackSubscriber(const std_msgs::msg::String::SharedPt
 
 //}
 
-}  // namespace ros2_uav_example
+}  // namespace ros2_examples
 
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(ros2_uav_example::SubscriberExample)
+RCLCPP_COMPONENTS_REGISTER_NODE(ros2_examples::SubscriberExample)

@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
 
-  <name>ros2_uav_example</name>
+  <name>ros2_examples</name>
   <version>1.0.0</version>
   <description>MRS ROS2 UAV example</description>
   <maintainer email="tomas.baca@fel.cvut.cz">klaxalk</maintainer>
@@ -21,7 +21,7 @@
   <depend>std_srvs</depend>
 
   <!-- this is needed to be able to run launch files -->
-  <depend>ros2_uav_example_py</depend>
+  <depend>ros2_examples_py</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

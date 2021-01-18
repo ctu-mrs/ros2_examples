@@ -9,7 +9,7 @@ def generate_launch_description():
 
     ld = launch.LaunchDescription()
 
-    pkg_name = "ros2_uav_example"
+    pkg_name = "ros2_examples"
     pkg_share_path = get_package_share_directory(pkg_name)
 
     namespace='nmspc1'
@@ -22,7 +22,7 @@ def generate_launch_description():
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
-                plugin='ros2_uav_example::PublisherExample',
+                plugin='ros2_examples::PublisherExample',
                 namespace=namespace,
                 name='publisher_example',
                 parameters=[

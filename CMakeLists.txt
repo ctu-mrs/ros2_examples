@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ros2_uav_example)
+project(ros2_examples)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,7 +27,7 @@ add_library(subscriber_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(subscriber_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(subscriber_example
   rclcpp
@@ -39,7 +39,7 @@ ament_target_dependencies(subscriber_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(subscriber_example PLUGIN "ros2_uav_example::SubscriberExample" EXECUTABLE subscriber_example)
+rclcpp_components_register_nodes(subscriber_example PLUGIN "ros2_examples::SubscriberExample" EXECUTABLE subscriber_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::Example\n")
 
@@ -53,7 +53,7 @@ add_library(publisher_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(publisher_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(publisher_example
   rclcpp
@@ -65,7 +65,7 @@ ament_target_dependencies(publisher_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_uav_example::PublisherExample" EXECUTABLE publisher_example)
+rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample" EXECUTABLE publisher_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::Example\n")
 
@@ -79,7 +79,7 @@ add_library(service_server_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(service_server_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(service_server_example
   rclcpp
@@ -91,7 +91,7 @@ ament_target_dependencies(service_server_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(service_server_example PLUGIN "ros2_uav_example::ServiceServerExample" EXECUTABLE service_server_example)
+rclcpp_components_register_nodes(service_server_example PLUGIN "ros2_examples::ServiceServerExample" EXECUTABLE service_server_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceServerExample\n")
 
@@ -105,7 +105,7 @@ add_library(service_client_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(service_client_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(service_client_example
   rclcpp
@@ -117,7 +117,7 @@ ament_target_dependencies(service_client_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_uav_example::ServiceClientExample" EXECUTABLE service_client_example)
+rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::ServiceClientExample" EXECUTABLE service_client_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceClientExample\n")
 
@@ -131,7 +131,7 @@ add_library(timer_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(timer_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(timer_example
   rclcpp
@@ -143,7 +143,7 @@ ament_target_dependencies(timer_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(timer_example PLUGIN "ros2_uav_example::TimerExample" EXECUTABLE timer_example)
+rclcpp_components_register_nodes(timer_example PLUGIN "ros2_examples::TimerExample" EXECUTABLE timer_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceServerExample\n")
 
@@ -157,7 +157,7 @@ add_library(params_example SHARED
 
 # TODO WHY IS THIS HERE?
 target_compile_definitions(params_example
-  PRIVATE "ROS2_UAV_EXAMPLE_BUILDING_DLL")
+  PRIVATE "ros2_examples_BUILDING_DLL")
 
 ament_target_dependencies(params_example
   rclcpp
@@ -170,7 +170,7 @@ ament_target_dependencies(params_example
 # )
 
 # TODO HOW DOES THIS WORK?
-rclcpp_components_register_nodes(params_example PLUGIN "ros2_uav_example::ParamsExample" EXECUTABLE params_example)
+rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
 # set(node_plugins "${node_plugins}${PROJECT_NAME}::ParamsExample\n")
 
