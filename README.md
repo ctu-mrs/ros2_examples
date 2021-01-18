@@ -28,7 +28,7 @@
   * [ ] TODO performance high data rates?
 * [ ] **Why are most examples on standalone node with `main()` when "everything in ROS2 should be a component (nodelet)?**
 * [ ] **ComponentContainer**
-  * [ ] seems like multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
+  * [ ] seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
   * [ ] multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
