@@ -10,7 +10,7 @@
 * [X] **SubscriberExample** - subscribes
 * [ ] **TimerExample** - runs multiple timers in parallel
   * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
-* [.] **ParamsExample** - load params from yaml and launch file
+* [ ] **ParamsExample** - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO nested params do not work
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
