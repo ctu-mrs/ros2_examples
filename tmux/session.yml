@@ -4,15 +4,15 @@ startup_window: params
 pre_window: export RCUTILS_COLORIZED_OUTPUT=1; source /opt/ros/foxy/setup.zsh; source ~/ros2_bridge_workpsace/install/setup.zsh
 windows:
   - params:
-      layout: tiled
+      layout: horizontal
       panes:
         - ros2 launch ros2_examples params_example.py
   - timers:
-      layout: tiled
+      layout: horizontal
       panes:
         - ros2 launch ros2_examples timer_example.py
   - publisher_subscriber:
-      layout: tiled
+      layout: horizontal
       panes:
         - ros2 launch ros2_examples publisher_example.py
         - ros2 launch ros2_examples subscriber_example.py
