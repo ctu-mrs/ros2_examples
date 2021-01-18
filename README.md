@@ -38,7 +38,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
 * [ ] **ComponentContainer**
   * [ ] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel**
-  * [ ] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [issue](https://github.com/ros2/rclcpp/issues/1487)
+  * [ ] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Publishing is slow in Docker with MutliThreadedExecutor #1487](https://github.com/ros2/rclcpp/issues/1487) (December, 2020)
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
   * [ ] TODO building (and using) custom libraries
