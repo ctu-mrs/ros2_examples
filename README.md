@@ -32,8 +32,8 @@
   * [https://index.ros.org/doc/ros2/Tutorials/Composition/](https://index.ros.org/doc/ros2/Tutorials/Composition/)
   * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
 * [ ] **ComponentContainer**
-  * [ ] seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
-  * [ ] multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers
+  * [ ] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel**
+  * [ ] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
   * [ ] TODO building (and using) custom libraries
