@@ -60,6 +60,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] basic params work from *yaml* and *launch*
   * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some random unused parameter.
   * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
+  * [ ] TODO test overloading multiple configs over each other
   * [ ] TODO test more complex types, array, matrices, ...
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
