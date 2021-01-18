@@ -108,10 +108,10 @@ Example::Example(rclcpp::NodeOptions options) : Node("ros2_uav_example", options
 
   // | -------------------------- timer ------------------------- |
 
-  timer_          = this->create_wall_timer(std::chrono::duration<double>(1.0 / timer_rate_), std::bind(&Example::callbackTimer, this));
+  timer_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / timer_rate_), std::bind(&Example::callbackTimer, this));
 
   // will this timer block other callbacks?
-  timer_blocking_ = this->create_wall_timer(std::chrono::duration<double>(1.0), std::bind(&Example::callbackTimerBlocking, this));
+  /* timer_blocking_ = this->create_wall_timer(std::chrono::duration<double>(1.0), std::bind(&Example::callbackTimerBlocking, this)); */
 
   // | --------------------- finish the init -------------------- |
 
@@ -136,7 +136,7 @@ void Example::callbackTimer(void) {
 
   publish();
 
-  /* callService(); */
+  callService();
 }
 
 //}
@@ -235,40 +235,58 @@ void Example::callService(void) {
   auto request  = std::make_shared<std_srvs::srv::SetBool::Request>();
   request->data = true;
 
-  while (!service_client_->wait_for_service(1s)) {
-    if (!rclcpp::ok()) {
-      RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting.");
-    }
-    RCLCPP_INFO(this->get_logger(), "service not available, waiting again...");
-    break;
+  {
+    // TODO THIS IS HOW YOU ARE SUPPOSED TO WAIT FOR THE SERVICE TO BECOME READY
+    // TODO IT MESSES UP SOMETHING WITH THE GRANULARITY OF PUBLISHING
+    // TODO THIS IS FROM AN EXAMPLE
+
+    /* while (!service_client_->wait_for_service(1s)) { */
+    /*   if (!rclcpp::ok()) { */
+    /*     RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting."); */
+    /*   } */
+    /*   RCLCPP_INFO(this->get_logger(), "service not available, waiting again..."); */
+    /*   break; */
+    /* } */
   }
 
+  // define a callback for the service response
   using ServiceResponseFuture = rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture;
 
   auto response_received_callback = [this](ServiceResponseFuture future) {
     auto result = future.get();
-    RCLCPP_INFO(this->get_logger(), "[Example]: prdel");
+    RCLCPP_INFO(this->get_logger(), "[Example]: service result received");
   };
 
   // asynchronous call
-  auto result = service_client_->async_send_request(request);
-  /* auto result = service_client_->async_send_request(request, response_received_callback); */
+  auto result = service_client_->async_send_request(request, response_received_callback);  // with a callback
+  /* auto result = service_client_->async_send_request(request); // without a callback */
 
-  std::future_status status;
-  do {
-    status = result.wait_for(std::chrono::seconds(1));
-    if (status == std::future_status::deferred) {
-      RCLCPP_INFO(this->get_logger(), "[Example]: deferred");
-    } else if (status == std::future_status::timeout) {
-      RCLCPP_INFO(this->get_logger(), "[Example]: timeout");
-    } else if (status == std::future_status::ready) {
-      RCLCPP_INFO(this->get_logger(), "[Example]: ready");
-    } else {
-      RCLCPP_INFO(this->get_logger(), "[Example]: something else");
-    }
-  } while (status != std::future_status::ready);
+  {
+      // TODO ONE WAY OF WAITING FOR THE RESULT IS TO CHECK THE std::future
+      // TODO THIS BLOCKS THE WHOLE NODE FROM GETTING CALLBACKS, THEREFORE, NOTHING WORKS
 
-  /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
+      /* std::future_status status; */
+      /* do { */
+      /*   status = result.wait_for(std::chrono::seconds(1)); */
+      /*   if (status == std::future_status::deferred) { */
+      /*     RCLCPP_INFO(this->get_logger(), "[Example]: deferred"); */
+      /*   } else if (status == std::future_status::timeout) { */
+      /*     RCLCPP_INFO(this->get_logger(), "[Example]: timeout"); */
+      /*   } else if (status == std::future_status::ready) { */
+      /*     RCLCPP_INFO(this->get_logger(), "[Example]: ready"); */
+      /*   } else { */
+      /*     RCLCPP_INFO(this->get_logger(), "[Example]: something else"); */
+      /*   } */
+      /* } while (status != std::future_status::ready); */
+  }
+
+  {
+    // TODO ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
+    // TODO THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
+    // TODO BUT WE DON'T HAVE THE "NODE"
+
+    /* rclcpp::spin_until_future_complete(node, result); */
+  }
 }
 
 //}

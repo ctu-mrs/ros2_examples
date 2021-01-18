@@ -65,7 +65,7 @@ def generate_launch_description():
                     ("~/topic_in", "/uav1/ros2_uav_example/topic"),
                     # services
                     ("~/set_bool_in", "~/set_bool"),
-                    ("~/set_bool_out", "/uav1/ros2_uav_example/set_bool"),
+                    ("~/set_bool_out", "/uav1/ros2_uav_example/set_booll"),
                 ],
             )
         ],
