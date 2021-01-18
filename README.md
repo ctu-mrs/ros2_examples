@@ -45,10 +45,10 @@
   * [ ] it is asynchronous only!!!!
   * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - works fine
-* [X] **Timers** - work fine, not a big difference from ROS1
+* [X] **Timers** - single timer works fine, similarly to ROS1 Timers
+  * [ ] TODO still problem with multiple timers in parallel
 * [ ] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
-  * [ ] nested parameters do not work for me yet
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
