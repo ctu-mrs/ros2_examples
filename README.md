@@ -49,6 +49,7 @@
   * [ ] TODO still problem with multiple timers in parallel
 * [ ] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
+  * [ ] TODO fix nested parameters
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
