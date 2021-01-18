@@ -43,13 +43,14 @@
   * [X] remapping, params, nodelets
   * [ ] TODO connecting to existing component containers (nodelet managers)
   * [ ] TODO launch prefixes (e.g., launching with GDB)
-* [X] **Subscribers** - work fine, not a big difference from ROS1
+* [ ] **Subscribers** - work fine, not a big difference from ROS1
+  * [ ] TODO still problem with multiple callbacks in parallel?
 * [X] **Publishers** - work fine, not a big difference from ROS1
 * [ ] **Service client**
   * [ ] it is asynchronous only!!!!
   * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - works fine
-* [X] **Timers** - single timer works fine, similarly to ROS1 Timers
+* [ ] **Timers** - single timer works fine, similarly to ROS1 Timers
   * [ ] TODO still problem with multiple timers in parallel
 * [ ] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
