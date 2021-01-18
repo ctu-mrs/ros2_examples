@@ -26,8 +26,8 @@
 
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs) were ported to **ROS2**
 * [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
-  * [ ] TODO performance with images?
-  * [ ] TODO performance high data rates?
+  * [ ] TODO check performance and load with images
+  * [ ] TODO check performance and load high publish rates
 * [ ] **Why are most examples on still use `main()` when everything in ROS2 should be a component (nodelet)?**
   * [https://index.ros.org/doc/ros2/Tutorials/Composition/](https://index.ros.org/doc/ros2/Tutorials/Composition/)
   * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
