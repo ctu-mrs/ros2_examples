@@ -18,8 +18,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
 * [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
-  * [ ] TODO nested params do not work
-  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
+  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary (and does not work when present)
 
 ### Running the examples
 
@@ -57,10 +56,11 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [X] **Service server** - works fine
 * [ ] **Timers** - single timer works fine, similarly to ROS1 Timers
   * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) and related issues [Avoid timers to be executed twice in the multithreaded executor #1328](https://github.com/ros2/rclcpp/pull/1328) and [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) tell me that it is not settled how they should behave ?!?
-* [ ] **Parameters**
+* [X] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
   * [X] **Beware!** loading an empty yaml file causes a long and criptic error. **Solution:** add some random unsued param.
-  * [ ] TODO fix nested parameters
+  * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
+  * [ ] TODO test more complex types, array, matrices, ...
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
