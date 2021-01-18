@@ -41,8 +41,8 @@
 * [ ] **Launch files**
   * [X] they are in python now [link](https://index.ros.org/doc/ros2/Tutorials/Launch-Files/Creating-Launch-Files/)
   * [X] remapping, params, nodelets
-  * [ ] TODO launching and connecting to nodelet managers
-  * [ ] TODO launch prefixes
+  * [ ] TODO connecting to existing component containers (nodelet managers)
+  * [ ] TODO launch prefixes (e.g., launching with GDB)
 * [X] **Subscribers** - work fine, not a big difference from ROS1
 * [X] **Publishers** - work fine, not a big difference from ROS1
 * [ ] **Service client**
