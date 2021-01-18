@@ -18,7 +18,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
 * [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
-  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary (and does not work when present)
+  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
 
 ### Running the examples
 
@@ -57,14 +57,14 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [ ] **Timers** - single timer works fine, similarly to ROS1 Timers
   * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) and related issues [Avoid timers to be executed twice in the multithreaded executor #1328](https://github.com/ros2/rclcpp/pull/1328) and [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) tell me that it is not settled how they should behave ?!?
 * [X] **Parameters**
-  * [X] basic params work from _yaml_ and _launch_
-  * [X] **Beware!** loading an empty yaml file causes a long and criptic error. **Solution:** add some random unsued param.
+  * [X] basic params work from *yaml* and *launch*
+  * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some random unused parameter.
   * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
   * [ ] TODO test more complex types, array, matrices, ...
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
-  * [ ] ROS2 rqt_reconfigure is super buggy and wonky, this [issue](https://github.com/ros-visualization/rqt_reconfigure/issues/97) is especially hellish
+  * [ ] ROS2 `rqt_reconfigure` is super buggy and wonky, this [issue](https://github.com/ros-visualization/rqt_reconfigure/issues/97) is especially hellish
     * [ ] it shows the node's parameters sometimes, seems random
 * [X] why is the terminal output monochromatic? I want my colors back...
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
@@ -75,6 +75,8 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [ ] **Tests**
   * [ ] TODO
 * [ ] **Pluginlib**
+  * [ ] TODO
+* [ ] **Actionlib**
   * [ ] TODO
 * [ ] **Lifecycles** (new feature)
   * [ ] TODO
