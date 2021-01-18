@@ -56,7 +56,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - works fine
 * [ ] **Timers** - single timer works fine, similarly to ROS1 Timers
-  * [ ] TODO still problem with multiple timers in parallel
+  * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) issues [1328](https://github.com/ros2/rclcpp/pull/1328) and [1516](https://github.com/ros2/rclcpp/pull/1516) tell me that it is not settled how they should behave ?!?
 * [ ] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
   * [X] **Beware!** loading an empty yaml file causes a long and criptic error. **Solution:** add some random unsued param.
