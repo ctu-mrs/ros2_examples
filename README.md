@@ -57,6 +57,7 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
   * [ ] TODO still problem with multiple timers in parallel
 * [ ] **Parameters**
   * [X] basic params work from _yaml_ and _launch_
+  * [X] **Beware!** loading an empty yaml file causes a long and criptic error. Solution: add some random unsued param.
   * [ ] TODO fix nested parameters
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
