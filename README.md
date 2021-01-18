@@ -1,6 +1,19 @@
 # ros2_uav_example
 
-## First impressions
+## Examples
+
+*[X] ServiceClientExample - periodically calls a service
+  * [ ] TODO retrieving result synchronously
+* [ ] PublisherExample - periodically publishes
+  * [ ] TODO slow and irregular with multi-threaded executor
+* [X] ServiceServerExample - getting called
+* [X] SubscriberExample - subscribes
+* [ ] ParamsExample - load params from yaml and launch file
+  * [X] param server callback is hooked up
+  * [ ] TODO nested params do not work
+  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
+
+## First ROS2 impressions
 
 * [X] **ROS bridge**
 * [X] **ROS2 [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs)**
