@@ -3,7 +3,7 @@
 ## Examples
 
 * [X] **ServiceClientExample** - periodically calls a service
-  * [ ] TODO retrieving result synchronously
+  * [ ] TODO retrieving result synchronously, more solutions available, none work for me within a component
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
 * [ ] **PublisherExample** - periodically publishes
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
@@ -23,7 +23,9 @@
 ## First ROS2 impressions
 
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs) were ported to **ROS2**
-* [X] **ROS bridge** works, install, compile and run [here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2)
+* [ ] **ROS bridge** runs, install, compile and run [here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2)
+  * [ ] TODO performance with images?
+  * [ ] TODO performance high data rates?
 * [ ] **Why are most examples on standalone node with `main()` when "everything in ROS2 should be a component (nodelet)?**
 * [ ] **ComponentContainer**
   * [ ] seems like multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
