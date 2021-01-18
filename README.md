@@ -2,18 +2,22 @@
 
 ## Examples
 
-* [X] *ServiceClientExample* - periodically calls a service
+* [X] **ServiceClientExample** - periodically calls a service
   * [ ] TODO retrieving result synchronously
-* [ ] *PublisherExample* - periodically publishes
+* [ ] **PublisherExample** - periodically publishes
   * [ ] TODO slow and irregular with multi-threaded executor
-* [X] *ServiceServerExample* - getting called
-* [X] *SubscriberExample* - subscribes
-* [ ] *TimerExample* - runs multiple timers in parallel
+* [X] **ServiceServerExample** - getting called
+* [X] **SubscriberExample** - subscribes
+* [ ] **TimerExample** - runs multiple timers in parallel
   * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
-* [ ] *ParamsExample* - load params from yaml and launch file
+* [.] **ParamsExample** - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO nested params do not work
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
+
+### Running examples
+
+`./tmux/start.sh` (change the sourced workspace path in `tmux/session.yml`)
 
 ## First ROS2 impressions
 
