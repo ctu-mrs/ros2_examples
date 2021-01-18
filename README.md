@@ -17,8 +17,9 @@
   * [ ] TODO launch prefixes
 * [X] **Subscribers** - work fine, not a big difference from ROS1
 * [X] **Publishers** - work fine, not a big difference from ROS1
-* [X] **Service client**
+* [ ] **Service client**
   * [ ] it is asynchronous only!!!!
+  * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - TODO
 * [X] **Timers** - work fine, not a big difference from ROS1
 * [X] **Parameters**
