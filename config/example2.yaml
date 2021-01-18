@@ -1,3 +1,0 @@
-timer:
-  rate: 5.0 # [Hz]
-publish_string: "cat is mewing"

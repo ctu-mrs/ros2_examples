@@ -1,0 +1,4 @@
+param_namespace:
+  floating_number: 5.0
+
+some_string: "dog is barking"

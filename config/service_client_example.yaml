@@ -1,0 +1,3 @@
+# there has to be at least something in the config file
+# otherwise it will produce a horrible error
+some_entry: 666
