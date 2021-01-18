@@ -15,8 +15,8 @@
 
 ## First ROS2 impressions
 
-* [X] **ROS bridge**
-* [X] **ROS2 [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs)**
+* [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs) were ported to **ROS2**
+* [X] **ROS bridge** works, install, compile and run [here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2)
 * [ ] **ComponentContainer**
   * [ ] seems like multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
   * [ ] multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers
