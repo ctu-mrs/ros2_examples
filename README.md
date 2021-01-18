@@ -4,6 +4,8 @@
 
 * [X] **ROS bridge**
 * [X] **ROS2 mrs_msgs**
+* [X] **ComponentContainer**
+  * [ ] seems like multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
   * [ ] TODO building (and using) custom libraries
@@ -15,8 +17,9 @@
   * [ ] TODO launch prefixes
 * [X] **Subscribers** - work fine, not a big difference from ROS1
 * [X] **Publishers** - work fine, not a big difference from ROS1
-* [ ] **Service client** - TODO
-* [ ] **Service server** - TODO
+* [X] **Service client**
+  * [ ] it is asynchronous only!!!!
+* [X] **Service server** - TODO
 * [X] **Timers** - work fine, not a big difference from ROS1
 * [X] **Parameters**
   * [X] somehow work from _yaml_ and _launch_
@@ -26,10 +29,10 @@
   * [ ] ROS2 rqt_reconfigure is super buggy and wonky
 * [ ] why is the terminal output monochromatic? I want my colors back...
 * [ ] **ROS Time**
-  * [ ] TODO
+  * [ ] TODO duration, rate, sleep
 * [ ] **Transformations**
   * [ ] TODO
-* [ ] **Lifecycles**
-  * [ ] TODO
 * [ ] **Pluginlib**
+  * [ ] TODO
+* [ ] **Lifecycles** (new feature)
   * [ ] TODO

@@ -11,6 +11,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 # include_directories(
 #   include
@@ -28,6 +29,7 @@ ament_target_dependencies(ros2_uav_example
   rclcpp
   rclcpp_components
   std_msgs
+  std_srvs
 )
 
 # target_link_libraries(ros2_uav_example

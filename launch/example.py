@@ -19,7 +19,7 @@ def generate_launch_description():
         namespace='',
         name=namespace+'_ros2_uav_example',
         package='rclcpp_components',
-        executable='component_container',
+        executable='component_container_mt',
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
@@ -31,8 +31,12 @@ def generate_launch_description():
                     {"uav_type": UAV_TYPE}
                 ],
                 remappings=[
+                    # topics
                     ("~/topic_out", "~/topic"),
                     ("~/topic_in", "/uav2/ros2_uav_example/topic"),
+                    # services
+                    ("~/set_bool_in", "~/set_bool"),
+                    ("~/set_bool_out", "/uav2/ros2_uav_example/set_bool"),
                 ],
             ),
         ],
@@ -44,7 +48,7 @@ def generate_launch_description():
         namespace='',
         name=namespace+'_ros2_uav_example',
         package='rclcpp_components',
-        executable='component_container',
+        executable='component_container_mt',
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
@@ -56,8 +60,12 @@ def generate_launch_description():
                     {"uav_type": UAV_TYPE}
                 ],
                 remappings=[
+                    # topics
                     ("~/topic_out", "~/topic"),
                     ("~/topic_in", "/uav1/ros2_uav_example/topic"),
+                    # services
+                    ("~/set_bool_in", "~/set_bool"),
+                    ("~/set_bool_out", "/uav1/ros2_uav_example/set_bool"),
                 ],
             )
         ],

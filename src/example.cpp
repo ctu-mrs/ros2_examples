@@ -1,5 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
+
 #include <std_msgs/msg/string.hpp>
+#include <std_srvs/srv/set_bool.hpp>
 
 using namespace std::chrono_literals;
 
@@ -11,21 +13,42 @@ namespace ros2_uav_example
 class Example : public rclcpp::Node {
 public:
   Example(rclcpp::NodeOptions options);
+  bool is_initialized_ = false;
 
 private:
   // | ----------------------- publishers ----------------------- |
 
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
 
+  void publish(void);
+
   // | ----------------------- subscribers ---------------------- |
 
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber_;
-  void                                                   callbackSubscriber(const std_msgs::msg::String::SharedPtr msg);
+
+  void callbackSubscriber(const std_msgs::msg::String::SharedPtr msg);
+
+  // | --------------------- service servers -------------------- |
+
+  rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr service_server_;
+
+  void callbackSetBool(const std::shared_ptr<std_srvs::srv::SetBool::Request> request, std::shared_ptr<std_srvs::srv::SetBool::Response> response);
+
+  // | --------------------- service clients -------------------- |
+
+  rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr service_client_;
+
+  void callService(void);
 
   // | ------------------------- timers ------------------------- |
 
   rclcpp::TimerBase::SharedPtr timer_;
-  void                         callbackTimer();
+
+  void callbackTimer();
+
+  rclcpp::TimerBase::SharedPtr timer_blocking_;
+
+  void callbackTimerBlocking();
 
   // | ----------------------- parameters ----------------------- |
 
@@ -34,10 +57,6 @@ private:
 
   OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
   rcl_interfaces::msg::SetParametersResult callbackParameters(std::vector<rclcpp::Parameter> parameters);
-
-  // | ------------------------ routines ------------------------ |
-
-  void publish(void);
 };
 
 //}
@@ -74,13 +93,30 @@ Example::Example(rclcpp::NodeOptions options) : Node("ros2_uav_example", options
 
   subscriber_ = this->create_subscription<std_msgs::msg::String>("~/topic_in", 10, std::bind(&Example::callbackSubscriber, this, std::placeholders::_1));
 
+  // | --------------------- service server --------------------- |
+
+  service_server_ =
+      this->create_service<std_srvs::srv::SetBool>("~/set_bool_in", std::bind(&Example::callbackSetBool, this, std::placeholders::_1, std::placeholders::_2));
+
+  // | --------------------- service client --------------------- |
+
+  service_client_ = this->create_client<std_srvs::srv::SetBool>("~/set_bool_out");
+
   // | ----------------------- parameters ----------------------- |
 
   param_callback_handle_ = add_on_set_parameters_callback(std::bind(&Example::callbackParameters, this, std::placeholders::_1));
 
   // | -------------------------- timer ------------------------- |
 
-  timer_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / timer_rate_), std::bind(&Example::callbackTimer, this));
+  timer_          = this->create_wall_timer(std::chrono::duration<double>(1.0 / timer_rate_), std::bind(&Example::callbackTimer, this));
+
+  // will this timer block other callbacks?
+  timer_blocking_ = this->create_wall_timer(std::chrono::duration<double>(1.0), std::bind(&Example::callbackTimerBlocking, this));
+
+  // | --------------------- finish the init -------------------- |
+
+  is_initialized_ = true;
+  RCLCPP_INFO(this->get_logger(), "[Example]: initialized");
 }
 
 //}
@@ -91,9 +127,29 @@ Example::Example(rclcpp::NodeOptions options) : Node("ros2_uav_example", options
 
 void Example::callbackTimer(void) {
 
-  RCLCPP_INFO(this->get_logger(), "timer spinning");
+  if (!is_initialized_) {
+    return;
+  }
+
+  RCLCPP_INFO(this->get_logger(), "Timer spinning");
+  RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "Timer spinning, throttled");
 
   publish();
+
+  /* callService(); */
+}
+
+//}
+
+/* callbackTimerBlocking() //{ */
+
+void Example::callbackTimerBlocking(void) {
+
+  if (!is_initialized_) {
+    return;
+  }
+
+  rclcpp::sleep_for(std::chrono::milliseconds(1000));
 }
 
 //}
@@ -102,7 +158,27 @@ void Example::callbackTimer(void) {
 
 void Example::callbackSubscriber(const std_msgs::msg::String::SharedPtr msg) {
 
+  if (!is_initialized_) {
+    return;
+  }
+
   RCLCPP_INFO(this->get_logger(), "callbackSubscriber(): received '%s'", msg->data.c_str());
+}
+
+//}
+
+/* callbackSetBool() //{ */
+
+void Example::callbackSetBool(const std::shared_ptr<std_srvs::srv::SetBool::Request> request, std::shared_ptr<std_srvs::srv::SetBool::Response> response) {
+
+  if (!is_initialized_) {
+    return;
+  }
+
+  RCLCPP_INFO(this->get_logger(), "[Example]: received service call: %s", request->data ? "TRUE" : "FALSE");
+
+  response->message = "succeeded";
+  response->success = true;
 }
 
 //}
@@ -110,6 +186,13 @@ void Example::callbackSubscriber(const std_msgs::msg::String::SharedPtr msg) {
 /* callbackParameters() //{ */
 
 rcl_interfaces::msg::SetParametersResult Example::callbackParameters(std::vector<rclcpp::Parameter> parameters) {
+
+  if (!is_initialized_) {
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = false;
+    result.reason     = "node is not initialized";
+    return result;
+  }
 
   RCLCPP_INFO(this->get_logger(), "params updated");
 
@@ -121,7 +204,7 @@ rcl_interfaces::msg::SetParametersResult Example::callbackParameters(std::vector
 
   rcl_interfaces::msg::SetParametersResult result;
   result.successful = true;
-  result.reason = "don't know";
+  result.reason     = "don't know";
 
   return result;
 }
@@ -139,6 +222,53 @@ void Example::publish(void) {
   std_msgs::msg::String string_out;
   string_out.data = publish_string_;
   publisher_->publish(string_out);
+}
+
+//}
+
+/* callService() //{ */
+
+void Example::callService(void) {
+
+  RCLCPP_INFO(this->get_logger(), "[Example]: calling service");
+
+  auto request  = std::make_shared<std_srvs::srv::SetBool::Request>();
+  request->data = true;
+
+  while (!service_client_->wait_for_service(1s)) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting.");
+    }
+    RCLCPP_INFO(this->get_logger(), "service not available, waiting again...");
+    break;
+  }
+
+  using ServiceResponseFuture = rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture;
+
+  auto response_received_callback = [this](ServiceResponseFuture future) {
+    auto result = future.get();
+    RCLCPP_INFO(this->get_logger(), "[Example]: prdel");
+  };
+
+  // asynchronous call
+  auto result = service_client_->async_send_request(request);
+  /* auto result = service_client_->async_send_request(request, response_received_callback); */
+
+  std::future_status status;
+  do {
+    status = result.wait_for(std::chrono::seconds(1));
+    if (status == std::future_status::deferred) {
+      RCLCPP_INFO(this->get_logger(), "[Example]: deferred");
+    } else if (status == std::future_status::timeout) {
+      RCLCPP_INFO(this->get_logger(), "[Example]: timeout");
+    } else if (status == std::future_status::ready) {
+      RCLCPP_INFO(this->get_logger(), "[Example]: ready");
+    } else {
+      RCLCPP_INFO(this->get_logger(), "[Example]: something else");
+    }
+  } while (status != std::future_status::ready);
+
+  /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
 }
 
 //}

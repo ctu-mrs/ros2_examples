@@ -18,9 +18,10 @@
   <depend>builtin_interfaces</depend>
 
   <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
 
   <!-- this is needed to be able to run launch files -->
-  <depend>ros2_uav_example_py</depend> 
+  <depend>ros2_uav_example_py</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
