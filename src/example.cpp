@@ -282,10 +282,16 @@ void Example::callService(void) {
 
   {
     // TODO ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
+
     // TODO THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
     // TODO BUT WE DON'T HAVE THE "NODE"
 
     /* rclcpp::spin_until_future_complete(node, result); */
+
+    // TODO THIS IS how we can get the "node" from our component, but it crashes
+    // TODO BECAUSE WE ARE "ADDING THE COMPONENT AGAIN TO AN EXECUTOR"
+
+    /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
   }
 }
 
