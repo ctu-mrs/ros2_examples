@@ -26,7 +26,7 @@
 * [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
   * [ ] TODO performance with images?
   * [ ] TODO performance high data rates?
-* [ ] **Why are most examples on standalone node with `main()` when "everything in ROS2 should be a component (nodelet)?**
+* [ ] **Why are most examples on standalone node with `main()` when "everything in ROS2 should be a component (nodelet)?"**
 * [ ] **ComponentContainer**
   * [ ] seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel
   * [ ] multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers
