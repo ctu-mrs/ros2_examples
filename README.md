@@ -68,6 +68,8 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
   * [ ] TODO duration, rate, sleep
 * [ ] **Transformations**
   * [ ] TODO
+* [ ] **Tests**
+  * [ ] TODO
 * [ ] **Pluginlib**
   * [ ] TODO
 * [ ] **Lifecycles** (new feature)
