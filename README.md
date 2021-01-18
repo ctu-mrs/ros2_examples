@@ -2,7 +2,7 @@
 
 ## Examples
 
-* [X\ ] **ServiceClientExample** - periodically calls a service
+* [X] **ServiceClientExample** - periodically calls a service
   * [ ] TODO retrieving result synchronously
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
 * [ ] **PublisherExample** - periodically publishes
