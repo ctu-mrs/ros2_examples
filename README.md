@@ -1,4 +1,4 @@
-# ROS2 C++ examples
+# ROS2 examples
 
 ## Examples
 
