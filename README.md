@@ -2,13 +2,13 @@
 
 ## Examples
 
-* [X] ServiceClientExample - periodically calls a service
+* [X] *ServiceClientExample* - periodically calls a service
   * [ ] TODO retrieving result synchronously
-* [ ] PublisherExample - periodically publishes
+* [ ] *PublisherExample* - periodically publishes
   * [ ] TODO slow and irregular with multi-threaded executor
-* [X] ServiceServerExample - getting called
-* [X] SubscriberExample - subscribes
-* [ ] ParamsExample - load params from yaml and launch file
+* [X] *ServiceServerExample* - getting called
+* [X] *SubscriberExample* - subscribes
+* [ ] *ParamsExample* - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO nested params do not work
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be neccessary
@@ -43,7 +43,8 @@
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
   * [ ] ROS2 rqt_reconfigure is super buggy and wonky
-* [ ] why is the terminal output monochromatic? I want my colors back...
+* [X] why is the terminal output monochromatic? I want my colors back...
+  * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
   * [ ] TODO duration, rate, sleep
 * [ ] **Transformations**
