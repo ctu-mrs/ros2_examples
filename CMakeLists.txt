@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# add_compile_options(-Wall -Wextra -Wpedantic)
-
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
@@ -35,13 +33,8 @@ ament_target_dependencies(subscriber_example
   std_msgs
 )
 
-# target_link_libraries(subscriber_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(subscriber_example PLUGIN "ros2_examples::SubscriberExample" EXECUTABLE subscriber_example)
-
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::Example\n")
 
 ## --------------------------------------------------------------
 ## |                      publisher example                     |
@@ -61,13 +54,8 @@ ament_target_dependencies(publisher_example
   std_msgs
 )
 
-# target_link_libraries(publisher_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample" EXECUTABLE publisher_example)
-
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::Example\n")
 
 ## --------------------------------------------------------------
 ## |                   service server example                   |
@@ -87,13 +75,8 @@ ament_target_dependencies(service_server_example
   std_srvs
 )
 
-# target_link_libraries(service_server_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(service_server_example PLUGIN "ros2_examples::ServiceServerExample" EXECUTABLE service_server_example)
-
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceServerExample\n")
 
 ## --------------------------------------------------------------
 ## |                   service client example                   |
@@ -113,13 +96,8 @@ ament_target_dependencies(service_client_example
   std_srvs
 )
 
-# target_link_libraries(service_client_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::ServiceClientExample" EXECUTABLE service_client_example)
-
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceClientExample\n")
 
 ## --------------------------------------------------------------
 ## |                        timer example                       |
@@ -139,13 +117,8 @@ ament_target_dependencies(timer_example
   std_srvs
 )
 
-# target_link_libraries(timer_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(timer_example PLUGIN "ros2_examples::TimerExample" EXECUTABLE timer_example)
-
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceServerExample\n")
 
 ## --------------------------------------------------------------
 ## |                       params example                       |
@@ -166,13 +139,17 @@ ament_target_dependencies(params_example
   std_srvs
 )
 
-# target_link_libraries(params_example
-# )
-
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
-# set(node_plugins "${node_plugins}${PROJECT_NAME}::ParamsExample\n")
+## --------------------------------------------------------------
+## |                    bank of unused stuff                    |
+## --------------------------------------------------------------
+
+# target_link_libraries(timer_example
+# )
+
+# set(node_plugins "${node_plugins}${PROJECT_NAME}::ServiceServerExample\n")
 
 ## --------------------------------------------------------------
 ## |                           install                          |
