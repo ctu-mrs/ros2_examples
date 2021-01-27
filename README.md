@@ -34,7 +34,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * no `colcon clean`
   * overall not much user friendly
   * immediately [aliased](https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475) it to fix those *improvements*
-* [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs) were ported to **ROS2**
+* [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
 * [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
   * [ ] TODO check performance and load with images
   * [ ] TODO check performance and load high publish rates
