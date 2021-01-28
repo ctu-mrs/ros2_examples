@@ -70,7 +70,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some unused parameter to the file.
   * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
   * [ ] TODO test overloading multiple configs over each other
-  * [ ] TODO test more complex types, array, matrices, ...
+  * [ ] TODO test more complex types: lists, matrices, ...
 * [ ] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
   * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
