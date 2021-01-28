@@ -79,9 +79,11 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [X] why is the terminal output monochromatic? I want my colors back...
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
-  * [ ] TODO duration, rate, sleep
+  * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
 * [ ] **Transformations**
   * [ ] TODO
+  * [ ] I really hope that ROS2 will suppor more than just a **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
+  * [ ] What about relativistic transformations? Meaning the frames could have a velocity and, therefore, we could transform a moving object (a ball) from a moving frame (a drone) to a world frame.
 * [ ] **Tests**
   * [ ] TODO
 * [ ] **Pluginlib**
