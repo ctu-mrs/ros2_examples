@@ -3,19 +3,21 @@
 This example package is meant to explore the possibilities of ROS2 from the point of view of current ROS1 features and how the ROS1 feature translate into the new ROS2 architecture.
 We investigate the aspects that are currently utilized in [MRS UAV System](https://github.com/ctu-mrs/mrs_uav_system) with the intention of a potential future transition.
 
+**Meant to be tested on 20.04 Foxy**
+
 ## Examples
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
 * [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
   * [ ] TODO retrieving result synchronously. Some solutions are available, none work for me within a component
-  * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
+  * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
 * [ ] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
-  * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor
+  * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
 * [X] [**ServiceServerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_server_example.cpp) - getting called, ok
 * [X] [**SubscriberExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/subscriber_example.cpp) - subscribes, ok
 * [ ] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
-  * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor)
+  * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor, looks like the same problem can appear even with single-threaded executor)
 * [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
@@ -60,11 +62,12 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] it is asynchronous only!!!!
   * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - works fine
-* [ ] **Timers** - single timer works fine, similarly to ROS1 Timers
-  * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) and related issues [Avoid timers to be executed twice in the multithreaded executor #1328](https://github.com/ros2/rclcpp/pull/1328) and [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) tell me that it is not settled how they should behave ?!?
+* [ ] **Timers** - single timer runs, similarly to ROS1 Timers
+  * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) and related issues [Avoid timers to be executed twice in the multithreaded executor #1328](https://github.com/ros2/rclcpp/pull/1328) and [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) tells me that it is not settled how they should behave ?!?
+  * [ ] Looks like there is a problem with the regularity of timer callbacks, can be seen with multi-threaded executor
 * [ ] **Parameters**
   * [X] basic params work from *yaml* and *launch*
-  * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some random unused parameter.
+  * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some unused parameter to the file.
   * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
   * [ ] TODO test overloading multiple configs over each other
   * [ ] TODO test more complex types, array, matrices, ...
