@@ -5,7 +5,7 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 
 **Meant to be tested on 20.04 Foxy**
 
-## Examples
+## Minimalistic Examples
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
