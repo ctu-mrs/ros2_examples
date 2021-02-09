@@ -1,3 +1,5 @@
+#include <condition_variable>
+#include <mutex>
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_srvs/srv/set_bool.hpp>
@@ -6,140 +8,94 @@ using namespace std::chrono_literals;
 
 namespace ros2_examples
 {
-
-/* class ServiceClientExample //{ */
-
-class ServiceClientExample : public rclcpp::Node {
-public:
-  ServiceClientExample(rclcpp::NodeOptions options);
-  bool is_initialized_ = false;
-
-private:
-  // | --------------------- service clients -------------------- |
-
-  rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr service_client_;
-
-  void callService(void);
-
-  // | ------------------------- timers ------------------------- |
-
-  rclcpp::TimerBase::SharedPtr timer_main_;
-
-  void timerMain();
-};
-
-//}
-
-/* ServiceClientExample() //{ */
-
-ServiceClientExample::ServiceClientExample(rclcpp::NodeOptions options) : Node("service_client_example", options) {
-
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: initializing");
-
-  // | --------------------- service client --------------------- |
-
-  service_client_ = this->create_client<std_srvs::srv::SetBool>("~/set_bool_out");
-
-  // | -------------------------- timer ------------------------- |
-
-  timer_main_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&ServiceClientExample::timerMain, this));
-
-  // | --------------------- finish the init -------------------- |
-
-  is_initialized_ = true;
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: initialized");
-}
-
-//}
-
-// | ------------------------ callbacks ----------------------- |
-
-/* timerMain() //{ */
-
-void ServiceClientExample::timerMain(void) {
-
-  if (!is_initialized_) {
-    return;
-  }
-
-  callService();
-}
-
-//}
-
-// | ------------------------ routines ------------------------ |
-
-/* callService() //{ */
-
-void ServiceClientExample::callService(void) {
-
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: calling service");
-
-  auto request  = std::make_shared<std_srvs::srv::SetBool::Request>();
-  request->data = true;
-
+  class ServiceClientExample : public rclcpp::Node
   {
-    // THIS IS HOW YOU ARE SUPPOSED TO WAIT FOR THE SERVICE TO BECOME READY
-    // IT MESSES UP SOMETHING WITH THE GRANULARITY OF PUBLISHING
-    // THIS IS FROM AN EXAMPLE
+    public:
+      // | ----------------------- constructor ---------------------- |
+      ServiceClientExample(rclcpp::NodeOptions options) : Node("service_client_example", options)
+      {
+        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initializing");
 
-    /* while (!service_client_->wait_for_service(1s)) { */
-    /*   if (!rclcpp::ok()) { */
-    /*     RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting."); */
-    /*   } */
-    /*   RCLCPP_INFO(this->get_logger(), "service not available, waiting again..."); */
-    /*   break; */
-    /* } */
-  }
+        m_service_client = create_client<std_srvs::srv::SetBool>("~/set_bool_out");
 
-  // define a callback for the service response
-  using ServiceResponseFuture = rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture;
+        m_main_thread = std::thread(&ServiceClientExample::main_thread, this);
 
-  auto response_received_callback = [this](ServiceResponseFuture future) {
-    auto result = future.get();
-    RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: service result received");
+        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initialized");
+      }
+
+    private:
+      std::thread m_main_thread;
+      rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr m_service_client;
+
+    private:
+      // | ------------------- main thread method ------------------- |
+      void main_thread()
+      {
+        // do some config loading, preparation, wait for other nodes to become ready, etc.
+
+        // call the service eg. to start some state-machine to control the robot
+        const bool success = call_start_service();
+
+        // check if call was successfull - if not, alert the user and abort
+        if (success)
+          RCLCPP_INFO(get_logger(), "[ServiceClientExample]: everything OK");
+        else
+          RCLCPP_ERROR(get_logger(), "[ServiceClientExample]: everything NOT OK! Failed to call service :(");
+      }
+
+      // | ---------------- call_start_service method --------------- |
+      bool call_start_service()
+      {
+        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: calling service");
+
+        // wait for service to become available
+        while (!m_service_client->wait_for_service(1s))
+        {
+          if (!rclcpp::ok())
+          {
+            RCLCPP_ERROR(get_logger(), "Interrupted while waiting for the service. Exiting.");
+            return false;
+          }
+          RCLCPP_INFO(get_logger(), "service not available, waiting again...");
+        }
+
+        // DEAR READER, PREPARE FOR THE BLOAT!
+        // helper type aliases
+        // prepare the synchronization primitives
+        std::mutex srv_mtx;
+        std::condition_variable srv_cv;
+        rclcpp::Client<std_srvs::srv::SetBool>::SharedResponse srv_resp;
+        // prepare the callback lambda function
+        const auto response_received_callback = [this, &srv_mtx, &srv_cv, &srv_resp](rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture fut)
+          {
+            RCLCPP_INFO(get_logger(), "[ServiceClientExample]: service result received");
+            {
+              std::scoped_lock lck(srv_mtx);
+              srv_resp = fut.get();
+            }
+            srv_cv.notify_all();
+          };
+        // remember to lock the mutex before the call
+        std::unique_lock lck(srv_mtx);
+        // I WARNED YOU!
+
+        // prepare the request
+        auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+        request->data = true; // why no constructor :(
+        // now finally actually call the service
+        m_service_client->async_send_request(request, response_received_callback);  // with a callback, which will notify our condition variable
+
+        // and wait for the response (MORE BLOAT!)
+        while (rclcpp::ok())
+        {
+          const auto timeout = 1s;
+          if (srv_cv.wait_for(lck, timeout) == std::cv_status::no_timeout)
+            return request->data;
+        }
+        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: got a ROS shutdown request, ending");
+        return false;
+      }
   };
-
-  // asynchronous call
-  auto result = service_client_->async_send_request(request, response_received_callback);  // with a callback
-  /* auto result = service_client_->async_send_request(request); // without a callback */
-
-  {
-      // ONE WAY OF WAITING FOR THE RESULT IS TO CHECK THE std::future
-      // THIS BLOCKS THE WHOLE NODE FROM GETTING CALLBACKS, THEREFORE, NOTHING WORKS
-
-      /* std::future_status status; */
-      /* do { */
-      /*   status = result.wait_for(std::chrono::seconds(1)); */
-      /*   if (status == std::future_status::deferred) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: deferred"); */
-      /*   } else if (status == std::future_status::timeout) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: timeout"); */
-      /*   } else if (status == std::future_status::ready) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: ready"); */
-      /*   } else { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: something else"); */
-      /*   } */
-      /* } while (status != std::future_status::ready); */
-  }
-
-  {
-    // ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
-
-    // THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
-    // BUT WE DON'T HAVE THE "NODE"
-
-    /* rclcpp::spin_until_future_complete(node, result); */
-
-    // THIS IS how we can get the "node" from our component, but it crashes
-    // BECAUSE WE ARE "ADDING THE COMPONENT AGAIN TO AN EXECUTOR"
-
-    /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
-  }
-}
-
-//}
-
 }  // namespace ros2_examples
 
 #include <rclcpp_components/register_node_macro.hpp>
