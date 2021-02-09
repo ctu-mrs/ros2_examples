@@ -23,6 +23,11 @@ namespace ros2_examples
         RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initialized");
       }
 
+      ~ServiceClientExample()
+      {
+        m_main_thread.join();
+      }
+
     private:
       std::thread m_main_thread;
       rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr m_service_client;
@@ -32,6 +37,18 @@ namespace ros2_examples
       void main_thread()
       {
         // do some config loading, preparation, wait for other nodes to become ready, etc.
+
+        // wait for service to become available
+        while (!m_service_client->wait_for_service(1s))
+        {
+          if (!rclcpp::ok())
+          {
+            RCLCPP_ERROR(get_logger(), "Interrupted while waiting for the service. Exiting.");
+            return;
+          }
+          else
+            RCLCPP_INFO(get_logger(), "service not available, waiting again...");
+        }
 
         // call the service eg. to start some state-machine to control the robot
         const bool success = call_start_service();
@@ -48,18 +65,7 @@ namespace ros2_examples
       {
         RCLCPP_INFO(get_logger(), "[ServiceClientExample]: calling service");
 
-        // wait for service to become available
-        while (!m_service_client->wait_for_service(1s))
-        {
-          if (!rclcpp::ok())
-          {
-            RCLCPP_ERROR(get_logger(), "Interrupted while waiting for the service. Exiting.");
-            return false;
-          }
-          RCLCPP_INFO(get_logger(), "service not available, waiting again...");
-        }
-
-        // DEAR READER, PREPARE FOR THE BLOAT!
+        // THE BLOAT PARAGRAPH
         // helper type aliases
         // prepare the synchronization primitives
         std::mutex srv_mtx;
@@ -77,8 +83,8 @@ namespace ros2_examples
           };
         // remember to lock the mutex before the call
         std::unique_lock lck(srv_mtx);
-        // I WARNED YOU!
 
+        // THE ACTUALLY INTERESTING CODE
         // prepare the request
         auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
         request->data = true; // why no constructor :(
