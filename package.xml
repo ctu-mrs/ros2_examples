@@ -20,6 +20,8 @@
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
 
+  <depend>mrs_lib</depend>
+
   <!-- this is needed to be able to run launch files -->
   <depend>ros2_examples_py</depend>
 

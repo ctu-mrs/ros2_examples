@@ -1,6 +1,10 @@
 #include <condition_variable>
+#include <future>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
+
+#include <mrs_lib/scope_timer.h>
+#include <mrs_lib/utils.h>
 
 #include <std_srvs/srv/set_bool.hpp>
 
@@ -30,12 +34,15 @@ namespace ros2_examples
 
     private:
       std::thread m_main_thread;
+      std::atomic<bool> m_main_thread_running;
       rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr m_service_client;
 
     private:
       // | ------------------- main thread method ------------------- |
       void main_thread()
       {
+        mrs_lib::AtomicScopeFlag running(m_main_thread_running);
+        mrs_lib::ScopeTimer tim("main");
         // do some config loading, preparation, wait for other nodes to become ready, etc.
 
         // wait for service to become available
@@ -49,9 +56,11 @@ namespace ros2_examples
           else
             RCLCPP_INFO(get_logger(), "service not available, waiting again...");
         }
+        tim.checkpoint("wait");
 
         // call the service eg. to start some state-machine to control the robot
         const bool success = call_start_service();
+        tim.checkpoint("call");
 
         // check if call was successfull - if not, alert the user and abort
         if (success)
@@ -65,38 +74,20 @@ namespace ros2_examples
       {
         RCLCPP_INFO(get_logger(), "[ServiceClientExample]: calling service");
 
-        // THE BLOAT PARAGRAPH
-        // helper type aliases
-        // prepare the synchronization primitives
-        std::mutex srv_mtx;
-        std::condition_variable srv_cv;
-        rclcpp::Client<std_srvs::srv::SetBool>::SharedResponse srv_resp;
-        // prepare the callback lambda function
-        const auto response_received_callback = [this, &srv_mtx, &srv_cv, &srv_resp](rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture fut)
-          {
-            RCLCPP_INFO(get_logger(), "[ServiceClientExample]: service result received");
-            {
-              std::scoped_lock lck(srv_mtx);
-              srv_resp = fut.get();
-            }
-            srv_cv.notify_all();
-          };
-        // remember to lock the mutex before the call
-        std::unique_lock lck(srv_mtx);
-
         // THE ACTUALLY INTERESTING CODE
         // prepare the request
         auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
         request->data = true; // why no constructor :(
         // now finally actually call the service
-        m_service_client->async_send_request(request, response_received_callback);  // with a callback, which will notify our condition variable
+        const auto fut = m_service_client->async_send_request(request);  // with a callback, which will notify our condition variable
 
-        // and wait for the response (MORE BLOAT!)
+        // and wait for the response (BLOAT)
         while (rclcpp::ok())
         {
           const auto timeout = 1s;
-          if (srv_cv.wait_for(lck, timeout) == std::cv_status::no_timeout)
+          if (fut.wait_for(timeout) == std::future_status::ready)
           {
+            const auto srv_resp = fut.get();
             RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: got a response: \"" << srv_resp->message << "\"");
             return srv_resp->success;
           }

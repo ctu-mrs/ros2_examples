@@ -1,7 +1,7 @@
 name: ros2_example
 root: ./
 startup_window: params
-pre_window: export RCUTILS_COLORIZED_OUTPUT=1; source /opt/ros/foxy/setup.zsh; source ~/ros2_bridge_workpsace/install/setup.zsh
+pre_window: export RCUTILS_COLORIZED_OUTPUT=1; source /opt/ros/foxy/setup.zsh; source ~/ros2_workspace/install/setup.zsh
 windows:
   - params:
       layout: horizontal
