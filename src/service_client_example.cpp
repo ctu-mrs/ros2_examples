@@ -96,7 +96,10 @@ namespace ros2_examples
         {
           const auto timeout = 1s;
           if (srv_cv.wait_for(lck, timeout) == std::cv_status::no_timeout)
-            return request->data;
+          {
+            RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: got a response: \"" << srv_resp->message << "\"");
+            return srv_resp->success;
+          }
         }
         RCLCPP_INFO(get_logger(), "[ServiceClientExample]: got a ROS shutdown request, ending");
         return false;
