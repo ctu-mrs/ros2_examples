@@ -13,6 +13,26 @@ find_package(std_srvs REQUIRED)
 find_package(mrs_lib REQUIRED)
 
 ## --------------------------------------------------------------
+## |                 parameter loading example                  |
+## --------------------------------------------------------------
+
+# specify a new target to be compiled (a dynamic library in this case)
+add_library(params_example SHARED
+  src/params_example.cpp
+)
+
+# ensures that headers and .so's are available when compiling the targe
+ament_target_dependencies(params_example
+  rclcpp
+  rclcpp_components
+  std_srvs
+  mrs_lib
+)
+
+# registers the passed class from the specified library as a ROS2 component
+rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
+
+## --------------------------------------------------------------
 ## |                   service server example                   |
 ## --------------------------------------------------------------
 
@@ -57,7 +77,7 @@ rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::S
 ## --------------------------------------------------------------
 
 install(TARGETS
-  service_server_example service_client_example
+  params_example service_server_example service_client_example
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
