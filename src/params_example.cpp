@@ -31,8 +31,8 @@ private:
 
 ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example", options)
 {
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: initializing");
-  mrs_lib::ParamLoader pl(*this, "ParamsExample");
+  RCLCPP_INFO(get_logger(), "initializing");
+  mrs_lib::ParamLoader pl(*this);
 
   pl.load_param("param_namespace.floating_number", floating_point_number_);
   pl.load_param("some_string", some_string_);
@@ -40,7 +40,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
 
   if (!pl.loaded_successfully())
   {
-    RCLCPP_ERROR(get_logger(), "[ParamsExample]: Some compulsory parameters were not loaded! Ending node.");
+    RCLCPP_ERROR(get_logger(), "Some compulsory parameters were not loaded! Ending node.");
     rclcpp::shutdown(nullptr, "Some compulsory parameters were not loaded");
     return;
   }
@@ -52,7 +52,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
   // | --------------------- finish the init -------------------- |
 
   is_initialized_ = true;
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: initialized");
+  RCLCPP_INFO(get_logger(), "initialized");
 }
 
 //}
@@ -70,12 +70,12 @@ rcl_interfaces::msg::SetParametersResult ParamsExample::callbackParameters(std::
     return result;
   }
 
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: params updated");
+  RCLCPP_INFO(get_logger(), "params updated");
 
   for (size_t i = 0; i < parameters.size(); i++) {
     std::stringstream ss;
     ss << "{" << parameters[i].get_name() << ", " << parameters[i].value_to_string() << "}";
-    RCLCPP_INFO(get_logger(), "[ParamsExample]: got parameter: '%s'", ss.str().c_str());
+    RCLCPP_INFO(get_logger(), "got parameter: '%s'", ss.str().c_str());
   }
 
   rcl_interfaces::msg::SetParametersResult result;
