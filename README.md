@@ -37,6 +37,23 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * overall not much user friendly
   * immediately [aliased](https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475) it to fix those *hurdles*
   * [ ] TODO workspace-wide profiles with custom flags
+* [X] Sourcing ROS2 workspace
+  * ROS2 sourcing
+```bash
+  source /opt/ros/foxy/setup.zsh
+  source ~/ros2_workspace/install/setup.zsh
+```
+  * if you build ROS2 workspace while ROS1 is sourced, you will need to source ROS1 every time before launching ROS2 programs, otherwise, this error will appear:
+```
+[INFO] [launch]: All log files can be found below /home/klaxalk/.ros/log/2021-02-16-09-29-27-258633-klaxalk-desktop2-1671935
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [component_container_mt-1]: process started with pid [1671949]
+[component_container_mt-1] [INFO] [1613464167.606666336] [nmspc1_timer_example]: Load Library: /home/klaxalk/ros2_workspace/install/ros2_examples/lib/libtimer_example.so
+[component_container_mt-1] /opt/ros/foxy/lib/rclcpp_components/component_container_mt: symbol lookup error: /home/klaxalk/ros2_workspace/install/ros2_examples/lib/libtimer_example.so: undefined symbol: _ZN12class_loader4impl22AbstractMetaObjectBaseC2ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_
+[ERROR] [component_container_mt-1]: process has died [pid 1671949, exit code 127, cmd '/opt/ros/foxy/lib/rclcpp_components/component_container_mt --ros-args -r __node:=nmspc1_timer_example -r __ns:=/'].
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
+```
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
 * [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
   * [ ] TODO check performance and load with images
