@@ -139,7 +139,10 @@ ament_target_dependencies(params_example
   std_srvs
 )
 
-# TODO HOW DOES THIS WORK?
+# makes a component executable
+# rclcpp_components_register_nodes(lib_name PLUGIN "namespace::class_name" EXECUTABLE executable_name)
+# # lib_name = add_library(lib_name ...
+# # executable_name => ros2 run package_name executable_name
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
 ## --------------------------------------------------------------

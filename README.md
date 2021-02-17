@@ -62,6 +62,16 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [https://index.ros.org/doc/ros2/Tutorials/Composition/](https://index.ros.org/doc/ros2/Tutorials/Composition/)
   * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
 * [ ] **ComponentContainer**
+  * [ ] try running a component as single node by:
+```
+  remap = [('cloud_in', '/livox/lidar')]
+  node = Node(package='octomap_server2',
+               executable='octomap_server',
+               output='screen',
+               remappings=remap,
+               parameters=[params])
+  return LaunchDescription([node])
+```
   * [ ] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel**
   * [ ] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Publishing is slow in Docker with MutliThreadedExecutor #1487](https://github.com/ros2/rclcpp/issues/1487) (December, 2020)
 * [ ] **CMakeLists.txt**
