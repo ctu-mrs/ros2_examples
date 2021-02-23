@@ -54,6 +54,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
 ```
+* [ ] *Topic* the subscribers and publisher have to have compatible Quality of Service (QoS) settings -- reliable or best effort. For example RViZ is setting different profile (reliable) that is by default (best effort). [QoS](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)  
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
 * [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
   * [ ] TODO check performance and load with images
@@ -108,6 +109,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
   * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
+    * [ ]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
 * [ ] **Transformations**
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
