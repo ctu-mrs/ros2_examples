@@ -127,3 +127,12 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * Follow [Migration guide from ROS1](https://docs.ros.org/en/foxy/Contributing/Migration-Guide.html#update-source-code) that provides most of the basic required modifications.
 * More details regarding genereated C++ interfaces [here](https://design.ros2.org/articles/generated_interfaces_cpp.html)
 * I had to use [eigen3_cmake_module](https://github.com/ros2/eigen3_cmake_module) to successfully force ament_cmake to find eigen during building process.
+### Messages/Services
+* In order to use the messages generated in the same package we need to use the following CMake code:
+  ```cmake
+  rosidl_target_interfaces(publish_address_book
+  ${PROJECT_NAME} "rosidl_typesupport_cpp")
+  ```
+  This finds the relevant generated C++ code from ``AddressBook.msg`` and allows your target to link against it.
+
+  You may have noticed that this step was not necessary when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)
