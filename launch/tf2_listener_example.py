@@ -15,16 +15,16 @@ def generate_launch_description():
     namespace='nmspc1'
     ld.add_action(ComposableNodeContainer(
         namespace='',
-        name=namespace+'_tf2_broadcaster_example',
+        name=namespace+'_tf2_listener_example',
         package='rclcpp_components',
         executable='component_container_mt', # this struggles to maintain timer rates!!!!!!!!!!
         # executable='component_container', # this maintains the rates fine
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
-                plugin='ros2_examples::Tf2BroadcasterExample',
+                plugin='ros2_examples::Tf2ListenerExample',
                 namespace=namespace,
-                name='tf2_broadcaster_example',
+                name='tf2_listener_example',
             ),
         ],
         output='screen',

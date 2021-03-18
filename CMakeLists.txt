@@ -170,6 +170,28 @@ ament_target_dependencies(tf2_broadcaster_example
 rclcpp_components_register_nodes(tf2_broadcaster_example PLUGIN "ros2_examples::Tf2BroadcasterExample" EXECUTABLE tf2_broadcaster_example)
 
 ## --------------------------------------------------------------
+## |                    tf2_broadcaster_example                 |
+## --------------------------------------------------------------
+
+add_library(tf2_listener_example SHARED
+  src/tf2_listener_example.cpp
+)
+
+# TODO WHY IS THIS HERE?
+target_compile_definitions(tf2_listener_example
+  PRIVATE "tf2_listener_example_BUILDING_DLL")
+
+ament_target_dependencies(tf2_listener_example
+  rclcpp
+  rclcpp_components
+  tf2_ros
+  geometry_msgs
+)
+
+# TODO HOW DOES THIS WORK?
+rclcpp_components_register_nodes(tf2_listener_example PLUGIN "ros2_examples::Tf2ListenerExample" EXECUTABLE tf2_listener_example)
+
+## --------------------------------------------------------------
 ## |                    bank of unused stuff                    |
 ## --------------------------------------------------------------
 
@@ -190,6 +212,7 @@ install(TARGETS
   service_client_example
   timer_example
   tf2_broadcaster_example
+  tf2_listener_example
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
