@@ -10,6 +10,8 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 # include_directories(
 #   include
@@ -146,6 +148,28 @@ ament_target_dependencies(params_example
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
 ## --------------------------------------------------------------
+## |                    tf2_broadcaster_example                 |
+## --------------------------------------------------------------
+
+add_library(tf2_broadcaster_example SHARED
+  src/tf2_broadcaster_example.cpp
+)
+
+# TODO WHY IS THIS HERE?
+target_compile_definitions(tf2_broadcaster_example
+  PRIVATE "tf2_broadcaster_example_BUILDING_DLL")
+
+ament_target_dependencies(tf2_broadcaster_example
+  rclcpp
+  rclcpp_components
+  tf2_ros
+  geometry_msgs
+)
+
+# TODO HOW DOES THIS WORK?
+rclcpp_components_register_nodes(tf2_broadcaster_example PLUGIN "ros2_examples::Tf2BroadcasterExample" EXECUTABLE tf2_broadcaster_example)
+
+## --------------------------------------------------------------
 ## |                    bank of unused stuff                    |
 ## --------------------------------------------------------------
 
@@ -165,6 +189,7 @@ install(TARGETS
   service_server_example
   service_client_example
   timer_example
+  tf2_broadcaster_example
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

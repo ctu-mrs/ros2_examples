@@ -19,6 +19,8 @@
 
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2_ros</depend>
 
   <!-- this is needed to be able to run launch files -->
   <depend>ros2_examples_py</depend>

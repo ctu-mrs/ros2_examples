@@ -21,6 +21,8 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
+* [X] [**Tf2BroadcasterExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - publishing transforms, ok
+  * [ ] TODO no innovation in TF structure, missing the option to have multiple parents
 
 ### Running the examples
 
