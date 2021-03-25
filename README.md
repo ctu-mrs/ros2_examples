@@ -33,17 +33,23 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 
 ## First ROS2 impressions
 
-* [X] **colcon**, the build system... is it really the best we have got? I want my catkin back.
+* [ ] **colcon**, the build system... is it really the best we have got? I want my catkin back.
   * creates workspace wherever `colcon build` is called
   * therefore, cannot build in subdirectories
   * no `colcon clean`, no `colcon init`
   * overall not much user friendly
   * immediately [aliased](https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475) it to fix those *hurdles*
   * [ ] TODO workspace-wide profiles with custom flags
+    * profile are not supported by colcon yet. See [discussion](https://github.com/colcon/colcon-core/issues/168) 
+    * predefining of build setting with custom flags can be done using mixin
+      * install: `sudo apt install python3-colcon-mixin`
+      * REPO with readme and mixin examples: [repo](https://github.com/colcon/colcon-mixin-repository) 
+      * example of usage: `colcon build --mixin rel-with-deb-info`
 * [X] Sourcing ROS2 workspace
   * ROS2 sourcing
 ```bash
   source /opt/ros/foxy/setup.zsh
+  source ~/ros2_bridge_workspace/install/setup.zsh
   source ~/ros2_workspace/install/setup.zsh
 ```
   * if you build ROS2 workspace while ROS1 is sourced, you will need to source ROS1 every time before launching ROS2 programs, otherwise, this error will appear:
