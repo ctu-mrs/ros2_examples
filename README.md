@@ -16,14 +16,14 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
 * [X] [**ServiceServerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_server_example.cpp) - getting called, ok
 * [X] [**SubscriberExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/subscriber_example.cpp) - subscribes, ok
-* [ ] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
-  * [ ] TODO timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor, looks like the same problem can appear even with single-threaded executor)
+* [X] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
+  * [X] ~~timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor, looks like the same problem can appear even with single-threaded executor)~~ --> timers were constructed as part of *mutual exclusive callbackGroup*
 * [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
 * [X] [**Tf2BroadcasterExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - publishing transforms, ok
   * [ ] TODO no innovation in TF structure, missing the option to have multiple parents
-* [X] [**Tf2ListenerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - receiving transforms, lookup table works, ok
+* [X] [**Tf2ListenerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_listener_example.cpp) - receiving transforms, lookup table works, ok
 
 ### Running the examples
 
@@ -33,17 +33,23 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 
 ## First ROS2 impressions
 
-* [X] **colcon**, the build system... is it really the best we have got? I want my catkin back.
+* [ ] **colcon**, the build system... is it really the best we have got? I want my catkin back.
   * creates workspace wherever `colcon build` is called
   * therefore, cannot build in subdirectories
   * no `colcon clean`, no `colcon init`
   * overall not much user friendly
   * immediately [aliased](https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475) it to fix those *hurdles*
   * [ ] TODO workspace-wide profiles with custom flags
+    * profile are not supported by colcon yet. See [discussion](https://github.com/colcon/colcon-core/issues/168) 
+    * predefining of build setting with custom flags can be done using mixin
+      * install: `sudo apt install python3-colcon-mixin`
+      * REPO with readme and mixin examples: [repo](https://github.com/colcon/colcon-mixin-repository) 
+      * example of usage: `colcon build --mixin rel-with-deb-info`
 * [X] Sourcing ROS2 workspace
   * ROS2 sourcing
 ```bash
   source /opt/ros/foxy/setup.zsh
+  source ~/ros2_bridge_workspace/install/setup.zsh
   source ~/ros2_workspace/install/setup.zsh
 ```
   * if you build ROS2 workspace while ROS1 is sourced, you will need to source ROS1 every time before launching ROS2 programs, otherwise, this error will appear:
@@ -76,27 +82,24 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
                parameters=[params])
   return LaunchDescription([node])
 ```
-  * [ ] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel**
-  * [ ] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Publishing is slow in Docker with MutliThreadedExecutor #1487](https://github.com/ros2/rclcpp/issues/1487) (December, 2020)
+  * [X] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel** --> the rclcpp::callback_group::CallbackGroupType::Reentrant has to be selected for parallel execution of callback driven classes (subscribers and timers)
+  * [X] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) -> merged already and available for version rclcpp 8.0 and higher
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
-  * [ ] TODO building (and using) custom libraries
-  * [ ] TODO building standalone executable nodelets (should be possible)
+  * [X] building (and using) custom libraries
+  * [X] building standalone executable nodelets
 * [ ] **Launch files**
   * [X] they are in python now [link](https://index.ros.org/doc/ros2/Tutorials/Launch-Files/Creating-Launch-Files/)
   * [X] remapping, params, nodelets
   * [ ] TODO connecting to existing component containers (nodelet managers)
-  * [ ] TODO launch prefixes (e.g., launching with GDB)
-* [ ] **Subscribers** - work fine, not a big difference from ROS1
-  * [ ] TODO still problem with multiple callbacks in parallel?
-* [X] **Publishers** - work fine, not a big difference from ROS1
+  * [X] launch prefixes (e.g., launching with GDB) [link](https://github.com/ctu-mrs/mrs_lib/blob/ros2/launch/params_example.py)
+* [X] **Subscribers** - work fine, just be aware of difference between CallbackGroupType::Reentrant and CallbackGroupType::MutuallyExclusive (default one).
+* [X] **Publishers** - works fine, not a big difference from ROS1
 * [ ] **Service client**
   * [ ] it is asynchronous only!!!!
   * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
 * [X] **Service server** - works fine
-* [ ] **Timers** - single timer runs, similarly to ROS1 Timers
-  * [ ] TODO still problem with multiple timers in parallel, recent (last active 2021/01/15) and related issues [Avoid timers to be executed twice in the multithreaded executor #1328](https://github.com/ros2/rclcpp/pull/1328) and [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) tells me that it is not settled how they should behave ?!?
-  * [ ] Looks like there is a problem with the regularity of timer callbacks, can be seen with multi-threaded executor
+* [X] **Timers** - works fine, just be aware of difference between CallbackGroupType::Reentrant and CallbackGroupType::MutuallyExclusive (default one).
 * [ ] **Parameters**
   * [X] basic params work from *yaml* and *launch*
   * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some unused parameter to the file.
@@ -112,7 +115,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
   * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
-    * [ ]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
+    * [X]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
 * [ ] **Transformations**
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
