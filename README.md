@@ -132,7 +132,6 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 ## Migration Guide
 * Follow [Migration guide from ROS1](https://docs.ros.org/en/foxy/Contributing/Migration-Guide.html#update-source-code) that provides most of the basic required modifications.
 * More details regarding genereated C++ interfaces [here](https://design.ros2.org/articles/generated_interfaces_cpp.html)
-* I had to use [eigen3_cmake_module](https://github.com/ros2/eigen3_cmake_module) to successfully force ament_cmake to find eigen during building process.
 ### Messages/Services
 * In order to use the messages generated in the same package we need to use the following CMake code:
   ```cmake
