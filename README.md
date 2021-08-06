@@ -116,6 +116,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [ ] **ROS Time**
   * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
     * [X]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
+    * [x]  While using sim time, the get_clock()->now() clock runs at 10 Hz by default. Need to increase the rate as described [here](https://github.com/ros-simulation/gazebo_ros_pkgs/pull/1214#issuecomment-894212336). 
 * [ ] **Transformations**
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
