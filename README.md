@@ -65,7 +65,8 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 ```
 * [ ] *Topic* the subscribers and publisher have to have compatible Quality of Service (QoS) settings -- reliable or best effort. For example RViZ is setting different profile (reliable) that is by default (best effort). [QoS](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)  
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
-* [ ] **ROS bridge** installs, compiles, runs ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
+* [ ] **ROS bridge** ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
+  * [ ] **Problem** does not compile with const arrays in services [issue](https://github.com/ros2/ros1_bridge/issues/283), as of Dec, 2021
   * [ ] TODO check performance and load with images
   * [ ] TODO check performance and load high publish rates
 * [ ] **Why are most examples still using `main()` when everything in ROS2 should be a component (nodelet)?**
