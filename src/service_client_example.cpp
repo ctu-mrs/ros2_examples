@@ -20,7 +20,7 @@ private:
   rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr service_client_;
 
   void callService(void);
-  bool futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future);
+  void futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future);
 
   bool last_call_success_ = false;
 
@@ -142,20 +142,17 @@ void ServiceClientExample::callService(void) {
   }
 
   // DEFINE A CALLBACK FOR THE SERVICE RESPONSE WITHOUT LAMBDA (ADVANTAGE: DIRECT ACCESS TO MEMBER VARIABLES WITHIN THE CALLBACK)
-  auto call_result =
-      service_client_->async_send_request(request, std::bind(&ServiceClientExample::futureCallback, this, std::placeholders::_1));  // with a callback function
+  service_client_->async_send_request(request, std::bind(&ServiceClientExample::futureCallback, this, std::placeholders::_1));  // with a callback function
   RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: Service called");
 }
 //}
 
 // Callback function for call response
 // This will be executed once the other side decides to respond to the service call
-bool ServiceClientExample::futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future) {
+void ServiceClientExample::futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future) {
   std::shared_ptr<std_srvs::srv::SetBool_Response> result = future.get();
   RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: Service call responded with %s", result->message.c_str());
   last_call_success_ = result->success;
-  return true;
-  // return false if something goes wrong
 }
 
 }  // namespace ros2_examples

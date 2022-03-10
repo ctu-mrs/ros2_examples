@@ -17,7 +17,7 @@ public:
 private:
   // | ------------------------- timers ------------------------- |
 
-  rclcpp::callback_group::CallbackGroup::SharedPtr cb_grp_;
+  rclcpp::CallbackGroup::SharedPtr cb_grp_;
 
   rclcpp::TimerBase::SharedPtr timer_1_;
   rclcpp::TimerBase::SharedPtr timer_2_;
@@ -45,7 +45,7 @@ TimerExample::TimerExample(rclcpp::NodeOptions options) : Node("timer_example", 
   // create separate callback group. Default group in Node class is CallbackGroupType::MutuallyExclusive
   // (https://github.com/ros2/rclcpp/blob/9c62c1c9463cd2accee57fe157125950df50f957/rclcpp/src/rclcpp/node_interfaces/node_base.cpp#L151) explanation of
   // CallbackGroupTypes: https://roscon.ros.org/2014/wp-content/uploads/2014/07/ROSCON-2014-Why-you-want-to-use-ROS-2.pdf
-  cb_grp_ = this->create_callback_group(rclcpp::callback_group::CallbackGroupType::Reentrant);
+  cb_grp_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
   // 100 Hz time
   timer_1_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / 100.0), std::bind(&TimerExample::callbackTimer1, this), cb_grp_);

@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 
+#include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
@@ -18,8 +19,8 @@ public:
 private:
   // | ----------------------- listener ------------------------- |
 
-  std::shared_ptr<tf2_ros::Buffer>            tf_buffer_;
-  std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+  tf2_ros::Buffer            tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
 
   // | ------------------------- timers ------------------------- |
 
@@ -32,14 +33,11 @@ private:
 
 /* Tf2ListenerExample() //{ */
 
-Tf2ListenerExample::Tf2ListenerExample(rclcpp::NodeOptions options) : Node("tf2_listener_example", options) {
+Tf2ListenerExample::Tf2ListenerExample(rclcpp::NodeOptions options)
+  : Node("tf2_listener_example", options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_, this, false)
+{
 
   RCLCPP_INFO(this->get_logger(), "[Tf2ListenerExample]: initializing");
-
-  // | ---------------------- broadcaster ----------------------- |
-
-  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());
-  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, this, false);
 
   // | -------------------------- timer ------------------------- |
 
@@ -63,7 +61,7 @@ void Tf2ListenerExample::timerMain(void) {
     return;
   }
   try {
-    auto transform_stamped = tf_buffer_->lookupTransform("child_frame", "parent_frame", rclcpp::Time(0));
+    auto transform_stamped = tf_buffer_.lookupTransform("child_frame", "parent_frame", rclcpp::Time(0));
     RCLCPP_INFO(this->get_logger(),
                 "[Tf2ListenerExample]: 'child_frame' -> 'parent_frame':\n\t translation: [%.2f, %.2f, %.2f]\n\t rotation: [%.2f, %.2f, %.2f, %.2f]",
                 transform_stamped.transform.translation.x, transform_stamped.transform.translation.y, transform_stamped.transform.translation.z,

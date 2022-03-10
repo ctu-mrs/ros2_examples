@@ -32,7 +32,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
 
   {
     const std::string param = "param_namespace.floating_number";
-    this->declare_parameter(param);
+    this->declare_parameter<double>(param);
     if (!this->get_parameter(param, floating_point_number_)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
@@ -42,7 +42,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
 
   {
     const std::string param = "some_string";
-    this->declare_parameter(param);
+    this->declare_parameter<std::string>(param);
     if (!this->get_parameter(param, some_string_)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
@@ -54,7 +54,7 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
   {
     const std::string param = "uav_type";
     std::string uav_type;
-    this->declare_parameter(param);
+    this->declare_parameter<std::string>(param);
     if (!this->get_parameter(param, uav_type)) {
       RCLCPP_ERROR(this->get_logger(), "[ParamsExample]: could not load param '%s'", param.c_str());
     } else {
