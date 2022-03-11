@@ -6,154 +6,135 @@ using namespace std::chrono_literals;
 
 namespace ros2_examples
 {
+  /* class ServiceClientExample //{ */
 
-/* class ServiceClientExample //{ */
+  class ServiceClientExample : public rclcpp::Node
+  {
+  public:
+    ServiceClientExample(rclcpp::NodeOptions options);
 
-class ServiceClientExample : public rclcpp::Node {
-public:
-  ServiceClientExample(rclcpp::NodeOptions options);
-  bool is_initialized_ = false;
+  private:
+    // | --------------------- service clients -------------------- |
 
-private:
-  // | --------------------- service clients -------------------- |
+    rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr service_client_;
 
-  rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr service_client_;
 
-  void callService(void);
-  void futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future);
+    // | ------------------------- timers ------------------------- |
 
-  bool last_call_success_ = false;
+    rclcpp::TimerBase::SharedPtr timer_future_;
+    rclcpp::TimerBase::SharedPtr timer_callback_;
 
-  // | ------------------------- timers ------------------------- |
+    rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture setbool_future_;
+    void timer_future();
 
-  rclcpp::TimerBase::SharedPtr timer_main_;
+    void setbool_callback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future);
+    void timer_callback();
+  };
 
-  void timerMain();
-};
+  //}
 
-//}
+  /* ServiceClientExample() //{ */
 
-/* ServiceClientExample() //{ */
+  ServiceClientExample::ServiceClientExample(rclcpp::NodeOptions options) : Node("service_client_example", options)
+  {
+    RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initializing");
 
-ServiceClientExample::ServiceClientExample(rclcpp::NodeOptions options) : Node("service_client_example", options) {
+    // | --------------------- service client --------------------- |
 
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: initializing");
+    service_client_ = create_client<std_srvs::srv::SetBool>("~/set_bool_out");
 
-  // | --------------------- service client --------------------- |
+    // | -------------------------- timer ------------------------- |
 
-  service_client_ = this->create_client<std_srvs::srv::SetBool>("~/set_bool_out");
+    // There are two ways you can check the result of the service call:
+    // 1. using std::future<Result>
+    // 2. using a callback
+    // Examples for each case follow.
 
-  // | -------------------------- timer ------------------------- |
+    timer_future_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&ServiceClientExample::timer_future, this));
+    timer_callback_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&ServiceClientExample::timer_callback, this));
 
-  timer_main_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&ServiceClientExample::timerMain, this));
+    // | --------------------- finish the init -------------------- |
 
-  // | --------------------- finish the init -------------------- |
-
-  is_initialized_ = true;
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: initialized");
-}
-
-//}
-
-// | ------------------------ callbacks ----------------------- |
-
-/* timerMain() //{ */
-
-void ServiceClientExample::timerMain(void) {
-
-  if (!is_initialized_) {
-    return;
+    RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initialized");
   }
 
-  callService();
-}
+  //}
 
-//}
+  // | ------------------------ callbacks ----------------------- |
 
-// | ------------------------ routines ------------------------ |
+  /* timer_future() //{ */
 
-/* callService() //{ */
-
-void ServiceClientExample::callService(void) {
-
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: calling service");
-
-  auto request  = std::make_shared<std_srvs::srv::SetBool::Request>();
-  request->data = true;
-
+  // a timer callback should never block for too long, so all checks should return after a while
+  void ServiceClientExample::timer_future()
   {
-      // THIS IS HOW YOU ARE SUPPOSED TO WAIT FOR THE SERVICE TO BECOME READY
-      // IT MESSES UP SOMETHING WITH THE GRANULARITY OF PUBLISHING
-      // THIS IS FROM AN EXAMPLE
-
-      /* while (!service_client_->wait_for_service(1s)) { */
-      /*   if (!rclcpp::ok()) { */
-      /*     RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting."); */
-      /*   } */
-      /*   RCLCPP_INFO(this->get_logger(), "service not available, waiting again..."); */
-      /*   break; */
-      /* } */
+    // if the future is already waiting for a result, check if we got one
+    if (setbool_future_.valid())
+    {
+        const std::future_status status = setbool_future_.wait_for(std::chrono::seconds(1));;
+        if (status == std::future_status::ready)
+        {
+          // future already got a result, check it and report to user
+          const auto result = setbool_future_.get();
+          // reset the future
+          setbool_future_ = {};
+          if (result->success)
+            RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: future finished, service call successful with message: " << result->message);
+          else
+            RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: future finished, service call reports failure: " << result->message);
+        }
+        else
+          // future isn't ready yet
+          RCLCPP_INFO(get_logger(), "[ServiceClientExample]: service future not ready yet, waiting again...");
+    }
+    // if the future is not waiting for a result, make a new service call
+    else
+    {
+      // you should not send a service request unless the service is ready, otherwise the future will never be ready
+      if (service_client_->service_is_ready())
+      {
+        auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+        request->data = true;
+        setbool_future_ = service_client_->async_send_request(request);
+        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: called service using future");
+      }
+      else
+        RCLCPP_WARN(get_logger(), "[ServiceClientExample]: not calling service using future, service not ready!");
+    }
   }
 
-  // DEFINE A CALLBACK FOR THE SERVICE RESPONSE USING LAMBDA FUNCTION
+  //}
+
+  /* timer_callback() //{ */
+
+  void ServiceClientExample::timer_callback()
   {
-      /* using ServiceResponseFuture = rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture; */
-
-      /* auto response_received_callback = [this](ServiceResponseFuture future) { */
-      /*   auto result = future.get(); */
-      /*   RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: service result received"); */
-      /* }; */
-
-      /* // asynchronous call */
-      /* auto result = service_client_->async_send_request(request, response_received_callback);  // with an anonymous callback */
-  } /* auto result = service_client_->async_send_request(request); // WITHOUT A CALLBACK */
-
-  {
-      // ONE WAY OF WAITING FOR THE RESULT IS TO CHECK THE std::future
-      // THIS BLOCKS THE WHOLE NODE FROM GETTING CALLBACKS, THEREFORE, NOTHING WORKS
-
-      /* std::future_status status; */
-      /* do { */
-      /*   status = result.wait_for(std::chrono::seconds(1)); */
-      /*   if (status == std::future_status::deferred) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: deferred"); */
-      /*   } else if (status == std::future_status::timeout) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: timeout"); */
-      /*   } else if (status == std::future_status::ready) { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: ready"); */
-      /*   } else { */
-      /*     RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: something else"); */
-      /*   } */
-      /* } while (status != std::future_status::ready); */
+    // it's good to firstly check if the service server is even ready to be called
+    if (service_client_->service_is_ready())
+    {
+      auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+      request->data = true;
+      setbool_future_ = service_client_->async_send_request(request);
+      RCLCPP_INFO(get_logger(), "[ServiceClientExample]: called service using callback");
+    }
+    else
+      RCLCPP_WARN(get_logger(), "[ServiceClientExample]: not calling service using callback, service not ready!");
   }
 
+  //}
+
+  // | ------------------------ routines ------------------------ |
+
+  // The callback function for service call response.
+  // This function will be executed once the other side decides to respond to the service call.
+  void ServiceClientExample::setbool_callback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future)
   {
-    // ANOTHER WAY HOT TO WAIT FOR THE RESULT IS TO "spin_until_future_complete"
-
-    // THIS IS HOW YOU WOULD WAIT FOR THE RESPONSE IN A NORMAL NODE
-    // BUT WE DON'T HAVE THE "NODE"
-
-    /* rclcpp::spin_until_future_complete(node, result); */
-
-    // THIS IS how we can get the "node" from our component, but it crashes
-    // BECAUSE WE ARE "ADDING THE COMPONENT AGAIN TO AN EXECUTOR"
-
-    /* rclcpp::spin_until_future_complete(this->get_node_base_interface(), result); */
+    // the future must be ready now that the callback was called
+    const auto result = setbool_future_.get();
+    if (result->success)
+      RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: callback called, service call successful with message: " << result->message);
+    else
+      RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: callback called, service call reports failure: " << result->message);
   }
-
-  // DEFINE A CALLBACK FOR THE SERVICE RESPONSE WITHOUT LAMBDA (ADVANTAGE: DIRECT ACCESS TO MEMBER VARIABLES WITHIN THE CALLBACK)
-  service_client_->async_send_request(request, std::bind(&ServiceClientExample::futureCallback, this, std::placeholders::_1));  // with a callback function
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: Service called");
-}
-//}
-
-// Callback function for call response
-// This will be executed once the other side decides to respond to the service call
-void ServiceClientExample::futureCallback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future) {
-  std::shared_ptr<std_srvs::srv::SetBool_Response> result = future.get();
-  RCLCPP_INFO(this->get_logger(), "[ServiceClientExample]: Service call responded with %s", result->message.c_str());
-  last_call_success_ = result->success;
-}
 
 }  // namespace ros2_examples
 

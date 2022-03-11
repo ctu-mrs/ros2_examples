@@ -7,55 +7,51 @@ using namespace std::chrono_literals;
 namespace ros2_examples
 {
 
-/* class SubscriberExample //{ */
+  /* class SubscriberExample //{ */
 
-class SubscriberExample : public rclcpp::Node {
-public:
-  SubscriberExample(rclcpp::NodeOptions options);
-  bool is_initialized_ = false;
+  class SubscriberExample : public rclcpp::Node
+  {
+  public:
+    SubscriberExample(rclcpp::NodeOptions options);
 
-private:
-  // | ----------------------- subscribers ---------------------- |
+  private:
+    // | ----------------------- subscribers ---------------------- |
 
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber_;
 
-  void callbackSubscriber(const std_msgs::msg::String::SharedPtr msg);
-};
+    void callback_subscriber(const std_msgs::msg::String::SharedPtr msg);
+  };
 
-//}
+  //}
 
-/* SubscriberExample() //{ */
+  /* SubscriberExample() //{ */
 
-SubscriberExample::SubscriberExample(rclcpp::NodeOptions options) : Node("subscriber_example", options) {
+  SubscriberExample::SubscriberExample(rclcpp::NodeOptions options) : Node("subscriber_example", options)
+  {
 
-  RCLCPP_INFO(this->get_logger(), "[SubscriberExample]: initializing");
+    RCLCPP_INFO(get_logger(), "[SubscriberExample]: initializing");
 
-  // | ----------------------- SubscriberExample ----------------------- |
+    // | ----------------------- SubscriberExample ----------------------- |
 
-  subscriber_ = this->create_subscription<std_msgs::msg::String>("~/topic_in", 10, std::bind(&SubscriberExample::callbackSubscriber, this, std::placeholders::_1));
+    subscriber_ = create_subscription<std_msgs::msg::String>("~/topic_in", 10, std::bind(&SubscriberExample::callback_subscriber, this, std::placeholders::_1));
 
-  // | --------------------- finish the init -------------------- |
+    // | --------------------- finish the init -------------------- |
 
-  is_initialized_ = true;
-  RCLCPP_INFO(this->get_logger(), "[SubscriberExample]: initialized");
-}
-
-//}
-
-// | ------------------------ callbacks ----------------------- |
-
-/* callbackSubscriber() //{ */
-
-void SubscriberExample::callbackSubscriber(const std_msgs::msg::String::SharedPtr msg) {
-
-  if (!is_initialized_) {
-    return;
+    RCLCPP_INFO(get_logger(), "[SubscriberExample]: initialized");
   }
 
-  RCLCPP_INFO(this->get_logger(), "[SubscriberExample]: receiving '%s'",  msg->data.c_str());
-}
+  //}
 
-//}
+  // | ------------------------ callbacks ----------------------- |
+
+  /* callback_subscriber() //{ */
+
+  void SubscriberExample::callback_subscriber(const std_msgs::msg::String::SharedPtr msg)
+  {
+    RCLCPP_INFO_STREAM(get_logger(), "[SubscriberExample]: received string message '" << msg->data << "'");
+  }
+
+  //}
 
 }  // namespace ros2_examples
 
