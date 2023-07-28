@@ -13,9 +13,9 @@ find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
-# include_directories(
-#   include
-# )
+include_directories(
+  include
+)
 
 ## --------------------------------------------------------------
 ## |                     subscriber example                     |

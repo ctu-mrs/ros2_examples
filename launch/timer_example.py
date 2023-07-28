@@ -27,6 +27,7 @@ def generate_launch_description():
                 name='timer_example',
                 parameters=[
                     pkg_share_path + '/config/timer_example.yaml',
+                    {"callback_group_type": "UniqueMutuallyExclusives"}
                 ],
                 # remappings=[
                 #     ("~/topic", "~/topic"),

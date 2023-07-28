@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_msgs/msg/string.hpp>
+#include "ros2_examples/rate_counter.h"
 
 using namespace std::chrono_literals;
 
@@ -12,62 +13,7 @@ namespace ros2_examples
   class SubscriberExample : public rclcpp::Node
   {
   private:
-
-    /* helper class RateMonitor //{ */
-    
-    class RateMonitor
-    {
-      public:
-        RateMonitor(const unsigned long window, const rclcpp::Time& first_t)
-          : window(window)
-        {
-          reset(first_t);
-        }
-    
-        void reset(const rclcpp::Time& now)
-        {
-          prev_t = now;
-          n_samples = 0;
-          mean = 0;
-        }
-    
-        bool update(const rclcpp::Time& next_t)
-        {
-          bool before_reset = false;
-          if (n_samples == window)
-          {
-            reset(next_t);
-            return false;
-          }
-          else if (n_samples == window - 1)
-            before_reset = true;
-
-          // Welford's algorithm according to https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
-          n_samples += 1;
-          const double dt = (next_t - prev_t).seconds();
-          prev_t = next_t;
-          const double delta = dt - mean;
-          mean += delta / static_cast<double>(n_samples);
-          return before_reset;
-        }
-    
-        double get_mean()
-        {
-          if (n_samples < 2)
-            return std::numeric_limits<double>::quiet_NaN();
-          else
-            // we want the rate, not the period, so invert it
-            return 1.0 / mean;
-        }
-    
-      private:
-        const unsigned long window;
-        rclcpp::Time prev_t;
-        unsigned long n_samples;
-        double mean;
-    };
-    
-    //}
+    using RateCounter = utils::RateCounter;
 
   public:
     SubscriberExample(rclcpp::NodeOptions options);
@@ -90,13 +36,13 @@ namespace ros2_examples
     rclcpp::CallbackGroup::SharedPtr callback_group_;
 
     std::mutex fast_rate_mtx_;
-    RateMonitor fast_rate_monitor_ = RateMonitor(100, get_clock()->now());
+    RateCounter fast_rate_counter_ = RateCounter(get_clock(), 100);
 
     std::mutex slow_rate_mtx_;
-    RateMonitor slow_rate_monitor_ = RateMonitor(10, get_clock()->now());
+    RateCounter slow_rate_counter_ = RateCounter(get_clock(), 10);
 
     std::mutex irregular_rate_mtx_;
-    RateMonitor irregular_rate_monitor_ = RateMonitor(10, get_clock()->now());
+    RateCounter irregular_rate_counter_ = RateCounter(get_clock(), 10);
   };
 
   //}
@@ -138,25 +84,22 @@ namespace ros2_examples
   void SubscriberExample::callback_fast_subscriber(const std_msgs::msg::String::SharedPtr msg)
   {
     std::scoped_lock lck(fast_rate_mtx_);
-    const bool monitor_done = fast_rate_monitor_.update(get_clock()->now());
-    if (monitor_done)
-      RCLCPP_INFO_STREAM(get_logger(), "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << fast_rate_monitor_.get_mean() << "Hz.");
+    const double rate = fast_rate_counter_.update_rate();
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << rate << "Hz.");
   }
 
   void SubscriberExample::callback_slow_subscriber(const std_msgs::msg::String::SharedPtr msg)
   {
     std::scoped_lock lck(slow_rate_mtx_);
-    const bool monitor_done = slow_rate_monitor_.update(get_clock()->now());
-    if (monitor_done)
-      RCLCPP_INFO_STREAM(get_logger(), "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << slow_rate_monitor_.get_mean() << "Hz.");
+    const double rate = slow_rate_counter_.update_rate();
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << rate << "Hz.");
   }
 
   void SubscriberExample::callback_irregular_subscriber(const std_msgs::msg::String::SharedPtr msg)
   {
     std::scoped_lock lck(irregular_rate_mtx_);
-    const bool monitor_done = irregular_rate_monitor_.update(get_clock()->now());
-    if (monitor_done)
-      RCLCPP_INFO_STREAM(get_logger(), "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << irregular_rate_monitor_.get_mean() << "Hz.");
+    const double rate = irregular_rate_counter_.update_rate();
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[SubscriberExample]: receiving string message '" << msg->data << "' at rate " << rate << "Hz.");
   }
 
   //}

@@ -1,11 +1,15 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_msgs/msg/float64.hpp>
+#include "ros2_examples/rate_counter.h"
+#include "ros2_examples/params.h"
 
 using namespace std::chrono_literals;
 
 namespace ros2_examples
 {
+
+  using namespace utils;
 
   /* class TimerExample //{ */
 
@@ -17,56 +21,25 @@ namespace ros2_examples
   private:
     // | ------------------------- timers ------------------------- |
 
-    rclcpp::CallbackGroup::SharedPtr cb_grp_;
+    rclcpp::CallbackGroup::SharedPtr cb_grp1_;
+    rclcpp::CallbackGroup::SharedPtr cb_grp2_;
+    rclcpp::CallbackGroup::SharedPtr cb_grp3_;
+    rclcpp::CallbackGroup::SharedPtr cb_grp4_;
 
     rclcpp::TimerBase::SharedPtr timer_1_;
     rclcpp::TimerBase::SharedPtr timer_2_;
     rclcpp::TimerBase::SharedPtr timer_3_;
+    rclcpp::TimerBase::SharedPtr timer_4_;
 
     void callback_timer1();
     void callback_timer2();
     void callback_timer3();
+    void callback_timer4();
 
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_timer_1_;
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_timer_2_;
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_timer_3_;
-
-    // | -------------- helper class to count a rate -------------- |
-    class RateCounter
-    {
-    public:
-      RateCounter(const rclcpp::Clock::SharedPtr& clk_ptr, const unsigned window_len)
-        : clk_ptr_(clk_ptr), prev_call_(clk_ptr_->now()), first_update_(true), avg_rate_(0), avg_rate_weight_(0), max_weight_(window_len-1) {};
-
-      double update_rate()
-      {
-        // ignore the first update as it's probably going to be called right after construction
-        if (first_update_)
-        {
-          first_update_ = false;
-          return 0;
-        }
-
-        const rclcpp::Time cur_call = clk_ptr_->now();;
-        const rclcpp::Duration cur_dur = cur_call - prev_call_;
-        const double cur_rate = 1.0/cur_dur.seconds();
-
-        std::scoped_lock lck(mtx_);
-        avg_rate_ = (avg_rate_*avg_rate_weight_ + cur_rate)/(avg_rate_weight_+1);
-        // clamp the max weight so that only the last N samples are taken into account
-        avg_rate_weight_ = std::min(avg_rate_weight_+1, max_weight_);
-        prev_call_ = cur_call;
-        return avg_rate_;
-      }
-    private:
-      std::mutex mtx_;
-      rclcpp::Clock::SharedPtr clk_ptr_;
-      rclcpp::Time prev_call_;
-      bool first_update_;
-      double avg_rate_;
-      unsigned avg_rate_weight_;
-      const unsigned max_weight_;
-    };
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_timer_4_;
 
   };
 
@@ -81,26 +54,63 @@ namespace ros2_examples
 
     // | -------------------------- timer ------------------------- |
 
-    // create separate callback group. Default group in Node class is CallbackGroupType::MutuallyExclusive
-    // (https://github.com/ros2/rclcpp/blob/9c62c1c9463cd2accee57fe157125950df50f957/rclcpp/src/rclcpp/node_interfaces/node_base.cpp#L151) explanation of
-    // CallbackGroupTypes: https://roscon.ros.org/2014/wp-content/uploads/2014/07/ROSCON-2014-Why-you-want-to-use-ROS-2.pdf
-    cb_grp_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    // Uncomment the following line to use a Reentrant callback group - the slow callback will no longer block the others.
-    /* cb_grp_ = create_callback_group(rclcpp::CallbackGroupType::Reentrant); */
+    bool loaded_successfully = true;
+    const std::string callback_group_type = parse_param2<std::string>("callback_group_type", loaded_successfully, *this);
+    if (!loaded_successfully)
+    {
+      RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+      rclcpp::shutdown();
+      return;
+    }
+
+    if (callback_group_type == "MutuallyExclusive")
+    {
+      // In this case, all callbacks are part of the same MutuallyExclusive group, so only a single callback will be running
+      // at one time. This means that one callback that takes a long time will cause the others to stall. You will see that
+      // when running this example with the "callback_group_type" parameter set to "MutuallyExclusive".
+      cb_grp1_ = cb_grp2_ = cb_grp3_ = cb_grp4_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    }
+    else if (callback_group_type == "Reentrant")
+    {
+      // In this case, all callbacks are part of the same Reentrant group, so all any number of callbacks (even of the same type)
+      // can run in parallel. No blocking will happen in this case.
+      cb_grp1_ = cb_grp2_ = cb_grp3_ = cb_grp4_ = create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    }
+    else if (callback_group_type == "UniqueMutuallyExclusives")
+    {
+      // In this case, every callback has its own MutuallyExclusive group, so the different callbacks can run in parallel, but
+      // each callback can only run once at a time. This can be useful if you don't want the same callback to execute twice
+      // e.g. to avoid having to use mutexes or too much CPU load. But if your callback function takes a too long time, some 
+      // callbacks may not get executed (see the rate of the 0.5Hz callback executing a 4s workload).
+      cb_grp1_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+      cb_grp2_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+      cb_grp3_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+      cb_grp4_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    }
+    else
+    {
+      RCLCPP_ERROR_STREAM(get_logger(), "The callback group type must be one of 'MutuallyExclusive', 'Reentrant', 'UniqueMutuallyExclusives'.");
+      rclcpp::shutdown();
+      return;
+    }
 
     // 100 Hz time
-    timer_1_ = create_wall_timer(std::chrono::duration<double>(1.0 / 100.0), std::bind(&TimerExample::callback_timer1, this), cb_grp_);
+    timer_1_ = create_wall_timer(std::chrono::duration<double>(1.0 / 100.0), std::bind(&TimerExample::callback_timer1, this), cb_grp1_);
 
     // 10 Hz timer
-    timer_2_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&TimerExample::callback_timer2, this), cb_grp_);
+    timer_2_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&TimerExample::callback_timer2, this), cb_grp2_);
 
     // 1 Hz timer with 800ms work to do, it will block the other timers from being executed because if it is in the same MutuallyExclusive callback group.
     // It will not block if it is in a Reentrant callback group or a different callback group than the other callbacks.
-    timer_3_ = create_wall_timer(std::chrono::duration<double>(1.0 / 1.0), std::bind(&TimerExample::callback_timer3, this), cb_grp_);
+    timer_3_ = create_wall_timer(std::chrono::duration<double>(1.0 / 0.2), std::bind(&TimerExample::callback_timer3, this), cb_grp3_);
+
+    // a timer that takes longer to execute than the desired rate of execution
+    timer_4_ = create_wall_timer(std::chrono::duration<double>(1.0 / 0.5), std::bind(&TimerExample::callback_timer4, this), cb_grp4_);
 
     publisher_timer_1_ = create_publisher<std_msgs::msg::Float64>("timer_1", 10);
     publisher_timer_2_ = create_publisher<std_msgs::msg::Float64>("timer_2", 10);
     publisher_timer_3_ = create_publisher<std_msgs::msg::Float64>("timer_3", 10);
+    publisher_timer_4_ = create_publisher<std_msgs::msg::Float64>("timer_3", 10);
 
     // | --------------------- finish the init -------------------- |
 
@@ -115,11 +125,11 @@ namespace ros2_examples
 
   void TimerExample::callback_timer1()
   {
-    static RateCounter cntr(get_clock(), 100);
+    static RateCounter cntr(get_clock(), 300);
     const double rate = cntr.update_rate();
 
     publisher_timer_1_->publish(std_msgs::msg::Float64().set__data(rate));
-    RCLCPP_INFO_STREAM(get_logger(), "[TimerExample]: 100 Hz Timer spinning at rate " << rate << "Hz");
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[TimerExample]: 100Hz timer spinning at rate " << rate << "Hz");
   }
 
   //}
@@ -132,7 +142,7 @@ namespace ros2_examples
     const double rate = cntr.update_rate();
 
     publisher_timer_2_->publish(std_msgs::msg::Float64().set__data(rate));
-    RCLCPP_INFO_STREAM(get_logger(), "[TimerExample]: 10 Hz Timer spinning at rate " << rate << "Hz");
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[TimerExample]: 10Hz timer spinning at rate " << rate << "Hz");
   }
 
   //}
@@ -141,13 +151,33 @@ namespace ros2_examples
 
   void TimerExample::callback_timer3()
   {
-    static RateCounter cntr(get_clock(), 10);
+    static RateCounter cntr(get_clock(), 5);
     const double rate = cntr.update_rate();
 
     publisher_timer_3_->publish(std_msgs::msg::Float64().set__data(rate));
-    RCLCPP_INFO_STREAM(get_logger(), "[TimerExample]: 1 Hz timer spinning at rate " << rate << "Hz, starting work");
-    rclcpp::sleep_for(std::chrono::milliseconds(800));
-    RCLCPP_INFO(get_logger(), "[TimerExample]: 1 Hz timer stopping work");
+    RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[TimerExample]: 0.2Hz timer (5s period) spinning at rate " << rate << "Hz, starting 4s work");
+    rclcpp::sleep_for(std::chrono::milliseconds(4000));
+    RCLCPP_INFO(get_logger(), "[TimerExample]: 0.2 Hz timer stopping work");
+  }
+
+  //}
+
+  /* callbackTimer4() //{ */
+
+  void TimerExample::callback_timer4()
+  {
+    static std::mutex mtx;
+    {
+      std::scoped_lock lck(mtx);
+      static RateCounter cntr(get_clock(), 5);
+      const double rate = cntr.update_rate();
+
+      publisher_timer_4_->publish(std_msgs::msg::Float64().set__data(rate));
+      RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[TimerExample]: 0.5Hz timer (2s period) spinning at rate " << rate << "Hz, starting 4s work");
+    }
+    // this sleep simulates some kind of work done by this thread that can be paralellized
+    rclcpp::sleep_for(std::chrono::milliseconds(4000));
+    RCLCPP_INFO(get_logger(), "[TimerExample]: 0.5 Hz timer stopping work");
   }
 
   //}
