@@ -17,8 +17,8 @@ def generate_launch_description():
         namespace='',
         name=namespace+'_publisher_example',
         package='rclcpp_components',
-        executable='component_container_mt', # this struggles to maintain timer rates!!!!!!!!!!
-        # executable='component_container', # this maintains the rates fine
+        executable='component_container_mt', # multi-threaded callback execution
+        # executable='component_container', # single-threaded callback execution
         composable_node_descriptions=[
             ComposableNode(
                 package=pkg_name,
@@ -30,7 +30,9 @@ def generate_launch_description():
                 ],
                 remappings=[
                     # topics
-                    ("~/topic_out", "~/topic"),
+                    ("~/topic_fast_out", "~/topic_fast"),
+                    ("~/topic_slow_out", "~/topic_slow"),
+                    ("~/topic_irregular_out", "~/topic_irregular"),
                 ],
             ),
         ],

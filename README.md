@@ -3,7 +3,7 @@
 This example package is meant to explore the possibilities of ROS2 from the point of view of current ROS1 features and how the ROS1 feature translate into the new ROS2 architecture.
 We investigate the aspects that are currently utilized in [MRS UAV System](https://github.com/ctu-mrs/mrs_uav_system) with the intention of a potential future transition.
 
-**Meant to be tested on 20.04 Foxy**
+**Meant to be tested on 20.04 Galactic**
 
 ## Minimalistic Examples
 
@@ -84,7 +84,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
                parameters=[params])
   return LaunchDescription([node])
 ```
-  * [X] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel** --> the rclcpp::callback_group::CallbackGroupType::Reentrant has to be selected for parallel execution of callback driven classes (subscribers and timers)
+  %% * [X] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel** --> the rclcpp::callback_group::CallbackGroupType::Reentrant has to be selected for parallel execution of callback driven classes (subscribers and timers)
   * [X] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) -> merged already and available for version rclcpp 8.0 and higher
 * [ ] **CMakeLists.txt**
   * [X] basics are fine
@@ -135,6 +135,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 ## Migration Guide
 * Follow [Migration guide from ROS1](https://docs.ros.org/en/foxy/Contributing/Migration-Guide.html#update-source-code) that provides most of the basic required modifications.
 * More details regarding genereated C++ interfaces [here](https://design.ros2.org/articles/generated_interfaces_cpp.html)
+
 ### Messages/Services
 * In order to use the messages generated in the same package we need to use the following CMake code:
   ```cmake
@@ -144,3 +145,13 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   This finds the relevant generated C++ code from ``AddressBook.msg`` and allows your target to link against it.
 
   You may have noticed that this step was not necessary when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)
+
+## General Tips
+The API documentation of `rclcpp` and `rclpy` is hard to find.
+It is [here for Humble `rclcpp`](http://docs.ros.org/en/humble/p/rclcpp/generated/index.html) and [here for Rolling `rclpy`](https://docs.ros.org/en/rolling/p/rclpy/rclpy.html) (I didn't find version-specific documentation of `rclpy`).
+
+%% *Note*: The API documentation unfortunately sucks. Do not rely on it. A lot of the features are poorly or not at all documented. For example, the
+%% ``` C++
+%% bool get_parameter(const std::string &name, rclcpp::Parameter &parameter) const
+%% ```
+%% function can throw a `rclcpp::exceptions::InvalidParameterTypeException` if the declared and loaded parameter types mismatch, which is not documented, but can crash your code.

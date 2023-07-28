@@ -29,7 +29,9 @@ def generate_launch_description():
                 ],
                 remappings=[
                     # topics
-                    ("~/topic_in", "/nmspc1/publisher_example/topic"),
+                    ("~/topic_fast_in", "/nmspc1/publisher_example/topic_fast"),
+                    ("~/topic_slow_in", "/nmspc1/publisher_example/topic_slow"),
+                    ("~/topic_irregular_in", "/nmspc1/publisher_example/topic_irregular"),
                 ],
             )
         ],

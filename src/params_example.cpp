@@ -19,33 +19,59 @@ namespace ros2_examples
     std::string some_string_;
 
     OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+
+    // | ------------------------- methods ------------------------ |
     rcl_interfaces::msg::SetParametersResult callback_parameters(std::vector<rclcpp::Parameter> parameters);
   };
 
   //}
 
 
+  /* parse_param() method //{ */
   // a helper parameter loading function
   template <class T>
   bool parse_param(const std::string &param_name, T &param_dest, rclcpp::Node& node)
   {
-    // each parameter has to firstly be declared to ROS2 parameter server
-    node.declare_parameter<T>(param_name); // for Galactic and newer
-    // then we can attempt to load its value from the server
-    if (!node.get_parameter(param_name, param_dest))
+    // firstly, the parameter has to be specified (together with its type), which can throw an exception
+    try
     {
-      RCLCPP_ERROR_STREAM(node.get_logger(), "Could not load param '" << param_name << "'");
+      node.declare_parameter<T>(param_name); // for Galactic and newer, the type has to be specified here
+    }
+    catch (const std::exception& e)
+    {
+      // this can happen if (see http://docs.ros.org/en/humble/p/rclcpp/generated/classrclcpp_1_1Node.html#_CPPv4N6rclcpp4Node17declare_parameterERKNSt6stringERKN6rclcpp14ParameterValueERKN14rcl_interfaces3msg19ParameterDescriptorEb):
+      // * parameter has already been declared              (rclcpp::exceptions::ParameterAlreadyDeclaredException)
+      // * parameter name is invalid                        (rclcpp::exceptions::InvalidParametersException)
+      // * initial value fails to be set                    (rclcpp::exceptions::InvalidParameterValueException, not sure what exactly this means)
+      // * type of the default value or override is wrong   (rclcpp::exceptions::InvalidParameterTypeException, the most common one)
+      RCLCPP_ERROR_STREAM(node.get_logger(), "Could not load param '" << param_name << "': " << e.what());
       return false;
     }
-    else
+  
+    // then we can attempt to load its value from the server
+    if (node.get_parameter(param_name, param_dest))
     {
       RCLCPP_INFO_STREAM(node.get_logger(), "Loaded '" << param_name << "' = '" << param_dest << "'");
       return true;
     }
+    else
+    {
+      // this branch should never happen since we *just* declared the parameter
+      RCLCPP_ERROR_STREAM(node.get_logger(), "Could not load param '" << param_name << "': Not declared!");
+      return false;
+    }
   }
+  
+  template <class T>
+  T parse_param2(const std::string &param_name, bool& ok_out, rclcpp::Node& node)
+  {
+    T out;
+    ok_out = parse_param(param_name, out, node);
+    return out;
+  }
+  //}
 
-
-  /* ParamsExample() //{ */
+  /* ParamsExample() constructor //{ */
 
   ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example", options)
   {
@@ -56,8 +82,8 @@ namespace ros2_examples
 
     loaded_successfully &= parse_param("param_namespace.floating_number", floating_point_number_, *this);
     loaded_successfully &= parse_param("some_string", some_string_, *this);
-    std::string uav_type;
-    loaded_successfully &= parse_param("uav_type", uav_type, *this);
+    
+    const std::string uav_type = parse_param2<std::string>("uav_type", loaded_successfully, *this);
 
     if (!loaded_successfully)
     {
@@ -85,6 +111,8 @@ namespace ros2_examples
   {
     rcl_interfaces::msg::SetParametersResult result;
 
+    // Note that setting a parameter to a nonsensical value (such as setting the `param_namespace.floating_number` parameter to `hello`)
+    // doesn't have any effect - it doesn't even call this callback.
     for (auto& param : parameters)
     {
       RCLCPP_INFO_STREAM(get_logger(), "[ParamsExample]: got parameter: '" << param.get_name() << "' with value '" << param.value_to_string() << "'");
@@ -108,8 +136,6 @@ namespace ros2_examples
   }
 
   //}
-
-  // | ------------------------ routines ------------------------ |
 
 }  // namespace ros2_examples
 
