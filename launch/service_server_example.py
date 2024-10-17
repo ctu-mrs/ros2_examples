@@ -1,24 +1,27 @@
 import launch
-from ament_index_python.packages import get_package_share_directory
-from launch_ros.actions import Node
+from ament_index_python import get_package_share_directory
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
-import os
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-
-    pkg_name = "ros2_examples"
+    pkg_name = 'ros2_examples'
+    # path to the ROS pkg to be used to load launch and config files
     pkg_share_path = get_package_share_directory(pkg_name)
 
-    namespace='nmspc1'
-    ld.add_action(ComposableNodeContainer(
-        namespace='',
-        name=namespace+'_service_server_example',
+    namespace = pkg_name
+    # create a container process (single thread executor) that will load and run the node
+    container = ComposableNodeContainer(
+        namespace = namespace,
+        name = 'container_service_server_example',
+        # pkg and type of the executor to be used for running the node
+        # NOTE: the executable param decides if the node is going to be run by a SingleThreadedExecutor or MultiThreadedExecutor 
         package='rclcpp_components',
-        executable='component_container_mt',
+        # NOTE: component_container is SingleThreadedExecutor and component_container_mt is MultiThreadedExecutor 
+        executable='component_container',
+        # describe the node
         composable_node_descriptions=[
+            # possible to add multiple nodes to this container
             ComposableNode(
                 package=pkg_name,
                 plugin='ros2_examples::ServiceServerExample',
@@ -29,11 +32,11 @@ def generate_launch_description():
                 ],
                 remappings=[
                     # services
-                    ("~/set_bool_in", "~/set_bool"),
+                    ('~/set_bool_in', '~/set_bool'),
                 ],
             )
         ],
         output='screen',
-    ))
+    )
 
-    return ld
+    return launch.LaunchDescription([container])

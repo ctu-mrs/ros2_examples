@@ -1,3 +1,4 @@
+#include <chrono>
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_srvs/srv/set_bool.hpp>
@@ -11,7 +12,7 @@ namespace ros2_examples
   class ServiceClientExample : public rclcpp::Node
   {
   public:
-    ServiceClientExample(rclcpp::NodeOptions options);
+    ServiceClientExample(const rclcpp::NodeOptions & options);
 
   private:
     // | --------------------- service clients -------------------- |
@@ -22,26 +23,25 @@ namespace ros2_examples
     // | ------------------------- timers ------------------------- |
 
     rclcpp::TimerBase::SharedPtr timer_future_;
-    rclcpp::TimerBase::SharedPtr timer_callback_;
+    rclcpp::TimerBase::SharedPtr timer_cb_;
 
-    rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture setbool_future_;
-    void timer_future();
+    rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future_setbool_;
+    void callback_timer_future();
 
-    void setbool_callback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future);
-    void timer_callback();
+    void callback_timer_cb();
   };
 
   //}
 
   /* ServiceClientExample() //{ */
 
-  ServiceClientExample::ServiceClientExample(rclcpp::NodeOptions options) : Node("service_client_example", options)
+  ServiceClientExample::ServiceClientExample(const rclcpp::NodeOptions & options) : Node("service_client_example", options)
   {
-    RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initializing");
+    RCLCPP_INFO_STREAM(get_logger(), "initializing");
 
     // | --------------------- service client --------------------- |
 
-    service_client_ = create_client<std_srvs::srv::SetBool>("~/set_bool_out");
+    service_client_ = create_client<std_srvs::srv::SetBool>("~/out_set_bool");
 
     // | -------------------------- timer ------------------------- |
 
@@ -50,12 +50,13 @@ namespace ros2_examples
     // 2. using a callback
     // Examples for each case follow.
 
-    timer_future_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&ServiceClientExample::timer_future, this));
-    timer_callback_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&ServiceClientExample::timer_callback, this));
+    // both the timers are going to be run inside the same thread as this example will be run inside a Single Threaded Executor
+    timer_future_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&ServiceClientExample::callback_timer_future, this));
+    timer_cb_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&ServiceClientExample::callback_timer_cb, this));
 
     // | --------------------- finish the init -------------------- |
 
-    RCLCPP_INFO(get_logger(), "[ServiceClientExample]: initialized");
+    RCLCPP_INFO_STREAM(get_logger(), "initialized");
   }
 
   //}
@@ -65,26 +66,32 @@ namespace ros2_examples
   /* timer_future() //{ */
 
   // a timer callback should never block for too long, so all checks should return after a while
-  void ServiceClientExample::timer_future()
+  void ServiceClientExample::callback_timer_future()
   {
     // if the future is already waiting for a result, check if we got one
-    if (setbool_future_.valid())
+    if (future_setbool_.valid())
     {
-        const std::future_status status = setbool_future_.wait_for(std::chrono::seconds(1));;
+        const std::future_status status = future_setbool_.wait_for(std::chrono::milliseconds(100));;
         if (status == std::future_status::ready)
         {
           // future already got a result, check it and report to user
-          const auto result = setbool_future_.get();
+          const auto result = future_setbool_.get();
           // reset the future
-          setbool_future_ = {};
+          future_setbool_ = {};
           if (result->success)
-            RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: future finished, service call successful with message: " << result->message);
+          {
+            RCLCPP_INFO_STREAM(get_logger(), "future finished, service call successful with message: " << result->message);
+          }
           else
-            RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: future finished, service call reports failure: " << result->message);
+          {
+            RCLCPP_INFO_STREAM(get_logger(), "future finished, service call reports failure: " << result->message);
+          }
         }
         else
+        {
           // future isn't ready yet
-          RCLCPP_INFO(get_logger(), "[ServiceClientExample]: service future not ready yet, waiting again...");
+          RCLCPP_INFO_STREAM(get_logger(), "service future not ready yet, waiting again...");
+        }
     }
     // if the future is not waiting for a result, make a new service call
     else
@@ -94,30 +101,14 @@ namespace ros2_examples
       {
         auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
         request->data = true;
-        setbool_future_ = service_client_->async_send_request(request);
-        RCLCPP_INFO(get_logger(), "[ServiceClientExample]: called service using future");
+        future_setbool_ = service_client_->async_send_request(request).future.share();
+        RCLCPP_INFO_STREAM(get_logger(), "called service using future");
       }
       else
-        RCLCPP_WARN(get_logger(), "[ServiceClientExample]: not calling service using future, service not ready!");
+      {
+        RCLCPP_WARN_STREAM(get_logger(), "not calling service using future, service not ready!");
+      }
     }
-  }
-
-  //}
-
-  /* timer_callback() //{ */
-
-  void ServiceClientExample::timer_callback()
-  {
-    // it's good to firstly check if the service server is even ready to be called
-    if (service_client_->service_is_ready())
-    {
-      auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
-      request->data = true;
-      setbool_future_ = service_client_->async_send_request(request);
-      RCLCPP_INFO(get_logger(), "[ServiceClientExample]: called service using callback");
-    }
-    else
-      RCLCPP_WARN(get_logger(), "[ServiceClientExample]: not calling service using callback, service not ready!");
   }
 
   //}
@@ -126,15 +117,41 @@ namespace ros2_examples
 
   // The callback function for service call response.
   // This function will be executed once the other side decides to respond to the service call.
-  void ServiceClientExample::setbool_callback(rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future)
+  void callback_future_setbool(const rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture fut)
   {
     // the future must be ready now that the callback was called
-    const auto result = setbool_future_.get();
+    const auto result = fut.get();
     if (result->success)
-      RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: callback called, service call successful with message: " << result->message);
+    {
+      std::cout << "callback called, service call successful with message: " << result->message << std::endl;
+      /* RCLCPP_INFO_STREAM(get_logger(), "[" << get_name() << "]: callback called, service call successful with message: " << result->message); */
+    }
     else
-      RCLCPP_INFO_STREAM(get_logger(), "[ServiceClientExample]: callback called, service call reports failure: " << result->message);
+    {
+      std::cout << "callback called, service call reports failure: " << result->message << std::endl;
+      /* RCLCPP_INFO_STREAM(get_logger(), "[" << get_name() << "]: callback called, service call reports failure: " << result->message); */
+    }
   }
+
+  /* timer_callback() //{ */
+
+  void ServiceClientExample::callback_timer_cb()
+  {
+    // it's good to first check if the service server is even ready to be called
+    if (service_client_->service_is_ready())
+    {
+      auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+      request->data = true;
+      future_setbool_ = service_client_->async_send_request(request, &callback_future_setbool).future;
+      RCLCPP_INFO_STREAM(get_logger(), "[" << get_name() << "]: called service using callback");
+    }
+    else
+    {
+      RCLCPP_INFO_STREAM(get_logger(), "[" << get_name() << "]: not calling service using callback, service not ready!");
+    }
+  }
+
+  //}
 
 }  // namespace ros2_examples
 
