@@ -18,7 +18,8 @@ def generate_launch_description():
         # NOTE: the executable param decides if the node is going to be run by a SingleThreadedExecutor or MultiThreadedExecutor 
         package='rclcpp_components',
         # NOTE: component_container is SingleThreadedExecutor and component_container_mt is MultiThreadedExecutor 
-        executable='component_container',
+        # NOTE: a MultiThreadedExecutor is necessary for nodes which run callbacks inside anpther callback (eg. services, actions inside timers)
+        executable='component_container_mt',
         # describe the node
         composable_node_descriptions=[
             # possible to add multiple nodes to this container
