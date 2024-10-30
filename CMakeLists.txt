@@ -49,22 +49,23 @@ include_directories(
 ## |                      publisher example                     |
 ## --------------------------------------------------------------
 
-# add_library(publisher_example SHARED
-#   src/publisher_example.cpp
-# )
+add_library(publisher_example SHARED
+  src/publisher_example.cpp
+)
 
 # # TODO WHY IS THIS HERE?
 # target_compile_definitions(publisher_example
 #   PRIVATE "ros2_examples_BUILDING_DLL")
 
-# ament_target_dependencies(publisher_example
-#   rclcpp
-#   rclcpp_components
-#   std_msgs
-# )
+# ament manages cmake related variables and dependecy search (similar to catkin in ROS1)
+ament_target_dependencies(publisher_example
+  rclcpp
+  rclcpp_components
+  std_msgs
+)
 
-# # TODO HOW DOES THIS WORK?
-# rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample" EXECUTABLE publisher_example)
+# each component (nodelet) needs to be registered to make it discoverable at runtime
+rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample")
 
 ## --------------------------------------------------------------
 ## |                   service server example                   |
@@ -216,7 +217,7 @@ rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::S
 install(TARGETS
   # params_example
   # subscriber_example
-  # publisher_example
+  publisher_example
   service_server_example
   service_client_example
   # timer_example

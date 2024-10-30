@@ -1,25 +1,28 @@
 import launch
-from ament_index_python.packages import get_package_share_directory
-from launch_ros.actions import Node
+from ament_index_python import get_package_share_directory
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
-import os
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-
-    pkg_name = "ros2_examples"
+    pkg_name = 'ros2_examples'
+    # path to the ROS pkg to be used to load launch and config files
     pkg_share_path = get_package_share_directory(pkg_name)
 
-    namespace='nmspc1'
-    ld.add_action(ComposableNodeContainer(
-        namespace='',
-        name=namespace+'_publisher_example',
+    namespace = pkg_name
+    # create a container process (single thread executor) that will load and run the node
+    container = ComposableNodeContainer(
+        namespace = namespace,
+        name = 'component_publisher_example',
+        # pkg and type of the executor to be used for running the node
+        # NOTE: the executable param decides if the node is going to be run by a SingleThreadedExecutor or MultiThreadedExecutor 
         package='rclcpp_components',
-        executable='component_container_mt', # multi-threaded callback execution
-        # executable='component_container', # single-threaded callback execution
+        # NOTE: component_container is SingleThreadedExecutor and component_container_mt is MultiThreadedExecutor 
+        # NOTE: a MultiThreadedExecutor is necessary for nodes which run callbacks inside anpther callback (eg. services, actions inside timers)
+        executable='component_container_mt',
+        # describe the node
         composable_node_descriptions=[
+            # possible to add multiple nodes to this container
             ComposableNode(
                 package=pkg_name,
                 plugin='ros2_examples::PublisherExample',
@@ -34,9 +37,9 @@ def generate_launch_description():
                     ("~/topic_slow_out", "~/topic_slow"),
                     ("~/topic_irregular_out", "~/topic_irregular"),
                 ],
-            ),
+            )
         ],
         output='screen',
-    ))
+    )
 
-    return ld
+    return launch.LaunchDescription([container])
