@@ -1,23 +1,9 @@
-name: ros2_example
+name: ros2_timer_test 
 root: ./
-startup_window: params
-pre_window: export RCUTILS_COLORIZED_OUTPUT=1; source /opt/ros/foxy/setup.zsh; source ~/ros2_bridge_workpsace/install/setup.zsh
+startup_window: timers 
+pre_window: source ~/.zshrc
 windows:
-  - params:
-      layout: horizontal
-      panes:
-        - ros2 launch ros2_examples params_example.py
   - timers:
       layout: horizontal
       panes:
         - ros2 launch ros2_examples timer_example.py
-  - publisher_subscriber:
-      layout: horizontal
-      panes:
-        - ros2 launch ros2_examples publisher_example.py
-        - ros2 launch ros2_examples subscriber_example.py
-  - services:
-      layout: horizontal
-      panes:
-        - ros2 launch ros2_examples service_client_example.py
-        - ros2 launch ros2_examples service_server_example.py
