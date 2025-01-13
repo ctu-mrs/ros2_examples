@@ -10,7 +10,7 @@ cd "$SCRIPTPATH"
 rm .tmuxinator.yml
 
 # link the session file to .tmuxinator.yml
-ln timer_session.yml .tmuxinator.yml
+ln $1.yml .tmuxinator.yml
 
 # start tmuxinator
 tmuxinator
