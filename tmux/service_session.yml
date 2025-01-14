@@ -1,0 +1,10 @@
+name: ros2_timer_test 
+root: ./
+startup_window: timers 
+pre_window: source ~/.zshrc
+windows:
+  - timers:
+      layout: horizontal
+      panes:
+        - ros2 launch ros2_examples service_server_example.py
+        - ros2 launch ros2_examples service_client_example.py
