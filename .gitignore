@@ -2,3 +2,4 @@
 *.swo
 
 __pycache__
+*/.tmuxinator.yml
