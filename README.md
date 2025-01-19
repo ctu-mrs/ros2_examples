@@ -3,14 +3,14 @@
 This example package is meant to explore the possibilities of ROS2 from the point of view of current ROS1 features and how the ROS1 feature translate into the new ROS2 architecture.
 We investigate the aspects that are currently utilized in [MRS UAV System](https://github.com/ctu-mrs/mrs_uav_system) with the intention of a potential future transition.
 
-**Meant to be tested on 20.04 Galactic**
+**Meant to be tested on 24.04 - Jazzy**
 
 ## Minimalistic Examples
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
 * [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
-  * [ ] TODO retrieving result synchronously. Some solutions are available, none work for me within a component
+  * [ ] TODO [retrieving](retrieving) result synchronously. Some solutions are available, none work for me within a component
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
 * [ ] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
@@ -38,38 +38,21 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * therefore, cannot build in subdirectories
   * no `colcon clean`, no `colcon init`
   * overall not much user friendly
-  * immediately [aliased](https://github.com/ctu-mrs/uav_core/blob/281f16730f587200c29a1763379a08cd53d075d1/miscellaneous/shell_additions/shell_additions.sh#L475) it to fix those *hurdles*
   * [ ] TODO workspace-wide profiles with custom flags
-    * profile are not supported by colcon yet. See [discussion](https://github.com/colcon/colcon-core/issues/168) 
+    * profiles are not supported by colcon yet. See [discussion](https://github.com/colcon/colcon-core/issues/168)
     * predefining of build setting with custom flags can be done using mixin
       * install: `sudo apt install python3-colcon-mixin`
-      * REPO with readme and mixin examples: [repo](https://github.com/colcon/colcon-mixin-repository) 
+      * REPO with readme and mixin examples: [repo](https://github.com/colcon/colcon-mixin-repository)
       * example of usage: `colcon build --mixin rel-with-deb-info`
 * [X] Sourcing ROS2 workspace
   * ROS2 sourcing
 ```bash
-  source /opt/ros/foxy/setup.zsh
-  source ~/ros2_bridge_workspace/install/setup.zsh
+  source /opt/ros/jazzy/setup.zsh
   source ~/ros2_workspace/install/setup.zsh
 ```
-  * if you build ROS2 workspace while ROS1 is sourced, you will need to source ROS1 every time before launching ROS2 programs, otherwise, this error will appear:
-```
-[INFO] [launch]: All log files can be found below /home/klaxalk/.ros/log/2021-02-16-09-29-27-258633-klaxalk-desktop2-1671935
-[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [component_container_mt-1]: process started with pid [1671949]
-[component_container_mt-1] [INFO] [1613464167.606666336] [nmspc1_timer_example]: Load Library: /home/klaxalk/ros2_workspace/install/ros2_examples/lib/libtimer_example.so
-[component_container_mt-1] /opt/ros/foxy/lib/rclcpp_components/component_container_mt: symbol lookup error: /home/klaxalk/ros2_workspace/install/ros2_examples/lib/libtimer_example.so: undefined symbol: _ZN12class_loader4impl22AbstractMetaObjectBaseC2ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_
-[ERROR] [component_container_mt-1]: process has died [pid 1671949, exit code 127, cmd '/opt/ros/foxy/lib/rclcpp_components/component_container_mt --ros-args -r __node:=nmspc1_timer_example -r __ns:=/'].
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
-```
-* [ ] *Topic* the subscribers and publisher have to have compatible Quality of Service (QoS) settings -- reliable or best effort. For example RViZ is setting different profile (reliable) that is by default (best effort). [QoS](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)  
+* [ ] When **ros2 launch** fails due to python error (nondescriptive), launch it as `ros2 launch -d ...`
+* [ ] *Topic* the subscribers and publisher have to have compatible Quality of Service (QoS) settings -- reliable or best effort. For example RViZ is setting different profile (reliable) that is by default (best effort). [QoS](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
 * [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
-* [ ] **ROS bridge** ([scripts here](https://github.com/ctu-mrs/uav_core/tree/master/installation/ros2))
-  * [ ] **Problem**: does not compile with const arrays in services [issue](https://github.com/ros2/ros1_bridge/issues/283), as of Dec, 2021
-  * [ ] **Problem**: arrays of bools cause compilation issues
-  * [ ] TODO check performance and load with images
-  * [ ] TODO check performance and load high publish rates
 * [ ] **Why are most examples still using `main()` when everything in ROS2 should be a component (nodelet)?**
   * [https://index.ros.org/doc/ros2/Tutorials/Composition/](https://index.ros.org/doc/ros2/Tutorials/Composition/)
   * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
@@ -118,7 +101,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [ ] **ROS Time**
   * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
     * [X]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
-    * [x]  While using sim time, the get_clock()->now() clock runs at 10 Hz by default. Need to increase the rate as described [here](https://github.com/ros-simulation/gazebo_ros_pkgs/pull/1214#issuecomment-894212336). 
+    * [x]  While using sim time, the get_clock()->now() clock runs at 10 Hz by default. Need to increase the rate as described [here](https://github.com/ros-simulation/gazebo_ros_pkgs/pull/1214#issuecomment-894212336).
 * [ ] **Transformations**
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.

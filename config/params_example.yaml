@@ -1,5 +1,7 @@
 param_namespace:
+
   # floating_number: "asd" # this will fail to load due to type mismatch
+
   floating_number: 5.0
 
 some_string: "dog is barking"
