@@ -10,7 +10,7 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
 * [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
-  * [ ] TODO [retrieving](retrieving) result synchronously. Some solutions are available, none work for me within a component
+  * [ ] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
 * [ ] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
   * [ ] TODO slow and irregular publishing (Timer-driven) with multi-threaded executor (looks like the same problem can appear even with single-threaded executor)
@@ -22,7 +22,7 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] param server callback is hooked up
   * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
 * [X] [**Tf2BroadcasterExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - publishing transforms, ok
-  * [ ] TODO no innovation in TF structure, missing the option to have multiple parents
+  * [ ] no innovation in TF structure form ROS1, still missing the option to have multiple parents
 * [X] [**Tf2ListenerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_listener_example.cpp) - receiving transforms, lookup table works, ok
 
 ### Running the examples

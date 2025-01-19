@@ -17,11 +17,10 @@ def generate_launch_description():
         name = 'component_publisher_example',
         package='rclcpp_components',
 
-        # NOTE: a MultiThreadedExecutor is necessary for nodes which run callbacks inside another callback (eg. services, actions inside timers)
-        # NOTE: component_container is SingleThreadedExecutor and component_container_mt is MultiThreadedExecutor
         executable='component_container_mt',
 
         composable_node_descriptions=[
+
             ComposableNode(
                 package=pkg_name,
                 plugin='ros2_examples::SubscriberExample',
@@ -37,6 +36,7 @@ def generate_launch_description():
                     ("~/topic_irregular_in", "/nmspc1/publisher_example/topic_irregular"),
                     ],
                 )
+
             ],
 
         output='screen',

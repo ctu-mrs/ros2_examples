@@ -17,10 +17,7 @@ def generate_launch_description():
         name = 'component_publisher_example',
         package='rclcpp_components',
 
-        # NOTE: a MultiThreadedExecutor is necessary for nodes which run callbacks inside another callback (eg. services, actions inside timers)
-        # NOTE: component_container is SingleThreadedExecutor and component_container_mt is MultiThreadedExecutor
         executable='component_container_mt',
-        # describe the node
 
         composable_node_descriptions=[
 
@@ -30,9 +27,11 @@ def generate_launch_description():
                 plugin='ros2_examples::PublisherExample',
                 namespace=namespace,
                 name='publisher_example',
+
                 parameters=[
                     pkg_share_path + '/config/publisher_example.yaml',
                     ],
+
                 remappings=[
                     # topics
                     ("~/topic_fast_out", "~/topic_fast"),
@@ -40,8 +39,11 @@ def generate_launch_description():
                     ("~/topic_irregular_out", "~/topic_irregular"),
                     ],
                 )
+
             ],
+
         output='screen',
+
         ))
 
     return ld

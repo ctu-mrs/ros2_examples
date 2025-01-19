@@ -22,13 +22,16 @@ def generate_launch_description():
         executable='component_container_mt',
 
         composable_node_descriptions=[
+
             ComposableNode(
                 package=pkg_name,
                 plugin='ros2_examples::Tf2BroadcasterExample',
                 namespace=namespace,
                 name='tf2_broadcaster_example',
             ),
+
         ],
+
         output='screen',
     ))
 

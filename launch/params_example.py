@@ -28,19 +28,24 @@ def generate_launch_description():
         composable_node_descriptions=[
 
             ComposableNode(
+
                 package=pkg_name,
                 plugin='ros2_examples::ParamsExample',
                 namespace=namespace,
                 name='params_example',
+
                 parameters=[
                     pkg_share_path + '/config/params_example.yaml',
                     {"uav_type": UAV_TYPE}
                 ],
+
                 # remappings=[
                 #     # topics
                 #     ("~/topic_out", "~/topic"),
                 # ],
+
             ),
+
         ],
 
         output='screen',
