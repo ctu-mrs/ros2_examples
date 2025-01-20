@@ -16,9 +16,9 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [X] [**SubscriberExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/subscriber_example.cpp) - subscribes, ok
 * [X] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
   * [X] ~~timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor, looks like the same problem can appear even with single-threaded executor)~~ --> timers were constructed as part of *mutual exclusive callbackGroup*
-* [ ] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
+* [X] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
   * [X] param server callback is hooked up
-  * [ ] TODO investigate the `ros__parameters:` namespace, which does not seem to be necessary (and does not work when present)
+  * [X] custom configs work
 * [X] [**Tf2BroadcasterExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - publishing transforms, ok
   * [ ] no innovation in TF structure form ROS1, still missing the option to have multiple parents
 * [X] [**Tf2ListenerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_listener_example.cpp) - receiving transforms, lookup table works, ok
@@ -48,50 +48,34 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 ```
 * [ ] When **ros2 launch** fails due to python error (nondescriptive), launch it as `ros2 launch -d ...`
 * [ ] *Topic* the subscribers and publisher have to have compatible Quality of Service (QoS) settings -- reliable or best effort. For example RViZ is setting different profile (reliable) that is by default (best effort). [QoS](https://index.ros.org/doc/ros2/Concepts/About-Quality-of-Service-Settings/)
-* [X] [mrs_msgs](https://github.com/ctu-mrs/mrs_msgs/tree/ros2) were ported to **ROS2**
-* [ ] **Why are most examples still using `main()` when everything in ROS2 should be a component (nodelet)?**
-  * [https://index.ros.org/doc/ros2/Tutorials/Composition/](https://index.ros.org/doc/ros2/Tutorials/Composition/)
-  * `"Note: It is still possible to use the node-like style of “writing your own main” but for the common case it is not recommended."`
-* [ ] **ComponentContainer**
-  * [ ] try running a component as single node by:
-```
-  remap = [('cloud_in', '/livox/lidar')]
-  node = Node(package='octomap_server2',
-               executable='octomap_server',
-               output='screen',
-               remappings=remap,
-               parameters=[params])
-  return LaunchDescription([node])
-```
-  %% * [X] **seems like the multi-threaded container (with multi-threaded executor) fails to execute callbacks (at least Timer callbacks) in parallel** --> the rclcpp::callback_group::CallbackGroupType::Reentrant has to be selected for parallel execution of callback driven classes (subscribers and timers)
-  * [X] **multi-threaded composer (with multi-threaded executor) produces very uneven and slow rates of timers**, [Allow timers to keep up the intended rate in MultiThreadedExecutor #1516](https://github.com/ros2/rclcpp/pull/1516) -> merged already and available for version rclcpp 8.0 and higher
-* [ ] **CMakeLists.txt**
+* [X] **CMakeLists.txt**
   * [X] basics are fine
   * [X] building (and using) custom libraries
   * [X] building standalone executable nodelets
-* [ ] **Launch files**
-  * [X] they are in python now [link](https://index.ros.org/doc/ros2/Tutorials/Launch-Files/Creating-Launch-Files/)
-  * [X] remapping, params, nodelets
+* [o] **Launch files**
+  * [X] they are in python now
+  * [X] remappings
+  * [X] passing params
+  * [ ] TODO passing terminal arguments not working (nonexistant??)
   * [ ] TODO connecting to existing component containers (nodelet managers)
-  * [X] launch prefixes (e.g., launching with GDB) [link](https://github.com/ctu-mrs/mrs_lib/blob/ros2/launch/params_example.py)
+  * [ ] TODO how to add launch prefix, e.g., `gdb`
 * [X] **Subscribers** - work fine, just be aware of difference between CallbackGroupType::Reentrant and CallbackGroupType::MutuallyExclusive (default one).
 * [X] **Publishers** - works fine, not a big difference from ROS1
-* [ ] **Service client**
-  * [ ] it is asynchronous only!!!!
-  * [ ] how to make it behave synchronously? [wrapper](https://answers.ros.org/question/343279/ros2-how-to-implement-a-sync-service-client-in-a-node/?answer=366458#post-id-366458) (only in standalone node)
+* [o] **Service client**
+  * [X] it is asynchronous only!!!!
+  * [ ] make a wrapper that will default to synchronous services
 * [X] **Service server** - works fine
 * [X] **Timers** - works fine, just be aware of difference between CallbackGroupType::Reentrant and CallbackGroupType::MutuallyExclusive (default one).
-* [ ] **Parameters**
+* [O] **Parameters**
   * [X] basic params work from *yaml* and *launch*
-  * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error. **Solution:** add some unused parameter to the file.
+  * [X] **Beware!** loading an empty *yaml* file causes a long and cryptic error (`[ERROR] [launch]: Caught exception in launch (see debug for traceback): 'NoneType' object has no attribute 'items'`). **Solution:** add some unused parameter to the file.
   * [X] Nesting is distinguished by "." in the code (it was "/" in ROS1)
-  * [ ] TODO test overloading multiple configs over each other
+  * [X] overloading multiple configs over each other works, the ones loaded last rule
   * [ ] TODO test more complex types: lists, matrices, ...
-* [ ] **DRS** - has a direct implementation in the default **parameters**
+* [o] **DRS** - has a direct implementation in the default **parameters**
   * [X] callback hooked to the external change of the parameters works
-  * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
-  * [ ] ROS2 `rqt_reconfigure` is super buggy and wonky, this [issue](https://github.com/ros-visualization/rqt_reconfigure/issues/97) is especially hellish
-    * [ ] it shows the node's parameters sometimes, seems random
+  * [ ] validation of the parameters has to be performed in our code -> we will need a custom wrapper for that, otherwise madness [**madness**](https://github.com/alsora/ros2-code-examples/blob/master/simple_parameter/src/simple_parameter_server_node.cpp)
+  * [X] ROS2 `rqt_reconfigure` works
 * [X] why is the terminal output monochromatic? I want my colors back...
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
@@ -112,10 +96,12 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] TODO
 
 ## Migration Guide
+
 * Follow [Migration guide from ROS1](https://docs.ros.org/en/foxy/Contributing/Migration-Guide.html#update-source-code) that provides most of the basic required modifications.
 * More details regarding genereated C++ interfaces [here](https://design.ros2.org/articles/generated_interfaces_cpp.html)
 
 ### Messages/Services
+
 * In order to use the messages generated in the same package we need to use the following CMake code:
   ```cmake
   rosidl_target_interfaces(publish_address_book
@@ -123,14 +109,4 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   ```
   This finds the relevant generated C++ code from ``AddressBook.msg`` and allows your target to link against it.
 
-  You may have noticed that this step was not necessary when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)
-
-## General Tips
-The API documentation of `rclcpp` and `rclpy` is hard to find.
-It is [here for Humble `rclcpp`](http://docs.ros.org/en/humble/p/rclcpp/generated/index.html) and [here for Rolling `rclpy`](https://docs.ros.org/en/rolling/p/rclpy/rclpy.html) (I didn't find version-specific documentation of `rclpy`).
-
-%% *Note*: The API documentation unfortunately sucks. Do not rely on it. A lot of the features are poorly or not at all documented. For example, the
-%% ``` C++
-%% bool get_parameter(const std::string &name, rclcpp::Parameter &parameter) const
-%% ```
-%% function can throw a `rclcpp::exceptions::InvalidParameterTypeException` if the declared and loaded parameter types mismatch, which is not documented, but can crash your code.
+  You may have noticed that this step was not necessa y when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)
