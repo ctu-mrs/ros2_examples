@@ -1,0 +1,11 @@
+root: ./
+socket_name: mrs
+name: simulation
+attach: false
+# tmux_options: -f /etc/ctu-mrs/tmux.conf
+startup_window: main
+windows:
+  - main:
+      layout: horizontal
+      panes:
+        - custom_config=./config/custom_config.yaml ros2 launch ros2_examples params_example.py

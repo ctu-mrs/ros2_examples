@@ -34,9 +34,11 @@ private:
 
 ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example", options) {
 
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: initializing");
+  RCLCPP_INFO(get_logger(), "initializing");
 
   bool loaded_successfully = true;
+
+  // | --------------------- load parameters -------------------- |
 
   loaded_successfully &= parse_param("param_namespace.floating_number", floating_point_number_, *this);
   loaded_successfully &= parse_param("some_string", some_string_, *this);
@@ -49,13 +51,13 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
     return;
   }
 
-  // | ----------------------- parameters ----------------------- |
+  // | --------------- bind pararm server callback -------------- |
 
   param_callback_handle_ = add_on_set_parameters_callback(std::bind(&ParamsExample::callback_parameters, this, std::placeholders::_1));
 
   // | --------------------- finish the init -------------------- |
 
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: initialized");
+  RCLCPP_INFO(get_logger(), "initialized");
 }
 
 //}
@@ -71,7 +73,7 @@ rcl_interfaces::msg::SetParametersResult ParamsExample::callback_parameters(std:
   // doesn't have any effect - it doesn't even call this callback.
   for (auto& param : parameters) {
 
-    RCLCPP_INFO_STREAM(get_logger(), "[ParamsExample]: got parameter: '" << param.get_name() << "' with value '" << param.value_to_string() << "'");
+    RCLCPP_INFO_STREAM(get_logger(), "got parameter: '" << param.get_name() << "' with value '" << param.value_to_string() << "'");
 
     if (param.get_name() == "param_namespace.floating_number") {
 
@@ -83,16 +85,17 @@ rcl_interfaces::msg::SetParametersResult ParamsExample::callback_parameters(std:
 
     } else {
 
-      RCLCPP_WARN_STREAM(get_logger(), "[ParamsExample]: parameter: '" << param.get_name() << "' is not dynamically reconfigurable!");
+      RCLCPP_WARN_STREAM(get_logger(), "parameter: '" << param.get_name() << "' is not dynamically reconfigurable!");
       result.successful = false;
       result.reason     = "Parameter '" + param.get_name() + "' is not dynamically reconfigurable!";
       return result;
     }
   }
 
-  RCLCPP_INFO(get_logger(), "[ParamsExample]: params updated");
+  RCLCPP_INFO(get_logger(), "params updated");
   result.successful = true;
   result.reason     = "OK";
+
   return result;
 }
 
