@@ -1,9 +1,9 @@
-name: ros2_timer_test 
+name: ros2_pubsub_test 
 root: ./
-startup_window: timers 
+startup_window: pubsub
 pre_window: source ~/.zshrc
 windows:
-  - timers:
+  - pubsub:
       layout: horizontal
       panes:
         - ros2 launch ros2_examples publisher_example.py
