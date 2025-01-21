@@ -3,9 +3,13 @@
 <package format="3">
 
   <name>ros2_examples</name>
+
   <version>1.0.0</version>
   <description>MRS ROS2 UAV example</description>
+
+  <author email="tomas.baca@fel.cvut.cz">klaxalk</author>
   <maintainer email="tomas.baca@fel.cvut.cz">klaxalk</maintainer>
+
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

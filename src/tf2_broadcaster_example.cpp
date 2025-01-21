@@ -8,74 +8,73 @@ using namespace std::chrono_literals;
 namespace ros2_examples
 {
 
-  /* class Tf2BroadcasterExample //{ */
+/* class Tf2BroadcasterExample //{ */
 
-  class Tf2BroadcasterExample : public rclcpp::Node
-  {
-  public:
-    Tf2BroadcasterExample(rclcpp::NodeOptions options);
+class Tf2BroadcasterExample : public rclcpp::Node {
+public:
+  Tf2BroadcasterExample(rclcpp::NodeOptions options);
 
-  private:
-    // | ---------------------- broadcaster ----------------------- |
+private:
+  // | ---------------------- broadcaster ----------------------- |
 
-    tf2_ros::TransformBroadcaster tf_broadcaster_;
+  tf2_ros::TransformBroadcaster tf_broadcaster_;
 
-    // | ------------------------- timers ------------------------- |
+  // | ------------------------- timers ------------------------- |
 
-    rclcpp::TimerBase::SharedPtr timer_main_;
+  rclcpp::TimerBase::SharedPtr timer_main_;
 
-    void timer_main();
-  };
+  void timer_main();
+};
 
-  //}
+//}
 
-  /* Tf2BroadcasterExample() //{ */
+/* Tf2BroadcasterExample() //{ */
 
-  Tf2BroadcasterExample::Tf2BroadcasterExample(rclcpp::NodeOptions options)
-    : Node("tf2_broadcaster_example", options), tf_broadcaster_(this)
-  {
+Tf2BroadcasterExample::Tf2BroadcasterExample(rclcpp::NodeOptions options) : Node("tf2_broadcaster_example", options), tf_broadcaster_(this) {
 
-    RCLCPP_INFO(get_logger(), "[Tf2BroadcasterExample]: initializing");
+  RCLCPP_INFO(get_logger(), "initializing");
 
-    // | -------------------------- timer ------------------------- |
+  // | -------------------------- timer ------------------------- |
 
-    timer_main_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&Tf2BroadcasterExample::timer_main, this));
+  timer_main_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&Tf2BroadcasterExample::timer_main, this));
 
-    // | --------------------- finish the init -------------------- |
+  // | --------------------- finish the init -------------------- |
 
-    RCLCPP_INFO(get_logger(), "[Tf2BroadcasterExample]: initialized");
-  }
+  RCLCPP_INFO(get_logger(), "initialized");
+}
 
-  //}
+//}
 
-  // | ------------------------ callbacks ----------------------- |
+// | ------------------------ callbacks ----------------------- |
 
-  /* timer_main() //{ */
+/* timer_main() //{ */
 
-  void Tf2BroadcasterExample::timer_main()
-  {
-    RCLCPP_INFO(get_logger(), "[Tf2BroadcasterExample]: broadcasting transform");
+void Tf2BroadcasterExample::timer_main() {
 
-    geometry_msgs::msg::TransformStamped transform_stamped;
-    transform_stamped.header.stamp = get_clock()->now();
-    transform_stamped.header.frame_id = "parent_frame";
-    transform_stamped.child_frame_id = "child_frame";
+  RCLCPP_INFO(get_logger(), "broadcasting transform");
 
-    static double x = 0.0;
-    x = std::fmod(x+0.5, 10);
-    transform_stamped.transform.translation.x = x;
-    transform_stamped.transform.translation.y = 0.0;
-    transform_stamped.transform.translation.z = 0.0;
+  geometry_msgs::msg::TransformStamped transform_stamped;
 
-    transform_stamped.transform.rotation.x = 0.0;
-    transform_stamped.transform.rotation.y = 0.0;
-    transform_stamped.transform.rotation.z = 0.0;
-    transform_stamped.transform.rotation.w = 1.0;
+  transform_stamped.header.stamp    = get_clock()->now();
+  transform_stamped.header.frame_id = "parent_frame";
+  transform_stamped.child_frame_id  = "child_frame";
 
-    tf_broadcaster_.sendTransform(transform_stamped);
-  }
+  static double x = 0.0;
+  x               = std::fmod(x + 0.5, 10);
 
-  //}
+  transform_stamped.transform.translation.x = x;
+  transform_stamped.transform.translation.y = 0.0;
+  transform_stamped.transform.translation.z = 0.0;
+
+  transform_stamped.transform.rotation.x = 0.0;
+  transform_stamped.transform.rotation.y = 0.0;
+  transform_stamped.transform.rotation.z = 0.0;
+  transform_stamped.transform.rotation.w = 1.0;
+
+  tf_broadcaster_.sendTransform(transform_stamped);
+}
+
+//}
 
 }  // namespace ros2_examples
 

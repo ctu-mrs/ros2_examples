@@ -1,4 +1,5 @@
 #include <rclcpp/rclcpp.hpp>
+
 #include <random>
 
 #include <std_msgs/msg/string.hpp>
@@ -8,109 +9,114 @@ using namespace std::chrono_literals;
 namespace ros2_examples
 {
 
-  /* class PublisherExample //{ */
+/* class PublisherExample //{ */
 
-  class PublisherExample : public rclcpp::Node
-  {
-  public:
-    PublisherExample(const rclcpp::NodeOptions options);
+class PublisherExample : public rclcpp::Node {
+public:
+  PublisherExample(const rclcpp::NodeOptions options);
 
-  private:
-    // | -------------------- member variables -------------------- |
-    std::default_random_engine reng_;
-    std::uniform_real_distribution<> random_time_dist_;
+private:
+  // | -------------------- member variables -------------------- |
 
-    // | ----------------------- publishers ----------------------- |
+  std::default_random_engine       reng_;
+  std::uniform_real_distribution<> random_time_dist_;
 
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_fast_;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_slow_;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_irregular_;
+  // | ----------------------- publishers ----------------------- |
 
-    // | ------------------------- timers ------------------------- |
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_fast_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_slow_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_irregular_;
 
-    /* assigning each timer to a separate callback group ensures they are run in parallel */
-    rclcpp::CallbackGroup::SharedPtr callback_group_fast_;
-    rclcpp::TimerBase::SharedPtr timer_fast_;
+  // | ------------------------- timers ------------------------- |
 
-    rclcpp::CallbackGroup::SharedPtr callback_group_slow_;
-    rclcpp::TimerBase::SharedPtr timer_slow_;
+  /* assigning each timer to a separate callback group ensures they are run in parallel */
+  rclcpp::CallbackGroup::SharedPtr callback_group_fast_;
+  rclcpp::TimerBase::SharedPtr     timer_fast_;
 
-    rclcpp::CallbackGroup::SharedPtr callback_group_irregular_;
-    rclcpp::TimerBase::SharedPtr timer_irregular_;
+  rclcpp::CallbackGroup::SharedPtr callback_group_slow_;
+  rclcpp::TimerBase::SharedPtr     timer_slow_;
 
-    // | ------------------------- methods ------------------------ |
+  rclcpp::CallbackGroup::SharedPtr callback_group_irregular_;
+  rclcpp::TimerBase::SharedPtr     timer_irregular_;
 
-    void callback_timer_fast();
-    void callback_timer_slow();
-    void callback_timer_irregular();
-  };
+  // | ------------------------- methods ------------------------ |
 
-  //}
+  void callback_timer_fast();
+  void callback_timer_slow();
+  void callback_timer_irregular();
+};
 
-  /* PublisherExample() //{ */
+//}
 
-  PublisherExample::PublisherExample(rclcpp::NodeOptions options) : Node("publisher_example", options)
-  {
-    RCLCPP_INFO(get_logger(), "initializing");
+/* PublisherExample() //{ */
 
-    random_time_dist_ = std::uniform_real_distribution<>(0.0, 1.0);
+PublisherExample::PublisherExample(rclcpp::NodeOptions options) : Node("publisher_example", options) {
 
-    // | ------------------------ publisher ----------------------- |
+  RCLCPP_INFO(get_logger(), "initializing");
 
-    publisher_fast_ = create_publisher<std_msgs::msg::String>("~/topic_fast_out", 1);
-    publisher_slow_ = create_publisher<std_msgs::msg::String>("~/topic_slow_out", 1);
-    publisher_irregular_ = create_publisher<std_msgs::msg::String>("~/topic_irregular_out", 1);
+  random_time_dist_ = std::uniform_real_distribution<>(0.0, 1.0);
 
-    // | -------------------------- timer ------------------------- |
+  // | ------------------------ publisher ----------------------- |
 
-    /* assign each timer callback to a different group so they are run in parallel */
-    callback_group_fast_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    timer_fast_ = create_wall_timer(std::chrono::duration<double>(1.0 / 100.0), std::bind(&PublisherExample::callback_timer_fast, this), callback_group_fast_);
+  publisher_fast_      = create_publisher<std_msgs::msg::String>("~/topic_fast_out", 1);
+  publisher_slow_      = create_publisher<std_msgs::msg::String>("~/topic_slow_out", 1);
+  publisher_irregular_ = create_publisher<std_msgs::msg::String>("~/topic_irregular_out", 1);
 
-    callback_group_slow_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    timer_slow_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&PublisherExample::callback_timer_slow, this), callback_group_slow_);
+  // | -------------------------- timer ------------------------- |
 
-    callback_group_irregular_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    timer_irregular_ = create_wall_timer(std::chrono::duration<double>(random_time_dist_(reng_)), std::bind(&PublisherExample::callback_timer_irregular, this), callback_group_irregular_);
+  /* assign each timer callback to a different group so they are run in parallel */
+  callback_group_fast_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
-    // | --------------------- finish the init -------------------- |
+  timer_fast_ = create_wall_timer(std::chrono::duration<double>(1.0 / 100.0), std::bind(&PublisherExample::callback_timer_fast, this), callback_group_fast_);
 
-    RCLCPP_INFO(get_logger(), "initialized");
-  }
+  callback_group_slow_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
-  //}
+  timer_slow_ = create_wall_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&PublisherExample::callback_timer_slow, this), callback_group_slow_);
 
-  // | ------------------------ callbacks ----------------------- |
+  callback_group_irregular_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
-  /* callback_timer_fast() //{ */
+  timer_irregular_ = create_wall_timer(std::chrono::duration<double>(random_time_dist_(reng_)), std::bind(&PublisherExample::callback_timer_irregular, this),
+                                       callback_group_irregular_);
 
-  void PublisherExample::callback_timer_fast()
-  {
-    publisher_fast_->publish(std_msgs::msg::String().set__data("This message should be published at 100Hz."));
-  }
+  // | --------------------- finish the init -------------------- |
 
-  //}
+  RCLCPP_INFO(get_logger(), "initialized");
+}
 
-  /* callback_timer_slow() //{ */
+//}
 
-  void PublisherExample::callback_timer_slow()
-  {
-    publisher_slow_->publish(std_msgs::msg::String().set__data("This message should be published at 2Hz."));
-  }
+// | ------------------------ callbacks ----------------------- |
 
-  //}
+/* callback_timer_fast() //{ */
 
-  /* callback_timer_irregular() //{ */
+void PublisherExample::callback_timer_fast() {
 
-  void PublisherExample::callback_timer_irregular()
-  {
-    publisher_irregular_->publish(std_msgs::msg::String().set__data("This message should be published at irregular intervals."));
-    /* reset the rate of this timer to a random number */
-    /* the average rate for this timer will be 2.5Hz as the average period is 0.5s */
-    timer_irregular_ = create_wall_timer(std::chrono::duration<double>(random_time_dist_(reng_)), std::bind(&PublisherExample::callback_timer_irregular, this));
-  }
+  publisher_fast_->publish(std_msgs::msg::String().set__data("This message should be published at 100Hz."));
+}
 
-  //}
+//}
+
+/* callback_timer_slow() //{ */
+
+void PublisherExample::callback_timer_slow() {
+
+  publisher_slow_->publish(std_msgs::msg::String().set__data("This message should be published at 2Hz."));
+}
+
+//}
+
+/* callback_timer_irregular() //{ */
+
+void PublisherExample::callback_timer_irregular() {
+
+  publisher_irregular_->publish(std_msgs::msg::String().set__data("This message should be published at irregular intervals."));
+
+  /* reset the rate of this timer to a random number */
+  /* the average rate for this timer will be 2.5Hz as the average period is 0.5s */
+  timer_irregular_ = create_wall_timer(std::chrono::duration<double>(random_time_dist_(reng_)), std::bind(&PublisherExample::callback_timer_irregular, this));
+}
+
+//}
 
 }  // namespace ros2_examples
 
