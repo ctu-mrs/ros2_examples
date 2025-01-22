@@ -9,23 +9,23 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
-* [ ] [**ServiceClientExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_client_example.cpp) - periodically calls a service
+* [ ] **ServiceClientExample** - periodically calls a service
   * [ ] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
-* [X] [**PublisherExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/publisher_example.cpp) - periodically publishes
-* [X] [**ServiceServerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/service_server_example.cpp) - getting called, ok
-* [X] [**SubscriberExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/subscriber_example.cpp) - subscribes, ok
-* [X] [**TimerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/timer_example.cpp) - runs multiple timers in parallel
+* [X] **PublisherExample** - periodically publishes
+* [X] **ServiceServerExample** - getting called, ok
+* [X] **SubscriberExample** - subscribes, ok
+* [X] **TimerExample** - runs multiple timers in parallel
   * [X] ~~timer callbacks are not executed in parallel even with multi-threaded container (with multi-threaded executor, looks like the same problem can appear even with single-threaded executor)~~ --> timers were constructed as part of *mutual exclusive callbackGroup*
-* [X] [**ParamsExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/params_example.cpp) - load params from yaml and launch file
+* [X] **ParamsExample** - load params from yaml and launch file
   * [X] param server callback is hooked up
   * [X] custom configs work
-* [X] [**Tf2BroadcasterExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_broadcaster_example.cpp) - publishing transforms, ok
+* [X] **Tf2BroadcasterExample** - publishing transforms, ok
   * [ ] no innovation in TF structure form ROS1, still missing the option to have multiple parents
-* [X] [**Tf2ListenerExample**](https://github.com/ctu-mrs/ros2_examples/blob/master/src/tf2_listener_example.cpp) - receiving transforms, lookup table works, ok
+* [X] **Tf2ListenerExample** - receiving transforms, lookup table works, ok
 
 ### Running the examples
 
-* [tmuxinator](https://github.com/tmuxinator/tmuxinator) [session](https://github.com/ctu-mrs/ros2_examples/blob/master/tmux/session.yml)
+* there are tmux sessions within the example packages
 
 ## First ROS2 impressions
 
