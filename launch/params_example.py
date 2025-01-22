@@ -3,33 +3,44 @@ import os
 
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import (
+    LaunchConfiguration,
+    IfElseSubstitution,
+    PythonExpression,
+    PathJoinSubstitution,
+    EnvironmentVariable,
+)
 
 from ament_index_python.packages import get_package_share_directory
 
-def load_custom_config(name, param_file_list = None):
 
-    if param_file_list == None:
-        param_file_list = []
-
-    # custom config for param server
-    custom_config=os.getenv(name)
-
-    if custom_config:
-        param_file_list = param_file_list + [os.path.abspath(custom_config)]
-
-    return param_file_list
 
 def generate_launch_description():
 
     ld = launch.LaunchDescription()
+
+    # this adds the args to the list of args available for this launch files
+    # these args can be listed at runtime using -s flag
+    ld.add_action(DeclareLaunchArgument(
+        'custom_config',
+        default_value="",
+        description="Path to the custom configuration file. The path can be absolute, starting with '/' or relative to the current working directory"
+    ))
+    
+    custom_config = LaunchConfiguration('custom_config', default="")
+
+    custom_config = IfElseSubstitution(
+            condition=PythonExpression(["'", custom_config, "' != '' and ", "not '", custom_config, "'.startswith('/')"]),
+            if_value=PathJoinSubstitution([EnvironmentVariable('PWD'), custom_config]),
+            else_value=custom_config
+    )
 
     pkg_name = "ros2_examples"
     pkg_share_path = get_package_share_directory(pkg_name)
 
     # param loaded from env variable
     uav_type=os.getenv('UAV_TYPE', "")
-
-    param_files = load_custom_config("custom_config")
 
     ld.add_action(ComposableNodeContainer(
 
@@ -49,8 +60,9 @@ def generate_launch_description():
 
                 parameters=[
                         pkg_share_path + '/config/params_example.yaml',
-                        {"uav_type": uav_type}
-                    ] + param_files
+                        {'uav_type': uav_type},
+                        {'custom_config': custom_config}
+                    ],
 
                 # remappings=[
                 #     # topics

@@ -40,8 +40,10 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
 
   // | --------------------- load parameters -------------------- |
 
+  std::string custom_config = "";
   loaded_successfully &= parse_param("param_namespace.floating_number", floating_point_number_, *this);
   loaded_successfully &= parse_param("some_string", some_string_, *this);
+  loaded_successfully &= parse_param("custom_config", custom_config, *this);
 
   const std::string uav_type = parse_param2<std::string>("uav_type", loaded_successfully, *this);
 
