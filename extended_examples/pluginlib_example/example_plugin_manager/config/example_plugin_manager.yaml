@@ -1,0 +1,12 @@
+# the list of "names" of the loaded plugins
+# each plugin's properties are defined in 'plugins.yaml'
+plugins : [
+  "ExamplePlugin",
+  "ExamplePlugin2",
+]
+
+# the first loaded plugin
+# should be within "plugins"
+initial_plugin: "ExamplePlugin2"
+
+update_timer_rate: 1 # [Hz]
