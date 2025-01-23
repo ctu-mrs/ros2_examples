@@ -170,6 +170,17 @@ ament_target_dependencies(tf2_listener_example
 # TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(tf2_listener_example PLUGIN "ros2_examples::Tf2ListenerExample" EXECUTABLE tf2_listener_example)
 
+############################################################
+# adding libraries both Interface (header-only)
+############################################################
+# add template header-only library for implementing simulators
+add_library(${PROJECT_NAME}_headers INTERFACE)
+
+# add the header files that will be referenced when this target is used
+target_include_directories(${PROJECT_NAME}_headers INTERFACE
+  "$<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+
 ## --------------------------------------------------------------
 ## |                           install                          |
 ## --------------------------------------------------------------
@@ -189,8 +200,19 @@ install(TARGETS
 )
 
 install(DIRECTORY include/
-  DESTINATION include/
+  DESTINATION include/${PROJECT_NAME}
 )
+
+install(
+  TARGETS ${PROJECT_NAME}_headers
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
