@@ -1,12 +1,14 @@
-#include <ros/ros.h>
-#include <nodelet/nodelet.h>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/parameter.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <pluginlib/class_loader.hpp>
 
 #include <example_plugin_manager/plugin_interface.h>
+#include <ros2_examples/params.h>
 
-#include <mrs_lib/param_loader.h>
-#include <mrs_lib/mutex.h>
 
-#include <pluginlib/class_loader.h>
+// #include <mrs_lib/param_loader.h>
+// #include <mrs_lib/mutex.h>
 
 namespace example_plugin_manager
 {
@@ -35,18 +37,17 @@ PluginParams::PluginParams(const std::string& address, const std::string& name_s
 
 //}
 
-class ExamplePluginManager : public nodelet::Nodelet {
+class ExamplePluginManager : public rclcpp::Node {
 
 public:
-  virtual void onInit();
+  ExamplePluginManager(const rclcpp::NodeOptions &options);
 
 private:
-  ros::NodeHandle nh_;
   bool            is_initialized_ = false;
 
   // | ---------------------- update timer ---------------------- |
 
-  ros::Timer timer_update_;
+  rclcpp::TimerBase::SharedPtr timer_update_;
   double     _rate_timer_update_;
 
   // | -------- an object we want to share to our plugins ------- |
@@ -62,8 +63,8 @@ private:
   std::unique_ptr<pluginlib::ClassLoader<example_plugin_manager::Plugin>> plugin_loader_;  // pluginlib loader
   std::vector<std::string>                                                _plugin_names_;
   std::map<std::string, PluginParams>                                     plugins_;      // map between plugin names and plugin params
-  std::vector<boost::shared_ptr<example_plugin_manager::Plugin>>          plugin_list_;  // list of plugins, routines are callable from this
-  std::mutex                                                              mutex_plugins_;
+  std::vector<std::shared_ptr<example_plugin_manager::Plugin>>          plugin_list_;  // list of plugins, routines are callable from this
+  // std::mutex                                                              mutex_plugins_;
 
   std::string _initial_plugin_name_;
   int         _initial_plugin_idx_ = 0;
@@ -76,29 +77,35 @@ private:
 
   // | ------------------------- timers ------------------------- |
 
-  void timerUpdate(const ros::TimerEvent& event);
+  void timerUpdate();
 };
 
 //}
 
 /* onInit() //{ */
 
-void ExamplePluginManager::onInit() {
+ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  : Node("params_example", options) {
 
-  ros::NodeHandle nh_ = nodelet::Nodelet::getMTPrivateNodeHandle();
-
-  ros::Time::waitForValid();
-
-  ROS_INFO("[ExamplePluginManager]: initializing");
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: initializing");
 
   // --------------------------------------------------------------
   // |                           params                           |
   // --------------------------------------------------------------
 
-  mrs_lib::ParamLoader param_loader(nh_, "ExamplePluginManager");
+  // mrs_lib::ParamLoader param_loader(nh_, "ExamplePluginManager");
 
-  param_loader.loadParam("update_timer_rate", _rate_timer_update_);
-  param_loader.loadParam("initial_plugin", _initial_plugin_name_);
+  // | --------------------- load parameters -------------------- |
+
+  bool loaded_successfully = true;
+
+  loaded_successfully &= utils::parse_param("update_timer_rate", _rate_timer_update_, *this);
+  loaded_successfully &= utils::parse_param("initial_plugin", _initial_plugin_name_, *this);
+
+  if (!loaded_successfully) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+    rclcpp::shutdown();
+    return;
+  }
 
   // | --------------- example of a shared object --------------- |
 
@@ -112,14 +119,16 @@ void ExamplePluginManager::onInit() {
 
   common_handlers_->some_shared_object = std::make_shared<std::string>(example_of_a_shared_object_);
 
-  common_handlers_->vector_calculator.vectorNorm = boost::bind(&ExamplePluginManager::vectorNorm, this, _1);
+  common_handlers_->vector_calculator.vectorNorm = std::bind(&ExamplePluginManager::vectorNorm, this, std::placeholders::_1);
   common_handlers_->vector_calculator.enabled    = true;
 
   // --------------------------------------------------------------
   // |                      load the plugins                      |
   // --------------------------------------------------------------
 
-  param_loader.loadParam("plugins", _plugin_names_);
+  rclcpp::Parameter param_plugin_names;
+  loaded_successfully &= this->get_parameter("plugins", param_plugin_names);
+  _plugin_names_ = param_plugin_names.as_string_array();
 
   plugin_loader_ = std::make_unique<pluginlib::ClassLoader<example_plugin_manager::Plugin>>("example_plugin_manager", "example_plugin_manager::Plugin");
 
@@ -132,45 +141,45 @@ void ExamplePluginManager::onInit() {
     std::string name_space;
     double      some_property;
 
-    param_loader.loadParam(plugin_name + "/address", address);
-    param_loader.loadParam(plugin_name + "/name_space", name_space);
-    param_loader.loadParam(plugin_name + "/some_property", some_property);
+    loaded_successfully &= utils::parse_param(plugin_name + "/address", address, *this);
+    loaded_successfully &= utils::parse_param(plugin_name + "/name_space", name_space, *this);
+    loaded_successfully &= utils::parse_param(plugin_name + "/some_property", some_property, *this);
 
     PluginParams new_plugin(address, name_space, some_property);
     plugins_.insert(std::pair<std::string, PluginParams>(plugin_name, new_plugin));
 
     try {
-      ROS_INFO("[ExamplePluginManager]: loading the plugin '%s'", new_plugin.address.c_str());
-      plugin_list_.push_back(plugin_loader_->createInstance(new_plugin.address.c_str()));
+      RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: loading the plugin '%s'", new_plugin.address.c_str());
+      plugin_list_.push_back(plugin_loader_->createSharedInstance(new_plugin.address.c_str()));
     }
     catch (pluginlib::CreateClassException& ex1) {
-      ROS_ERROR("[ExamplePluginManager]: CreateClassException for the plugin '%s'", new_plugin.address.c_str());
-      ROS_ERROR("[ExamplePluginManager]: Error: %s", ex1.what());
-      ros::shutdown();
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: CreateClassException for the plugin '%s'", new_plugin.address.c_str());
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: Error: %s", ex1.what());
+      rclcpp::shutdown();
     }
     catch (pluginlib::PluginlibException& ex) {
-      ROS_ERROR("[ExamplePluginManager]: PluginlibException for the plugin '%s'", new_plugin.address.c_str());
-      ROS_ERROR("[ExamplePluginManager]: Error: %s", ex.what());
-      ros::shutdown();
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: PluginlibException for the plugin '%s'", new_plugin.address.c_str());
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: Error: %s", ex.what());
+      rclcpp::shutdown();
     }
   }
 
-  ROS_INFO("[ExamplePluginManager]: plugins were loaded");
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: plugins were loaded");
 
   for (int i = 0; i < int(plugin_list_.size()); i++) {
     try {
       std::map<std::string, PluginParams>::iterator it;
       it = plugins_.find(_plugin_names_[i]);
 
-      ROS_INFO("[ExamplePluginManager]: initializing the plugin '%s'", it->second.address.c_str());
-      plugin_list_[i]->initialize(nh_, _plugin_names_[i], it->second.name_space, common_handlers_);
+      RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: initializing the plugin '%s'", it->second.address.c_str());
+      plugin_list_[i]->initialize(*this, _plugin_names_[i], it->second.name_space, common_handlers_);
     }
     catch (std::runtime_error& ex) {
-      ROS_ERROR("[ExamplePluginManager]: exception caught during plugin initialization: '%s'", ex.what());
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: exception caught during plugin initialization: '%s'", ex.what());
     }
   }
 
-  ROS_INFO("[ExamplePluginManager]: plugins were initialized");
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: plugins were initialized");
 
   // --------------------------------------------------------------
   // |          check for existance of the initial plugin         |
@@ -190,14 +199,14 @@ void ExamplePluginManager::onInit() {
       }
     }
     if (!check) {
-      ROS_ERROR("[ExamplePluginManager]: the initial plugin (%s) is not within the loaded plugins", _initial_plugin_name_.c_str());
-      ros::shutdown();
+      RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: the initial plugin (%s) is not within the loaded plugins", _initial_plugin_name_.c_str());
+      rclcpp::shutdown();
     }
   }
 
   // | ---------- activate the first plugin on the list --------- |
 
-  ROS_INFO("[ExamplePluginManager]: activating plugin with idx %d on the list (named: %s)", _initial_plugin_idx_, _plugin_names_[_initial_plugin_idx_].c_str());
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: activating plugin with idx %d on the list (named: %s)", _initial_plugin_idx_, _plugin_names_[_initial_plugin_idx_].c_str());
 
   int some_activation_input_to_plugin = 1234;
 
@@ -206,18 +215,19 @@ void ExamplePluginManager::onInit() {
 
   // | ------------------------- timers ------------------------- |
 
-  timer_update_ = nh_.createTimer(ros::Rate(_rate_timer_update_), &ExamplePluginManager::timerUpdate, this);
+  timer_update_ = create_wall_timer(std::chrono::duration<double>(1.0 / _rate_timer_update_), std::bind(&ExamplePluginManager::timerUpdate, this));
 
   // | ----------------------- finish init ---------------------- |
 
-  if (!param_loader.loadedSuccessfully()) {
-    ROS_ERROR("[ExamplePluginManager]: could not load all parameters!");
-    ros::shutdown();
+  if (!loaded_successfully) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+    rclcpp::shutdown();
+    return;
   }
 
   is_initialized_ = true;
 
-  ROS_INFO("[ExamplePluginManager]: initialized");
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: initialized");
 }
 
 //}
@@ -226,28 +236,28 @@ void ExamplePluginManager::onInit() {
 
 /* timerUpdate() //{ */
 
-void ExamplePluginManager::timerUpdate([[maybe_unused]] const ros::TimerEvent& event) {
+void ExamplePluginManager::timerUpdate() {
 
   if (!is_initialized_)
     return;
 
-  auto active_plugin_idx = mrs_lib::get_mutexed(mutex_plugins_, active_plugin_idx_);
+  // auto active_plugin_idx = mrs_lib::get_mutexed(mutex_plugins_, active_plugin_idx_);
 
   // plugin input
   Eigen::Vector3d input;
   input << 0, 1, 2;
 
   // call the plugin's update routine
-  auto result = plugin_list_[active_plugin_idx]->update(input);
+  auto result = plugin_list_[active_plugin_idx_]->update(input);
 
   if (result) {
 
     // print the result
-    ROS_INFO("[ExamplePluginManager]: plugin update() returned: %.2f", result.value());
+    RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: plugin update() returned: %.2f", result.value());
 
   } else {
 
-    ROS_ERROR("[ExamplePluginManager]: plugin update failed!");
+    RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: plugin update failed!");
   }
 }
 
@@ -259,7 +269,7 @@ void ExamplePluginManager::timerUpdate([[maybe_unused]] const ros::TimerEvent& e
 
 double ExamplePluginManager::vectorNorm(const Eigen::Vector3d& input) {
 
-  ROS_INFO("[ExamplePluginManager]: somebody called my vectorNorm() function, probably some plugin");
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: somebody called my vectorNorm() function, probably some plugin");
 
   return input.norm();
 }
@@ -267,6 +277,9 @@ double ExamplePluginManager::vectorNorm(const Eigen::Vector3d& input) {
 //}
 
 }  // namespace example_plugin_manager
+#include "rclcpp_components/register_node_macro.hpp"
 
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(example_plugin_manager::ExamplePluginManager, nodelet::Nodelet)
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
+RCLCPP_COMPONENTS_REGISTER_NODE(example_plugin_manager::ExamplePluginManager)

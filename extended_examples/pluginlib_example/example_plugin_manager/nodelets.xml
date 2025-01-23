@@ -1,5 +1,0 @@
-<library path="lib/libExamplePluginManager">
-  <class name="example_plugin_manager/ExamplePluginManager" type="example_plugin_manager::ExamplePluginManager" base_class_type="nodelet::Nodelet">
-    <description>ExamplePluginManager nodelet</description>
-  </class>
-</library>

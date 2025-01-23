@@ -1,24 +1,25 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
 
   <name>example_plugin_manager</name>
   <version>1.0.0</version>
   <description>The example_plugin_manager package</description>
 
-  <author email="tomas.baca@fel.cvut.cz">Tomas Baca</author>
-  <maintainer email="tomas.baca@fel.cvut.cz">Tomas Baca</maintainer>
+  <author email="afzalhmd14@gmail.com">Afzal Ahmad</author>
+  <maintainer email="afzalhmd14@gmail.com">Afzal Ahmad</maintainer>
 
-  <license>MIT</license>
+  <license>TODO: License declaration</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>cmake_modules</depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>nodelet</depend>
   <depend>mrs_lib</depend>
+  <depend>ros2_examples</depend>
 
   <export>
-    <nodelet plugin="${prefix}/nodelets.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>

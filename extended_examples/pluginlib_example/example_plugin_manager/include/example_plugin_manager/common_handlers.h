@@ -1,7 +1,7 @@
 #ifndef COMMON_HANDLERS_H
 #define COMMON_HANDLERS_H
 
-#include <boost/function.hpp>
+#include <functional>
 #include <eigen3/Eigen/Eigen>
 
 namespace example_plugin_manager
@@ -11,7 +11,7 @@ namespace example_plugin_manager
 
 // | ---- logical units of supplied variables and functions --- |
 
-typedef boost::function<double(const Eigen::Vector3d& input)> vectorNorm_t;
+typedef std::function<double(const Eigen::Vector3d& input)> vectorNorm_t;
 
 struct VectorCalculator_t
 {
