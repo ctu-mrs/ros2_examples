@@ -8,4 +8,4 @@ windows:
   - main:
       layout: horizontal
       panes:
-        - custom_config=./config/custom_config.yaml ros2 launch ros2_examples params_example.py
+        - ros2 launch ros2_examples params_example.py custom_config:=./config/custom_config.yaml
