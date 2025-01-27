@@ -26,6 +26,8 @@
   <depend>geometry_msgs</depend>
   <depend>tf2_ros</depend>
 
+  <depend>ros2_lib</depend>
+
   <!-- this is needed to be able to run launch files -->
   <depend>ros2_examples_py</depend>
 
