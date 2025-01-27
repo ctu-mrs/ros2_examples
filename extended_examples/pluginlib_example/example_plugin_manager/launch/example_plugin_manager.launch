@@ -1,0 +1,22 @@
+<launch>
+
+  <arg name="standalone" default="true" />
+  <arg name="debug" default="false" />
+
+  <arg     if="$(arg debug)" name="launch_prefix" value="debug_roslaunch" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+
+  <arg     if="$(eval arg('standalone') or arg('debug'))" name="nodelet" value="standalone" />
+  <arg unless="$(eval arg('standalone') or arg('debug'))" name="nodelet" value="load" />
+  <arg     if="$(eval arg('standalone') or arg('debug'))" name="nodelet_manager" value="" />
+  <arg unless="$(eval arg('standalone') or arg('debug'))" name="nodelet_manager" value="nodelet_manager_name" />
+
+    <!-- Example manager -->
+  <node pkg="nodelet" type="nodelet" name="example_plugin_manager" args="$(arg nodelet) example_plugin_manager/ExamplePluginManager $(arg nodelet_manager)" output="screen" launch-prefix="$(arg launch_prefix)">
+
+    <rosparam file="$(find example_plugin_manager)/config/example_plugin_manager.yaml" />
+    <rosparam file="$(find example_plugin_manager)/config/plugins.yaml" />
+
+  </node>
+
+</launch>
