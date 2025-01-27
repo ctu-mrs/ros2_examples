@@ -52,8 +52,9 @@ install(TARGETS
   RUNTIME DESTINATION bin
   )
 
-install(DIRECTORY include/
-  DESTINATION include/
+install(
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
 )
 
 install(DIRECTORY launch
@@ -64,4 +65,5 @@ install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
+ament_export_include_directories("include/${PROJECT_NAME}")
 ament_package()
