@@ -9,8 +9,8 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
-* [ ] **ServiceClientExample** - periodically calls a service
-  * [ ] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
+* [X] **ServiceClientExample** - periodically calls a service
+  * [X] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
 * [X] **PublisherExample** - periodically publishes
 * [X] **ServiceServerExample** - getting called, ok
 * [X] **SubscriberExample** - subscribes, ok
@@ -86,8 +86,9 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
   * [ ] What about relativistic transformations? Meaning the frames could have a velocity and, therefore, we could transform a moving object (a ball) from a moving frame (a drone) to a world frame.
-* [ ] **Tests**
-  * [ ] TODO
+* [o] **Tests**
+  * [X] unit testing works
+  * [X] integration testing works almost like in ROS1, more complex now but also more powerfull
 * [ ] **Pluginlib**
   * [ ] TODO
 * [ ] **Actionlib**
