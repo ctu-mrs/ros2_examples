@@ -54,7 +54,7 @@ install(TARGETS
 
 install(
   DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
+  DESTINATION include
 )
 
 install(DIRECTORY launch
@@ -65,5 +65,5 @@ install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_export_include_directories("include/${PROJECT_NAME}")
+ament_export_include_directories("include")
 ament_package()

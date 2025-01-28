@@ -9,4 +9,4 @@ plugins : [
 # should be within "plugins"
 initial_plugin: "ExamplePlugin2"
 
-update_timer_rate: 1 # [Hz]
+update_timer_rate: 1.0 # [Hz]

@@ -1,5 +1,5 @@
 <library path="example_plugins">
-  <class type="example_plugins::example_plugin::ExamplePlugin" base_class_type="example_plugin_manager::Plugin">
+  <class type="example_plugins::ExamplePlugin" base_class_type="example_plugin_manager::Plugin">
     <description>This is ExamplePlugin.</description>
   </class>
 </library>

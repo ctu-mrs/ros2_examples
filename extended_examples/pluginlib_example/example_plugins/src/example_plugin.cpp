@@ -1,5 +1,6 @@
 #include <memory>
 #include <rclcpp/logging.hpp>
+#include <rclcpp/node_options.hpp>
 #include <rclcpp/parameter.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <pluginlib/class_loader.hpp>
@@ -14,15 +15,12 @@
 namespace example_plugins
 {
 
-namespace example_plugin
-{
-
 /* class ExamplePlugin //{ */
 
 class ExamplePlugin : public example_plugin_manager::Plugin {
 
 public:
-  void initialize(const rclcpp::Node &parent_node, const std::string& name, const std::string& name_space,
+  void initialize(const rclcpp::NodeOptions &node_options, const std::string& name, const std::string& name_space,
                   std::shared_ptr<example_plugin_manager::CommonHandlers_t> common_handlers);
 
   bool activate(const int& some_number);
@@ -33,7 +31,7 @@ public:
   // parameter from a config file
   double _pi_;
 
-  std::shared_ptr<rclcpp::Node> parent_node_;
+  std::shared_ptr<rclcpp::Node> node_;
   std::string _name_;
 
 private:
@@ -49,10 +47,10 @@ private:
 
 /* initialize() //{ */
 
-void ExamplePlugin::initialize(const rclcpp::Node &parent_node, const std::string& name, const std::string& name_space,
+void ExamplePlugin::initialize(const rclcpp::NodeOptions &node_options, const std::string& name, const std::string& name_space,
                                std::shared_ptr<example_plugin_manager::CommonHandlers_t> common_handlers) {
 
-  parent_node_ = std::make_shared<rclcpp::Node>(parent_node);
+  node_ = std::make_shared<rclcpp::Node>(name, name_space, node_options);
   _name_ = name;
 
   // I can use this to get stuff from the manager interactively
@@ -62,10 +60,10 @@ void ExamplePlugin::initialize(const rclcpp::Node &parent_node, const std::strin
 
   bool loaded_successfully = true;
 
-  loaded_successfully &= utils::parse_param("pi", _pi_, *parent_node_);
+  loaded_successfully &= utils::parse_param("pi", _pi_, *node_);
 
   if (!loaded_successfully) {
-    RCLCPP_ERROR_STREAM(parent_node_->get_logger(), "Could not load all non-optional parameters. Shutting down.");
+    RCLCPP_ERROR_STREAM(node_->get_logger(), "Could not load all non-optional parameters. Shutting down.");
     rclcpp::shutdown();
     return;
   }
@@ -81,11 +79,11 @@ void ExamplePlugin::initialize(const rclcpp::Node &parent_node, const std::strin
   //   ros::shutdown();
   // }
 
-  RCLCPP_INFO(parent_node_->get_logger(), "[%s]: loaded custom parameter: pi=%f", _name_.c_str(), _pi_);
+  RCLCPP_INFO(node_->get_logger(), "[%s]: loaded custom parameter: pi=%f", _name_.c_str(), _pi_);
 
   // | ----------------------- finish init ---------------------- |
 
-  RCLCPP_INFO(parent_node_->get_logger(), "[%s]: initialized under the name '%s', and namespace '%s'", _name_.c_str(), name.c_str(), name_space.c_str());
+  RCLCPP_INFO(node_->get_logger(), "[%s]: initialized under the name '%s', and namespace '%s'", _name_.c_str(), name.c_str(), name_space.c_str());
 
   is_initialized_ = true;
 }
@@ -96,7 +94,7 @@ void ExamplePlugin::initialize(const rclcpp::Node &parent_node, const std::strin
 
 bool ExamplePlugin::activate(const int& some_number) {
 
-  RCLCPP_INFO(parent_node_->get_logger(), "[%s]: activated with some_number=%d", _name_.c_str(), some_number);
+  RCLCPP_INFO(node_->get_logger(), "[%s]: activated with some_number=%d", _name_.c_str(), some_number);
 
   is_active_ = true;
 
@@ -111,7 +109,7 @@ void ExamplePlugin::deactivate(void) {
 
   is_active_ = false;
 
-  RCLCPP_INFO(parent_node_->get_logger(), "[%s]: deactivated", _name_.c_str());
+  RCLCPP_INFO(node_->get_logger(), "[%s]: deactivated", _name_.c_str());
 }
 
 //}
@@ -124,7 +122,7 @@ const std::optional<double> ExamplePlugin::update(const Eigen::Vector3d& input) 
     return false;
   }
 
-  RCLCPP_ERROR_STREAM(parent_node_->get_logger(), "[" << _name_ << "]: update() was called, let's find out the size of the vector [" << input.transpose() << "]");
+  RCLCPP_ERROR_STREAM(node_->get_logger(), "[" << _name_ << "]: update() was called, let's find out the size of the vector [" << input.transpose() << "]");
 
   // check some property from the "manager"
   if (common_handlers_->vector_calculator.enabled) {
@@ -143,10 +141,8 @@ const std::optional<double> ExamplePlugin::update(const Eigen::Vector3d& input) 
 
 //}
 
-}  // namespace example_plugin
-
 }  // namespace example_plugins
 
 #include <pluginlib/class_list_macros.hpp>
 
-PLUGINLIB_EXPORT_CLASS(example_plugins::example_plugin::ExamplePlugin, example_plugin_manager::Plugin)
+PLUGINLIB_EXPORT_CLASS(example_plugins::ExamplePlugin, example_plugin_manager::Plugin)
