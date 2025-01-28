@@ -1,12 +1,12 @@
 # define "running instances" of plugins, there can be more than one for each
 
 ExamplePlugin:
-  address: "example_plugins/ExamplePlugin" # this is taken from the plugin's package.xml
+  address: "example_plugins::ExamplePlugin" # this is taken from the plugin's package.xml
   name_space: "example_plugin" # useful for loading parameters into difference instances of the same plugin
   some_property: 6.28 # this can be anything specific the manager needs to hold for each instance of each plugin
 
 # We can run another instance of the same plugin
 ExamplePlugin2:
-  address: "example_plugins/ExamplePlugin" # this is taken from the plugin's package.xml
+  address: "example_plugins::ExamplePlugin" # this is taken from the plugin's package.xml
   name_space: "example_plugin_2"
   some_property: 10.1

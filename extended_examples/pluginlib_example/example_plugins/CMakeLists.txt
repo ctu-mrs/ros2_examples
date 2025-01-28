@@ -11,6 +11,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(pluginlib REQUIRED)
@@ -23,18 +24,14 @@ pluginlib_export_plugin_description_file(example_plugin_manager plugins.xml)
 set(Eigen_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
 set(Eigen_LIBRARIES ${Eigen_LIBRARIES})
 
-include_directories(
-  include
-  )
-
 # ExamplePlugin
 
-add_library(example_plugin SHARED
+add_library(${PROJECT_NAME} SHARED
   src/example_plugin.cpp
   )
 
 # ament manages cmake related variables and dependency search (similar to catkin in ROS1)
-ament_target_dependencies(example_plugin PUBLIC
+ament_target_dependencies(${PROJECT_NAME} PUBLIC
   rclcpp
   rclcpp_components
   pluginlib
@@ -43,30 +40,27 @@ ament_target_dependencies(example_plugin PUBLIC
   example_plugin_manager
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
-rclcpp_components_register_nodes(example_plugin "example_plugin::ExamplePlugin")
-
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS
-  example_plugin
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-  )
-
-install(DIRECTORY include/
-  DESTINATION include/
-)
-
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
 )
 
 install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
+)
+
+ament_export_libraries(
+  ${PROJECT_NAME}
+)
+ament_export_targets(
+  export_${PROJECT_NAME}
 )
 
 ament_package()

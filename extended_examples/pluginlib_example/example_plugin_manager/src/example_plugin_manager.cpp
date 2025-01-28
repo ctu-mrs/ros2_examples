@@ -106,7 +106,6 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
     rclcpp::shutdown();
     return;
   }
-
   // | --------------- example of a shared object --------------- |
 
   example_of_a_shared_object_ = "Hello, this is a shared object";
@@ -126,11 +125,24 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
   // |                      load the plugins                      |
   // --------------------------------------------------------------
 
-  rclcpp::Parameter param_plugin_names;
-  loaded_successfully &= this->get_parameter("plugins", param_plugin_names);
-  _plugin_names_ = param_plugin_names.as_string_array();
+  // rclcpp::Parameter param_plugin_names;
+  // loaded_successfully &= this->get_parameter("plugins", param_plugin_names);
+  // _plugin_names_ = param_plugin_names.as_string_array();
+  loaded_successfully &= utils::parse_param("plugins", _plugin_names_ , *this);
+
+  if (!loaded_successfully) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+    rclcpp::shutdown();
+    return;
+  }
 
   plugin_loader_ = std::make_unique<pluginlib::ClassLoader<example_plugin_manager::Plugin>>("example_plugin_manager", "example_plugin_manager::Plugin");
+
+    std::vector<std::string> plugins = plugin_loader_->getDeclaredClasses(); // Method name changed
+    
+    for (const auto& plugin : plugins) {
+      RCLCPP_INFO(get_logger(), "Plugin: %s", plugin.c_str());
+    }
 
   // for each plugin in the list
   for (int i = 0; i < int(_plugin_names_.size()); i++) {
@@ -141,26 +153,34 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
     std::string name_space;
     double      some_property;
 
-    loaded_successfully &= utils::parse_param(plugin_name + "/address", address, *this);
-    loaded_successfully &= utils::parse_param(plugin_name + "/name_space", name_space, *this);
-    loaded_successfully &= utils::parse_param(plugin_name + "/some_property", some_property, *this);
+    loaded_successfully &= utils::parse_param(plugin_name + ".address", address, *this);
+    loaded_successfully &= utils::parse_param(plugin_name + ".name_space", name_space, *this);
+    loaded_successfully &= utils::parse_param(plugin_name + ".some_property", some_property, *this);
+
+    if (!loaded_successfully) {
+      RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+      rclcpp::shutdown();
+      return;
+    }
 
     PluginParams new_plugin(address, name_space, some_property);
     plugins_.insert(std::pair<std::string, PluginParams>(plugin_name, new_plugin));
 
     try {
       RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: loading the plugin '%s'", new_plugin.address.c_str());
-      plugin_list_.push_back(plugin_loader_->createSharedInstance(new_plugin.address.c_str()));
+      plugin_list_.emplace_back(plugin_loader_->createSharedInstance(new_plugin.address));
     }
     catch (pluginlib::CreateClassException& ex1) {
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: CreateClassException for the plugin '%s'", new_plugin.address.c_str());
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: Error: %s", ex1.what());
       rclcpp::shutdown();
+      return;
     }
     catch (pluginlib::PluginlibException& ex) {
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: PluginlibException for the plugin '%s'", new_plugin.address.c_str());
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: Error: %s", ex.what());
       rclcpp::shutdown();
+      return;
     }
   }
 
@@ -172,7 +192,7 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
       it = plugins_.find(_plugin_names_[i]);
 
       RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: initializing the plugin '%s'", it->second.address.c_str());
-      plugin_list_[i]->initialize(*this, _plugin_names_[i], it->second.name_space, common_handlers_);
+      plugin_list_[i]->initialize(options, _plugin_names_[i], it->second.name_space, common_handlers_);
     }
     catch (std::runtime_error& ex) {
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: exception caught during plugin initialization: '%s'", ex.what());
@@ -201,6 +221,7 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
     if (!check) {
       RCLCPP_ERROR(get_logger(), "[ExamplePluginManager]: the initial plugin (%s) is not within the loaded plugins", _initial_plugin_name_.c_str());
       rclcpp::shutdown();
+      return;
     }
   }
 
@@ -218,12 +239,6 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
   timer_update_ = create_wall_timer(std::chrono::duration<double>(1.0 / _rate_timer_update_), std::bind(&ExamplePluginManager::timerUpdate, this));
 
   // | ----------------------- finish init ---------------------- |
-
-  if (!loaded_successfully) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
-    rclcpp::shutdown();
-    return;
-  }
 
   is_initialized_ = true;
 
