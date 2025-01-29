@@ -9,7 +9,7 @@ namespace example_plugin_manager
 
 class Plugin {
 public:
-  virtual void initialize(const rclcpp::NodeOptions &node_options, const std::string& name, const std::string& name_space,
+  virtual void initialize(const std::shared_ptr<rclcpp::Node> &sub_node, const std::string& name,
                           std::shared_ptr<example_plugin_manager::CommonHandlers_t> common_handlers) = 0;
 
   virtual bool activate(const int& some_number) = 0;

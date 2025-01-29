@@ -1,5 +1,5 @@
 # the list of "names" of the loaded plugins
-# each plugin's properties are defined in 'plugins.yaml'
+# each plugin's properties are defined in 'plugins.yaml' of the example_plugin package
 plugins : [
   "ExamplePlugin",
   "ExamplePlugin2",
