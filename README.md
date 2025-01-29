@@ -9,8 +9,8 @@ We investigate the aspects that are currently utilized in [MRS UAV System](https
 
 Everything is a component. We happily [nodelet everything](https://www.clearpathrobotics.com/assets/guides/kinetic/ros/Nodelet%20Everything.html) in ROS1, so why otherwise?
 
-* [ ] **ServiceClientExample** - periodically calls a service
-  * [ ] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
+* [X] **ServiceClientExample** - periodically calls a service
+  * [X] retreiving result synchronously needs to be done outside of ROS with waiting for the `std::future`
 * [X] **PublisherExample** - periodically publishes
 * [X] **ServiceServerExample** - getting called, ok
 * [X] **SubscriberExample** - subscribes, ok
@@ -52,10 +52,10 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] basics are fine
   * [X] building (and using) custom libraries
   * [X] building standalone executable nodelets
-* [o] **Launch files**
+* [.] **Launch files**
   * [X] they are in python now
   * [X] remappings
-  * [X] passing params
+  * [ ] passing args
   * [ ] TODO passing terminal arguments not working (nonexistant??)
   * [ ] TODO connecting to existing component containers (nodelet managers)
   * [ ] TODO how to add launch prefix, e.g., `gdb`
@@ -80,25 +80,21 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   * [X] `export RCUTILS_COLORIZED_OUTPUT=1`
 * [ ] **ROS Time**
   * [ ] TODO test duration, rate, sleep, wall time vs. sim time (we need sim time for faster/slower than real time simulations)
-    * [X]  To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
-    * [x]  While using sim time, the get_clock()->now() clock runs at 10 Hz by default. Need to increase the rate as described [here](https://github.com/ros-simulation/gazebo_ros_pkgs/pull/1214#issuecomment-894212336).
+    * [X] To be able to listen sim time, parameter use_sime_time=1 has to be set individually for every node. [PR](https://github.com/ros2/rclcpp/pull/559)
+    * [x] While using sim time, the get_clock()->now() clock runs at 10 Hz by default. Need to increase the rate as described [here](https://github.com/ros-simulation/gazebo_ros_pkgs/pull/1214#issuecomment-894212336).
 * [ ] **Transformations**
   * [ ] TODO
   * [ ] I really hope that ROS2 will support more than just the **TF tree**, e.g., an **Acyclic graph**. We need more parents for a node to allow a robot to being localized within more coordinated systems at a time.
   * [ ] What about relativistic transformations? Meaning the frames could have a velocity and, therefore, we could transform a moving object (a ball) from a moving frame (a drone) to a world frame.
-* [ ] **Tests**
-  * [ ] TODO
+* [o] **Tests**
+  * [X] unit testing works
+  * [X] integration testing works almost like in ROS1, more complex now but also more powerfull
 * [ ] **Pluginlib**
   * [ ] TODO
 * [ ] **Actionlib**
   * [ ] TODO
 * [ ] **Lifecycles** (new feature)
   * [ ] TODO
-
-## Migration Guide
-
-* Follow [Migration guide from ROS1](https://docs.ros.org/en/foxy/Contributing/Migration-Guide.html#update-source-code) that provides most of the basic required modifications.
-* More details regarding genereated C++ interfaces [here](https://design.ros2.org/articles/generated_interfaces_cpp.html)
 
 ### Messages/Services
 
@@ -109,4 +105,4 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
   ```
   This finds the relevant generated C++ code from ``AddressBook.msg`` and allows your target to link against it.
 
-  You may have noticed that this step was not necessa y when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)
+  You may have noticed that this step was not necessary when the interfaces being used were from a package that was built separately. This CMake code is only     required when you want to use interfaces in the same package as the one in which they are used. [Source](https://docs.ros.org/en/foxy/Tutorials/Single-Package-Define-And-Use-Interface.html#link-against-the-interface)

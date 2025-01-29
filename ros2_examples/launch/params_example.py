@@ -14,8 +14,6 @@ from launch.substitutions import (
 
 from ament_index_python.packages import get_package_share_directory
 
-
-
 def generate_launch_description():
 
     ld = launch.LaunchDescription()
@@ -27,7 +25,7 @@ def generate_launch_description():
         default_value="",
         description="Path to the custom configuration file. The path can be absolute, starting with '/' or relative to the current working directory"
     ))
-    
+
     custom_config = LaunchConfiguration('custom_config', default="")
 
     custom_config = IfElseSubstitution(
@@ -35,6 +33,8 @@ def generate_launch_description():
             if_value=PathJoinSubstitution([EnvironmentVariable('PWD'), custom_config]),
             else_value=custom_config
     )
+
+    print("custom_config: {}".format(custom_config))
 
     pkg_name = "ros2_examples"
     pkg_share_path = get_package_share_directory(pkg_name)
@@ -60,8 +60,8 @@ def generate_launch_description():
 
                 parameters=[
                         pkg_share_path + '/config/params_example.yaml',
+                        custom_config,
                         {'uav_type': uav_type},
-                        {'custom_config': custom_config}
                     ],
 
                 # remappings=[
