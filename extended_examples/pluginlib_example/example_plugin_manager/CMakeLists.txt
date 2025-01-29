@@ -11,11 +11,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(ros2_examples REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(ros2_examples REQUIRED)
 
 set(Eigen_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
 set(Eigen_LIBRARIES ${Eigen_LIBRARIES})
@@ -25,7 +26,6 @@ include_directories(
   )
 
 # ExamplePluginManager
-
 add_library(example_plugin_manager SHARED
  src/example_plugin_manager.cpp
  )
@@ -52,6 +52,7 @@ install(TARGETS
   RUNTIME DESTINATION bin
   )
 
+# this will copy the header files for use by other libraries
 install(
   DIRECTORY include/
   DESTINATION include
@@ -65,5 +66,7 @@ install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
+# this will export the include-related variables for use by other libraries
+# this is needed if you wish to include the headers from this pkg into downstream libraries
 ament_export_include_directories("include")
 ament_package()
