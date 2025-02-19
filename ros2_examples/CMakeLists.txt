@@ -33,6 +33,7 @@ add_library(subscriber_example SHARED
   src/subscriber_example.cpp
 )
 
+# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
 ament_target_dependencies(subscriber_example
   rclcpp
   rclcpp_components
@@ -51,14 +52,12 @@ add_library(publisher_example SHARED
   src/publisher_example.cpp
 )
 
-# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
 ament_target_dependencies(publisher_example
   rclcpp
   rclcpp_components
   std_msgs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample")
 
 ## --------------------------------------------------------------
@@ -69,14 +68,12 @@ add_library(service_server_example SHARED
   src/service_server_example.cpp
 )
 
-# ament manages cmake related variables and dependecy search (similar to catkin in ROS1)
 ament_target_dependencies(service_server_example
   rclcpp
   rclcpp_components
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(service_server_example PLUGIN "ros2_examples::ServiceServerExample")
 
 ## --------------------------------------------------------------
@@ -87,14 +84,12 @@ add_library(service_client_example SHARED
   src/service_client_example.cpp
 )
 
-# ament manages cmake related variables and dependecy search (similar to catkin in ROS1)
 ament_target_dependencies(service_client_example
   rclcpp
   rclcpp_components
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::ServiceClientExample")
 
 ## --------------------------------------------------------------
@@ -111,7 +106,6 @@ ament_target_dependencies(timer_example
   std_msgs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(timer_example PLUGIN "ros2_examples::TimerExample" EXECUTABLE timer_example)
 
 ## --------------------------------------------------------------
@@ -133,7 +127,6 @@ ament_target_dependencies(params_example
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
 ## --------------------------------------------------------------
@@ -151,7 +144,6 @@ ament_target_dependencies(tf2_broadcaster_example
   geometry_msgs
 )
 
-# TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(tf2_broadcaster_example PLUGIN "ros2_examples::Tf2BroadcasterExample" EXECUTABLE tf2_broadcaster_example)
 
 ## --------------------------------------------------------------
@@ -169,8 +161,22 @@ ament_target_dependencies(tf2_listener_example
   geometry_msgs
 )
 
-# TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(tf2_listener_example PLUGIN "ros2_examples::Tf2ListenerExample" EXECUTABLE tf2_listener_example)
+
+## --------------------------------------------------------------
+## |                      clock management                      |
+## --------------------------------------------------------------
+
+add_library(clock_consumer SHARED
+  src/clock_consumer.cpp
+)
+
+ament_target_dependencies(clock_consumer
+  rclcpp
+  rclcpp_components
+)
+
+rclcpp_components_register_nodes(clock_consumer PLUGIN "ros2_examples::ClockConsumer" EXECUTABLE clock_consumer)
 
 ## --------------------------------------------------------------
 ## |                           Testing                          |
@@ -197,6 +203,7 @@ install(TARGETS
   timer_example
   tf2_broadcaster_example
   tf2_listener_example
+  clock_consumer
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
