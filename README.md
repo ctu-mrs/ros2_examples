@@ -89,8 +89,8 @@ Everything is a component. We happily [nodelet everything](https://www.clearpath
 * [o] **Tests**
   * [X] unit testing works
   * [X] integration testing works almost like in ROS1, more complex now but also more powerfull
-* [ ] **Pluginlib**
-  * [ ] TODO
+* [X] **Pluginlib**
+  * [X] TODO
 * [ ] **Actionlib**
   * [ ] TODO
 * [ ] **Lifecycles** (new feature)
