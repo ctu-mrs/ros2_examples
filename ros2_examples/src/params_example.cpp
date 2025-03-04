@@ -1,61 +1,78 @@
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include <ros2_examples/params.h>
+#include <mrs_lib/param_loader.h>
 
 using namespace std::chrono_literals;
 
 namespace ros2_examples
 {
 
-using namespace utils;
+// using namespace utils;
 
 /* class ParamsExample //{ */
 
 class ParamsExample : public rclcpp::Node {
 public:
-  ParamsExample(rclcpp::NodeOptions options);
+  ParamsExample(const rclcpp::NodeOptions options);
 
 private:
   // | ----------------------- parameters ----------------------- |
 
   double      floating_point_number_;
   std::string some_string_;
+  std::string uav_type;
 
-  OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  // OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
 
   // | ------------------------- methods ------------------------ |
 
-  rcl_interfaces::msg::SetParametersResult callback_parameters(std::vector<rclcpp::Parameter> parameters);
+  // rcl_interfaces::msg::SetParametersResult callback_parameters(std::vector<rclcpp::Parameter> parameters);
 };
 
 //}
 
 /* ParamsExample() constructor //{ */
 
-ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example", options) {
+ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("params_example", options) {
 
   RCLCPP_INFO(get_logger(), "initializing");
 
-  bool loaded_successfully = true;
+  // bool loaded_successfully = true;
+  auto m_node = this->create_sub_node("params");
 
   // | --------------------- load parameters -------------------- |
 
+  mrs_lib::ParamLoader param_loader{m_node, std::string{"ParamsExample"}};
+
   std::string custom_config = "";
-  loaded_successfully &= parse_param("param_namespace.floating_number", floating_point_number_, *this);
-  loaded_successfully &= parse_param("some_string", some_string_, *this);
-  loaded_successfully &= parse_param("custom_config", custom_config, *this);
+  // param_loader.loadParam("param_namespace/floating_number", floating_point_number_);
+  param_loader.loadParam("some_string", some_string_);
+  param_loader.loadParam("some_string", some_string_);
+  // param_loader.loadParam("custom_config", custom_config);
 
-  const std::string uav_type = parse_param2<std::string>("uav_type", loaded_successfully, *this);
+  // if (custom_config == "") {
+  //   RCLCPP_WARN(get_logger(), "custom_config is empty");
+  // }
 
-  if (!loaded_successfully) {
+  param_loader.loadParam("uav_type", uav_type);
+
+  auto param_list = m_node->list_parameters(std::vector<std::string>(), 0);
+
+  for (const auto& param: param_list.names) {
+    std::cout << "params: " << param << std::endl;
+  
+  }
+
+  if (!param_loader.loadedSuccessfully()) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
-    rclcpp::shutdown();
+    // rclcpp::shutdown();
     return;
   }
 
   // | --------------- bind pararm server callback -------------- |
 
-  param_callback_handle_ = add_on_set_parameters_callback(std::bind(&ParamsExample::callback_parameters, this, std::placeholders::_1));
+  // param_callback_handle_ = add_on_set_parameters_callback(std::bind(&ParamsExample::callback_parameters, this, std::placeholders::_1));
 
   // | --------------------- finish the init -------------------- |
 
@@ -68,38 +85,38 @@ ParamsExample::ParamsExample(rclcpp::NodeOptions options) : Node("params_example
 
 /* callback_parameters() //{ */
 
-rcl_interfaces::msg::SetParametersResult ParamsExample::callback_parameters(std::vector<rclcpp::Parameter> parameters) {
-  rcl_interfaces::msg::SetParametersResult result;
+// rcl_interfaces::msg::SetParametersResult ParamsExample::callback_parameters(std::vector<rclcpp::Parameter> parameters) {
+//   rcl_interfaces::msg::SetParametersResult result;
 
-  // Note that setting a parameter to a nonsensical value (such as setting the `param_namespace.floating_number` parameter to `hello`)
-  // doesn't have any effect - it doesn't even call this callback.
-  for (auto& param : parameters) {
+//   // Note that setting a parameter to a nonsensical value (such as setting the `param_namespace.floating_number` parameter to `hello`)
+//   // doesn't have any effect - it doesn't even call this callback.
+//   for (auto& param : parameters) {
 
-    RCLCPP_INFO_STREAM(get_logger(), "got parameter: '" << param.get_name() << "' with value '" << param.value_to_string() << "'");
+//     RCLCPP_INFO_STREAM(get_logger(), "got parameter: '" << param.get_name() << "' with value '" << param.value_to_string() << "'");
 
-    if (param.get_name() == "param_namespace.floating_number") {
+//     if (param.get_name() == "param_namespace.floating_number") {
 
-      floating_point_number_ = param.as_double();
+//       floating_point_number_ = param.as_double();
 
-    } else if (param.get_name() == "some_string") {
+//     } else if (param.get_name() == "some_string") {
 
-      some_string_ = param.as_string();
+//       some_string_ = param.as_string();
 
-    } else {
+//     } else {
 
-      RCLCPP_WARN_STREAM(get_logger(), "parameter: '" << param.get_name() << "' is not dynamically reconfigurable!");
-      result.successful = false;
-      result.reason     = "Parameter '" + param.get_name() + "' is not dynamically reconfigurable!";
-      return result;
-    }
-  }
+//       RCLCPP_WARN_STREAM(get_logger(), "parameter: '" << param.get_name() << "' is not dynamically reconfigurable!");
+//       result.successful = false;
+//       result.reason     = "Parameter '" + param.get_name() + "' is not dynamically reconfigurable!";
+//       return result;
+//     }
+//   }
 
-  RCLCPP_INFO(get_logger(), "params updated");
-  result.successful = true;
-  result.reason     = "OK";
+//   RCLCPP_INFO(get_logger(), "params updated");
+//   result.successful = true;
+//   result.reason     = "OK";
 
-  return result;
-}
+//   return result;
+// }
 
 //}
 
