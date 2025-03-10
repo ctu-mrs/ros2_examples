@@ -27,6 +27,7 @@
   <depend>tf2_ros</depend>
 
   <depend>ros2_lib</depend>
+  <depend>mrs_lib</depend>
 
   <!-- this is needed to be able to run launch files -->
   <depend>ros2_examples_py</depend>

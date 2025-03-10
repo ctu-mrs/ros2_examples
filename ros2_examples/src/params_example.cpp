@@ -1,7 +1,9 @@
+#include <ios>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
 #include <mrs_lib/param_loader.h>
+#include <string>
 
 using namespace std::chrono_literals;
 
@@ -34,11 +36,11 @@ private:
 
 /* ParamsExample() constructor //{ */
 
-ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("params_example", options) {
+ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("dummy", options) {
 
   RCLCPP_INFO(get_logger(), "initializing");
 
-  // bool loaded_successfully = true;
+  bool loaded_successfully = true;
   auto m_node = this->create_sub_node("params");
 
   // | --------------------- load parameters -------------------- |
@@ -46,27 +48,18 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("params_e
   mrs_lib::ParamLoader param_loader{m_node, std::string{"ParamsExample"}};
 
   std::string custom_config = "";
-  // param_loader.loadParam("param_namespace/floating_number", floating_point_number_);
-  param_loader.loadParam("some_string", some_string_);
-  param_loader.loadParam("some_string", some_string_);
-  // param_loader.loadParam("custom_config", custom_config);
-
-  // if (custom_config == "") {
-  //   RCLCPP_WARN(get_logger(), "custom_config is empty");
-  // }
-
+  param_loader.loadParam2("param_namespace/floating_number", floating_point_number_);
   param_loader.loadParam("uav_type", uav_type);
+  param_loader.loadParam("some_string", some_string_);
+  param_loader.loadParam("custom_config", custom_config);
 
-  auto param_list = m_node->list_parameters(std::vector<std::string>(), 0);
-
-  for (const auto& param: param_list.names) {
-    std::cout << "params: " << param << std::endl;
-  
+  if (custom_config == "") {
+    RCLCPP_WARN(get_logger(), "custom_config is empty");
   }
 
   if (!param_loader.loadedSuccessfully()) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
-    // rclcpp::shutdown();
+    rclcpp::shutdown();
     return;
   }
 

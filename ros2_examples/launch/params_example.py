@@ -43,7 +43,7 @@ def generate_launch_description():
     pkg_share_path = get_package_share_directory(pkg_name)
 
     # param loaded from env variable
-    uav_type=os.getenv('UAV_TYPE', '')
+    uav_type=os.getenv('UAV_TYPE', "x500")
 
     ld.add_action(ComposableNodeContainer(
 
@@ -59,12 +59,12 @@ def generate_launch_description():
                 package=pkg_name,
                 plugin='ros2_examples::ParamsExample',
                 namespace='nmspc1',
-                name='params_',
+                name='params_node_ns',
 
                 parameters=[
                         pkg_share_path + '/config/params_example.yaml',
                         {'custom_config': custom_config,
-                        'params.uav_type': uav_type},
+                        'uav_type': uav_type},
                     ],
 
                 # remappings=[
