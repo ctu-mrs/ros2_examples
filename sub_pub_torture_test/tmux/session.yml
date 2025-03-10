@@ -1,0 +1,12 @@
+root: ./
+socket_name: mrs
+name: simulation
+attach: false
+tmux_options: -f /etc/ctu-mrs/tmux.conf
+startup_window: main
+windows:
+  - main:
+      layout: horizontal
+      panes:
+        - ros2 launch sub_pub_torture_test subscribers.py
+        - ros2 launch sub_pub_torture_test publishers.py
