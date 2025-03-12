@@ -23,7 +23,7 @@
   <depend>std_msgs</depend>
 
   <!-- this is needed to be able to run launch files -->
-  <depend>sub_pub_torture_test_py</depend>
+  <!-- <depend>sub_pub_torture_test_py</depend> -->
 
   <export>
     <build_type>ament_cmake</build_type>
