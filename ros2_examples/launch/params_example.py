@@ -43,7 +43,7 @@ def generate_launch_description():
     pkg_share_path = get_package_share_directory(pkg_name)
 
     # param loaded from env variable
-    uav_type=os.getenv('UAV_TYPE', "x500")
+    env_var=os.getenv('ENV_VAR', "x500")
 
     ld.add_action(ComposableNodeContainer(
 
@@ -64,7 +64,7 @@ def generate_launch_description():
                 parameters=[
                         pkg_share_path + '/config/params_example.yaml',
                         {'custom_config': custom_config,
-                        'uav_type': uav_type},
+                        'env_var': env_var},
                     ],
 
                 # remappings=[

@@ -1,9 +1,8 @@
-#include <ios>
-#include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include <mrs_lib/param_loader.h>
+#include <sstream>
 #include <string>
+#include <vector>
 
 using namespace std::chrono_literals;
 
@@ -21,43 +20,41 @@ public:
 private:
   // | ----------------------- parameters ----------------------- |
 
-  double      floating_point_number_;
-  std::string some_string_;
-  std::string uav_type;
+  std::string env_var = "I should have an env variable";
+  struct ConfigYAMLParams {
+    double floating_point_number = 786.00;
+    std::string some_string = "I should be changed";
+    std::vector<std::string> vec_str{"I", "must", "be", "changed"};
+    std::vector<double> vec_double{7.0, 8.0, 6.0};
+    std::string namespaced_str = "I should have a namespaced string";
+  };
+  ConfigYAMLParams params; 
 
-  // OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
 
   // | ------------------------- methods ------------------------ |
 
   // rcl_interfaces::msg::SetParametersResult callback_parameters(std::vector<rclcpp::Parameter> parameters);
+  bool load_parameters(const rclcpp::Node& node_ptr);
 };
 
 //}
 
 /* ParamsExample() constructor //{ */
 
-ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("dummy", options) {
+ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_example", options) {
 
   RCLCPP_INFO(get_logger(), "initializing");
 
   bool loaded_successfully = true;
-  auto m_node = this->create_sub_node("params");
+  auto sub_node = this->create_sub_node("params");
 
   // | --------------------- load parameters -------------------- |
 
-  mrs_lib::ParamLoader param_loader{m_node, std::string{"ParamsExample"}};
+  loaded_successfully &= load_parameters(*this);
+  // loaded_successfully &= load_parameters(sub_node);
 
-  std::string custom_config = "";
-  param_loader.loadParam2("param_namespace/floating_number", floating_point_number_);
-  param_loader.loadParam("uav_type", uav_type);
-  param_loader.loadParam("some_string", some_string_);
-  param_loader.loadParam("custom_config", custom_config);
-
-  if (custom_config == "") {
-    RCLCPP_WARN(get_logger(), "custom_config is empty");
-  }
-
-  if (!param_loader.loadedSuccessfully()) {
+  if (!loaded_successfully) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
     rclcpp::shutdown();
     return;
@@ -110,6 +107,51 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("dummy", 
 
 //   return result;
 // }
+
+bool ParamsExample::load_parameters(const rclcpp::Node& node_ptr) {
+
+  bool loaded_successfully = true;
+
+  node_ptr->declare_parameter<std::string>("env_var");
+  loaded_successfully &= node_ptr->get_parameter("env_var", env_var);
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: env_var: " << env_var);
+
+  node_ptr->declare_parameter<double>("floating_point_number");
+  loaded_successfully &= node_ptr->get_parameter("floating_point_number", params.floating_point_number);
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: floating_point_number: " << params.floating_point_number);
+
+  node_ptr->declare_parameter<std::string>("some_string");
+  loaded_successfully &= node_ptr->get_parameter("some_string", params.some_string);
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: some_string: " << params.some_string);
+
+  node_ptr->declare_parameter<std::vector<double>>("vec_double");
+  loaded_successfully &= node_ptr->get_parameter("vec_double", params.vec_double);
+
+  std::stringstream tmp_str;
+  tmp_str << "[";
+  for (const auto&  val: params.vec_double) {
+    tmp_str << val <<", ";
+  }
+  tmp_str << "]";
+
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: vec_double: " << tmp_str.str());
+
+  node_ptr->declare_parameter<std::vector<std::string>>("vec_str");
+  loaded_successfully &= node_ptr->get_parameter("vec_str", params.vec_str);
+  std::stringstream tmp_double_str;
+  tmp_double_str << "[";
+  for (const auto&  val: params.vec_double) {
+    tmp_double_str << val <<", ";
+  }
+  tmp_double_str << "]";
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: vec_str: " << tmp_double_str.str());
+
+  node_ptr->declare_parameter<std::string>("namespace1.str");
+  loaded_successfully &= node_ptr->get_parameter("namespace1.str", params.namespaced_str);
+  RCLCPP_INFO_STREAM(get_logger(), "[Param]: namespace1.str: " << params.namespaced_str);
+
+  return loaded_successfully;
+}
 
 //}
 
