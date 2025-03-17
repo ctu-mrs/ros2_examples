@@ -21,6 +21,8 @@
   <depend>image_transport</depend>
   <depend>libopencv-dev</depend>
 
+  <exec_depend>vision_examples_utils</exec_depend>
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>
