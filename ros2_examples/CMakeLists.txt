@@ -163,7 +163,6 @@ ament_target_dependencies(tf2_listener_example
 
 rclcpp_components_register_nodes(tf2_listener_example PLUGIN "ros2_examples::Tf2ListenerExample" EXECUTABLE tf2_listener_example)
 
-<<<<<<< HEAD
 ## --------------------------------------------------------------
 ## |                      clock management                      |
 ## --------------------------------------------------------------
@@ -179,8 +178,6 @@ ament_target_dependencies(clock_consumer
 
 rclcpp_components_register_nodes(clock_consumer PLUGIN "ros2_examples::ClockConsumer" EXECUTABLE clock_consumer)
 
-=======
->>>>>>> mrs-lib-dep
 ## --------------------------------------------------------------
 ## |                           Testing                          |
 ## --------------------------------------------------------------

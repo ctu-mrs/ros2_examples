@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <ros2_examples/params.h>
 
 using namespace std::chrono_literals;
 
@@ -35,7 +36,7 @@ private:
   // | ------------------------- methods ------------------------ |
 
   // rcl_interfaces::msg::SetParametersResult callback_parameters(std::vector<rclcpp::Parameter> parameters);
-  bool load_parameters(const rclcpp::Node& node_ptr);
+  bool load_parameters(rclcpp::Node& node);
 };
 
 //}
@@ -47,15 +48,33 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
   RCLCPP_INFO(get_logger(), "initializing");
 
   bool loaded_successfully = true;
-  auto sub_node = this->create_sub_node("params");
-
   // | --------------------- load parameters -------------------- |
 
-  loaded_successfully &= load_parameters(*this);
-  // loaded_successfully &= load_parameters(sub_node);
+  RCLCPP_INFO(get_logger(), "Loading using Node");
+  loaded_successfully &= utils::load_param("env_var", env_var, *this);
+  loaded_successfully &= utils::load_param("floating_point_number", params.floating_point_number, *this);
+  loaded_successfully &= utils::load_param("some_string", params.some_string, *this);
+  loaded_successfully &= utils::load_param("vec_double", params.vec_double, *this);
+  loaded_successfully &= utils::load_param("vec_str", params.vec_str, *this);
+  loaded_successfully &= utils::load_param("namespace1.str", params.namespaced_str, *this);
 
   if (!loaded_successfully) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  RCLCPP_INFO(get_logger(), "Loading using Sub-Node");
+  auto sub_node = this->create_sub_node("params");
+  loaded_successfully &= utils::load_param("env_var", env_var, *sub_node);
+  loaded_successfully &= utils::load_param("floating_point_number", params.floating_point_number, *sub_node);
+  loaded_successfully &= utils::load_param("some_string", params.some_string, *sub_node);
+  loaded_successfully &= utils::load_param("vec_double", params.vec_double, *sub_node);
+  loaded_successfully &= utils::load_param("vec_str", params.vec_str, *sub_node);
+  loaded_successfully &= utils::load_param("namespace1.str", params.namespaced_str, *sub_node);
+
+  if (!loaded_successfully) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Sub-Node. Shutting down.");
     rclcpp::shutdown();
     return;
   }
@@ -108,24 +127,24 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
 //   return result;
 // }
 
-bool ParamsExample::load_parameters(const rclcpp::Node& node_ptr) {
+bool ParamsExample::load_parameters(rclcpp::Node& node) {
 
   bool loaded_successfully = true;
 
-  node_ptr->declare_parameter<std::string>("env_var");
-  loaded_successfully &= node_ptr->get_parameter("env_var", env_var);
+  node.declare_parameter<std::string>("env_var");
+  loaded_successfully &= node.get_parameter("env_var", env_var);
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: env_var: " << env_var);
 
-  node_ptr->declare_parameter<double>("floating_point_number");
-  loaded_successfully &= node_ptr->get_parameter("floating_point_number", params.floating_point_number);
+  node.declare_parameter<double>("floating_point_number");
+  loaded_successfully &= node.get_parameter("floating_point_number", params.floating_point_number);
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: floating_point_number: " << params.floating_point_number);
 
-  node_ptr->declare_parameter<std::string>("some_string");
-  loaded_successfully &= node_ptr->get_parameter("some_string", params.some_string);
+  node.declare_parameter<std::string>("some_string");
+  loaded_successfully &= node.get_parameter("some_string", params.some_string);
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: some_string: " << params.some_string);
 
-  node_ptr->declare_parameter<std::vector<double>>("vec_double");
-  loaded_successfully &= node_ptr->get_parameter("vec_double", params.vec_double);
+  node.declare_parameter<std::vector<double>>("vec_double");
+  loaded_successfully &= node.get_parameter("vec_double", params.vec_double);
 
   std::stringstream tmp_str;
   tmp_str << "[";
@@ -136,8 +155,8 @@ bool ParamsExample::load_parameters(const rclcpp::Node& node_ptr) {
 
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: vec_double: " << tmp_str.str());
 
-  node_ptr->declare_parameter<std::vector<std::string>>("vec_str");
-  loaded_successfully &= node_ptr->get_parameter("vec_str", params.vec_str);
+  node.declare_parameter<std::vector<std::string>>("vec_str");
+  loaded_successfully &= node.get_parameter("vec_str", params.vec_str);
   std::stringstream tmp_double_str;
   tmp_double_str << "[";
   for (const auto&  val: params.vec_double) {
@@ -146,8 +165,8 @@ bool ParamsExample::load_parameters(const rclcpp::Node& node_ptr) {
   tmp_double_str << "]";
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: vec_str: " << tmp_double_str.str());
 
-  node_ptr->declare_parameter<std::string>("namespace1.str");
-  loaded_successfully &= node_ptr->get_parameter("namespace1.str", params.namespaced_str);
+  node.declare_parameter<std::string>("namespace1.str");
+  loaded_successfully &= node.get_parameter("namespace1.str", params.namespaced_str);
   RCLCPP_INFO_STREAM(get_logger(), "[Param]: namespace1.str: " << params.namespaced_str);
 
   return loaded_successfully;
