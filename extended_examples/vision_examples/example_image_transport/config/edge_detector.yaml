@@ -1,0 +1,16 @@
+# threshold for the canny edge detector (see https://docs.opencv.org/3.2.0/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de)
+canny_threshold: 70
+
+# coordinates of the point, which will be backprojected to the camera image from the specified frame
+world_frame_id: "world_origin"
+
+world_point:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+
+rate:
+  # how often to publish my topic?
+  publish: 10 # [Hz]
+  # how often check whether msgs are arriving?
+  check_subscribers: 1 # [Hz]

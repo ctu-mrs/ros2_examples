@@ -1,0 +1,3 @@
+n_subscribers: 1000 # [-]
+
+timer_rate: 100.0 # [Hz]

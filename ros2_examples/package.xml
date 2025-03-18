@@ -29,7 +29,7 @@
   <depend>ros2_lib</depend>
 
   <!-- this is needed to be able to run launch files -->
-  <depend>ros2_examples_py</depend>
+  <!-- <depend>ros2_examples_py</depend> -->
 
   <export>
     <build_type>ament_cmake</build_type>
