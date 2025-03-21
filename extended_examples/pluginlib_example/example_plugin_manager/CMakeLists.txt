@@ -29,6 +29,7 @@ include_directories(
 add_library(example_plugin_manager SHARED
  src/example_plugin_manager.cpp
  )
+
 # ament manages cmake related variables and dependency search (similar to catkin in ROS1)
 ament_target_dependencies(example_plugin_manager
   rclcpp
@@ -69,4 +70,5 @@ install(DIRECTORY config
 # this will export the include-related variables for use by other libraries
 # this is needed if you wish to include the headers from this pkg into downstream libraries
 ament_export_include_directories("include")
+
 ament_package()

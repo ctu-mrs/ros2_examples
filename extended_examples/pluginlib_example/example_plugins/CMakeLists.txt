@@ -45,7 +45,7 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
 ## --------------------------------------------------------------
 
 install(
-  TARGETS ${PROJECT_NAME} # list all libraries to be installed and exported out from this pkg
+  TARGETS ${PROJECT_NAME} # list all libraries to be installed and exported out from this 
   EXPORT export_${PROJECT_NAME} # a single export name is enough to export all libraries from this pkg
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
