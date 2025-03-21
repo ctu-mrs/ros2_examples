@@ -220,22 +220,27 @@ install(
   RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY include/
-  DESTINATION include
+install(
+  DIRECTORY include
+  DESTINATION .
 )
 
-install(DIRECTORY launch
+install(
+  DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(DIRECTORY config
+install(
+  DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
-# this will export the include-related variables for use by other libraries
-# this is needed if you wish to include the headers from this pkg into downstream libraries
-ament_export_include_directories("include")
+ament_export_include_directories(
+  include
+)
 
-ament_export_dependencies(${DEPENDENCIES})
+ament_export_dependencies(
+  ${DEPENDENCIES}
+)
 
 ament_package()
