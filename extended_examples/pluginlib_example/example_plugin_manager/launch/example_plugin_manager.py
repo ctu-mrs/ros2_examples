@@ -7,8 +7,6 @@ from launch.substitutions import EnvironmentVariable
 
 from ament_index_python.packages import get_package_share_directory
 
-
-
 def generate_launch_description():
 
     ld = launch.LaunchDescription()

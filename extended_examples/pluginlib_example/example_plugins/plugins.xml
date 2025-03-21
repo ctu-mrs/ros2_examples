@@ -1,4 +1,4 @@
-<library path="example_plugins">
+<library path="ExamplePlugin_Plugin">
   <!-- these two variables should be identical to the names at the end of th CPP file implementing the plugin -->
   <class type="example_plugins::ExamplePlugin" base_class_type="example_plugin_manager::Plugin">
     <description>This is ExamplePlugin.</description>

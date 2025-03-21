@@ -3,60 +3,24 @@ root: ./
 name: simulation
 socket_name: mrs
 attach: false
-tmux_options: -f /etc/ctu-mrs/tmux.conf
+# tmux_options: -f /etc/ctu-mrs/tmux.conf
 # you can modify these
-pre_window: export UAV_NAME=uav1; export RUN_TYPE=simulation; export UAV_TYPE=f550
-startup_window: edge_detector
+pre_window: export UAV_NAME=uav1;
+startup_window: image_transport
 windows:
-  - roscore:
+  - dummy_publisher:
       layout: tiled
       panes:
-        - roscore
-  - gazebo:
+        - ros2 run vision_examples_utils dummy_pub
+  - image_transport:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch world_name:=grass_plane gui:=true
-        - waitForControl; gz camera -c gzclient_camera -f $UAV_NAME; history -s gz camera -c gzclient_camera -f $UAV_NAME
-  - status:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch mrs_uav_status status.launch
-  - spawn:
-      layout: tiled
-      panes:
-        - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --pos -5 0 1 0.0 --enable-rangefinder --enable-mobius-camera-front"
-  - hw_api:
-      layout: tiled
-      panes:
-        - waitForTime; roslaunch mrs_uav_px4_api api.launch
-  - core:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch mrs_uav_core core.launch
-          platform_config:=`rospack find mrs_uav_gazebo_simulation`/config/mrs_uav_system/$UAV_TYPE.yaml
-          custom_config:=./config/custom_config.yaml
-          world_config:=./config/world_config.yaml
-          network_config:=./config/network_config.yaml
-  - edge_detector:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch example_edge_detector edge_detector.launch
-  - takeoff:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch mrs_uav_autostart automatic_start.launch
-        - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2; rosservice call /$UAV_NAME/hw_api/offboard'
-  - goto:
-      layout: tiled
-      panes:
-        - 'history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 10.0, 1.5, 0.0\]\"'
+        - ros2 launch vision_examples example_image_transport.py
   - rviz:
       layout: tiled
       panes:
-        - waitForControl; roslaunch mrs_uav_core rviz.launch
-        - waitForControl; roslaunch mrs_rviz_plugins load_robot.launch
-        - waitForTime; waitForControl; roslaunch mrs_rviz_plugins rviz_interface.launch
-  - layout:
-      layout: tiled
-      panes:
-        - waitForControl; sleep 5; ~/.i3/layout_manager.sh ./layout.json
+        - rqt --perspective-file default.perspective
+  # - layout:
+  #     layout: tiled
+  #     panes:
+  #       - waitForControl; sleep 5; ~/.i3/layout_manager.sh ./layout.json

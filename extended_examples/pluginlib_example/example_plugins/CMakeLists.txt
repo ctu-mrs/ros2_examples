@@ -10,28 +10,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_ros REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(pluginlib REQUIRED)
-find_package(ros2_examples REQUIRED)
-find_package(example_plugin_manager REQUIRED)
-
-# export the plugins listed in plugins.xml to be discovered by the manager
-pluginlib_export_plugin_description_file(example_plugin_manager plugins.xml)
-
-set(Eigen_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
-set(Eigen_LIBRARIES ${Eigen_LIBRARIES})
-
-# ${PROJECT_NAME}
-add_library(${PROJECT_NAME} SHARED
-  src/example_plugin.cpp
-  )
-
-# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
-ament_target_dependencies(${PROJECT_NAME} PUBLIC
+set(DEPENDENCIES
+  ament_cmake
+  ament_cmake_ros
   rclcpp
   rclcpp_components
   Eigen3
@@ -40,23 +21,71 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
   example_plugin_manager
 )
 
+set(LIBRARIES
+  ExamplePlugin_Plugin
+  )
+
+foreach(DEP IN LISTS DEPENDENCIES)
+  find_package(${DEP} REQUIRED)
+endforeach()
+
+include_directories(
+  include
+  ${rclcpp_INCLUDE_DIRS}
+  ${example_plugin_manager_INCLUDE_DIRS}
+  )
+
+## --------------------------------------------------------------
+## |                           Compile                          |
+## --------------------------------------------------------------
+
+# Example plugin
+
+add_library(ExamplePlugin_Plugin SHARED
+  src/example_plugin.cpp
+  )
+
+# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
+ament_target_dependencies(ExamplePlugin_Plugin
+  ${DEPENDENCIES}
+)
+
+## --------------------------------------------------------------
+## |                       Export plugins                       |
+## --------------------------------------------------------------
+
+# <package of the base class>, <relative path to the xml>
+pluginlib_export_plugin_description_file(example_plugin_manager plugins.xml)
+
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
+ament_export_libraries(
+  ${LIBRARIES}
+)
+
 install(
-  TARGETS ${PROJECT_NAME} # list all libraries to be installed and exported out from this pkg
-  EXPORT export_${PROJECT_NAME} # a single export name is enough to export all libraries from this pkg
+  TARGETS ${LIBRARIES}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY config
+install(
+  DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
+
 # export the installed library and related info to the cmake system
 # this is ESSENTIAL for the plugin to be discovered dynamically
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_targets(
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+)
+
+ament_export_dependencies(
+  ${DEPENDENCIES}
+)
 
 ament_package()

@@ -3,7 +3,7 @@ project(ros2_examples)
 
 # set the correct standards
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -12,17 +12,36 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(ros2_lib REQUIRED)
+set(DEPENDENCIES
+  ament_cmake
+  rclcpp
+  rclcpp_components
+  std_msgs
+  std_srvs
+  tf2_ros
+  geometry_msgs
+  ros2_lib
+)
+
+foreach(DEP IN LISTS DEPENDENCIES)
+  find_package(${DEP} REQUIRED)
+endforeach()
+
+set(LIBRARIES
+  params_example
+  subscriber_example
+  publisher_example
+  service_server_example
+  service_client_example
+  timer_example
+  tf2_broadcaster_example
+  tf2_listener_example
+  clock_consumer
+  )
 
 include_directories(
   include
+  ${colcon_INCLUDE_DIRS}
 )
 
 ## --------------------------------------------------------------
@@ -194,34 +213,34 @@ endif()
 ## |                           install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS
-  params_example
-  subscriber_example
-  publisher_example
-  service_server_example
-  service_client_example
-  timer_example
-  tf2_broadcaster_example
-  tf2_listener_example
-  clock_consumer
+install(
+  TARGETS ${LIBRARIES}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY include/
-  DESTINATION include
+install(
+  DIRECTORY include
+  DESTINATION .
 )
 
-install(DIRECTORY launch
+install(
+  DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(DIRECTORY config
+install(
+  DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
-# this will export the include-related variables for use by other libraries
-# this is needed if you wish to include the headers from this pkg into downstream libraries
-ament_export_include_directories("include")
+ament_export_include_directories(
+  include
+)
+
+ament_export_dependencies(
+  ${DEPENDENCIES}
+)
+
 ament_package()

@@ -66,8 +66,8 @@ rclcpp_components_register_nodes(publishers PLUGIN "sub_pub_torture_test::Publis
 ## |                           install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS
-  ${LIBRARIES}
+install(
+  TARGETS ${LIBRARIES}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -88,4 +88,5 @@ install(DIRECTORY config
 # this will export the include-related variables for use by other libraries
 # this is needed if you wish to include the headers from this pkg into downstream libraries
 ament_export_include_directories("include")
+
 ament_package()

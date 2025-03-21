@@ -10,27 +10,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_ros REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(pluginlib REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(ros2_examples REQUIRED)
-
-set(Eigen_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
-set(Eigen_LIBRARIES ${Eigen_LIBRARIES})
-
-include_directories(
-  include
-  )
-
-# ExamplePluginManager
-add_library(example_plugin_manager SHARED
- src/example_plugin_manager.cpp
- )
-# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
-ament_target_dependencies(example_plugin_manager
+set(DEPENDENCIES
+  ament_cmake
+  ament_cmake_ros
   rclcpp
   rclcpp_components
   pluginlib
@@ -38,35 +20,74 @@ ament_target_dependencies(example_plugin_manager
   ros2_examples
 )
 
+set(LIBRARIES
+  ExamplePluginManager_PluginManager
+  )
+
+foreach(DEP IN LISTS DEPENDENCIES)
+  find_package(${DEP} REQUIRED)
+endforeach()
+
+include_directories(
+  include
+  ${rclcpp_INCLUDE_DIRS}
+  ${ros2_examples_INCLUDE_DIRS}
+  )
+
+# ExamplePluginManager
+add_library(ExamplePluginManager_PluginManager SHARED
+ src/example_plugin_manager.cpp
+ )
+
+# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
+ament_target_dependencies(ExamplePluginManager_PluginManager
+  ${DEPENDENCIES}
+)
+
 # each component (nodelet) needs to be registered to make it discoverable at runtime
-rclcpp_components_register_nodes(example_plugin_manager "example_plugin_manager::ExamplePluginManager")
+rclcpp_components_register_nodes(ExamplePluginManager_PluginManager "example_plugin_manager::ExamplePluginManager")
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS
-  example_plugin_manager
+ament_export_libraries(
+  ${LIBRARIES}
+)
+
+install(
+  TARGETS ${LIBRARIES}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-  )
+)
 
-# this will copy the header files for use by other libraries
 install(
-  DIRECTORY include/
-  DESTINATION include
+  DIRECTORY include
+  DESTINATION .
 )
 
-install(DIRECTORY launch
+install(
+  DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(DIRECTORY config
+install(
+  DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )
 
-# this will export the include-related variables for use by other libraries
-# this is needed if you wish to include the headers from this pkg into downstream libraries
-ament_export_include_directories("include")
+ament_export_include_directories(
+  include
+)
+
+ament_export_targets(
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+)
+
+ament_export_dependencies(
+  ${DEPENDENCIES}
+)
+
 ament_package()

@@ -38,16 +38,16 @@ PluginParams::PluginParams(const std::string& address, const std::string& name_s
 class ExamplePluginManager : public rclcpp::Node {
 
 public:
-  ExamplePluginManager(const rclcpp::NodeOptions &options);
+  ExamplePluginManager(const rclcpp::NodeOptions& options);
 
 private:
-  bool            is_initialized_ = false;
-  std::string _uav_type_ = "";
+  bool        is_initialized_ = false;
+  std::string _uav_type_      = "";
 
   // | ---------------------- update timer ---------------------- |
 
   rclcpp::TimerBase::SharedPtr timer_update_;
-  double     _rate_timer_update_;
+  double                       _rate_timer_update_;
 
   // | -------- an object we want to share to our plugins ------- |
 
@@ -62,7 +62,7 @@ private:
   std::unique_ptr<pluginlib::ClassLoader<example_plugin_manager::Plugin>> plugin_loader_;  // pluginlib loader
   std::vector<std::string>                                                _plugin_names_;
   std::map<std::string, PluginParams>                                     plugins_;      // map between plugin names and plugin params
-  std::vector<std::shared_ptr<example_plugin_manager::Plugin>>          plugin_list_;  // list of plugins, routines are callable from this
+  std::vector<std::shared_ptr<example_plugin_manager::Plugin>>            plugin_list_;  // list of plugins, routines are callable from this
   // std::mutex                                                              mutex_plugins_;
 
   std::string _initial_plugin_name_;
@@ -83,7 +83,7 @@ private:
 
 /* onInit() //{ */
 
-ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  : Node("example_plugin_manager", options) {
+ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions& options) : Node("example_plugin_manager", options) {
 
   RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: initializing");
 
@@ -91,9 +91,9 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
 
   bool loaded_successfully = true;
 
-  loaded_successfully &= utils::parse_param("uav_type", _uav_type_, *this);
-  loaded_successfully &= utils::parse_param("update_timer_rate", _rate_timer_update_, *this);
-  loaded_successfully &= utils::parse_param("initial_plugin", _initial_plugin_name_, *this);
+  loaded_successfully &= utils::load_param("uav_type", _uav_type_, *this);
+  loaded_successfully &= utils::load_param("update_timer_rate", _rate_timer_update_, *this);
+  loaded_successfully &= utils::load_param("initial_plugin", _initial_plugin_name_, *this);
 
   if (!loaded_successfully) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
@@ -119,7 +119,7 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
   // |                      load the plugins                      |
   // --------------------------------------------------------------
 
-  loaded_successfully &= utils::parse_param("plugins", _plugin_names_ , *this);
+  loaded_successfully &= utils::load_param("plugins", _plugin_names_, *this);
 
   if (!loaded_successfully) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
@@ -139,9 +139,9 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
     double      some_property;
 
     // nested params are separated by '.' instead of '/'
-    loaded_successfully &= utils::parse_param(plugin_name + ".address", address, *this);
-    loaded_successfully &= utils::parse_param(plugin_name + ".name_space", name_space, *this);
-    loaded_successfully &= utils::parse_param(plugin_name + ".some_property", some_property, *this);
+    loaded_successfully &= utils::load_param(plugin_name + ".address", address, *this);
+    loaded_successfully &= utils::load_param(plugin_name + ".name_space", name_space, *this);
+    loaded_successfully &= utils::load_param(plugin_name + ".some_property", some_property, *this);
 
     if (!loaded_successfully) {
       RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters. Shutting down.");
@@ -213,7 +213,8 @@ ExamplePluginManager::ExamplePluginManager(const rclcpp::NodeOptions &options)  
 
   // | ---------- activate the first plugin on the list --------- |
 
-  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: activating plugin with idx %d on the list (named: %s)", _initial_plugin_idx_, _plugin_names_.at(_initial_plugin_idx_).c_str());
+  RCLCPP_INFO(get_logger(), "[ExamplePluginManager]: activating plugin with idx %d on the list (named: %s)", _initial_plugin_idx_,
+              _plugin_names_.at(_initial_plugin_idx_).c_str());
 
   int some_activation_input_to_plugin = 1234;
 
