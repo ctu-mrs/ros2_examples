@@ -1,6 +1,18 @@
-floating_point_number: 666.666
-some_string: "dog is barking"
-vec_double: [1.0, 2.0, 3.0, 4.0]
-vec_str: ["Cats", "are", "lovely"]
-namespace1:
-  str: "namespaced str"
+params:
+  floating_point_number: 666.666
+  some_string: "dog is barking"
+  vec_double: [1.0, 2.0, 3.0, 4.0]
+  vec_str: ["Cats", "are", "lovely"]
+  namespace1:
+    some_string: "namespaced str"
+
+  namespace2:
+    floating_point_number: 786.786
+    some_string: "Cat is meowing"
+    vec_double: [-1.0, -2.0, -3.0, -4.0]
+    vec_str: ["Dogs", "are", "lovely", "too"]
+    namespace3:
+      floating_point_number: 786.666
+      some_string: "Its raining cats and dogs"
+      vec_double: [-1.0, 2.0, -3.0, 4.0]
+      vec_str: ["Cats", "and", "dogs"]

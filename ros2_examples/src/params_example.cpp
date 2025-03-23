@@ -2,7 +2,8 @@
 
 #include <string>
 #include <vector>
-#include <ros2_examples/params.h>
+// #include <ros2_examples/params.h>
+#include <mrs_lib/param_loader.h>
 
 using namespace std::chrono_literals;
 
@@ -26,7 +27,6 @@ private:
     std::string some_string = "I should be changed";
     std::vector<std::string> vec_str{"I", "must", "be", "changed"};
     std::vector<double> vec_double{7.0, 8.0, 6.0};
-    std::string namespaced_str = "I should have a namespaced string";
   };
   ConfigYAMLParams params; 
 };
@@ -39,38 +39,53 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
 
   RCLCPP_INFO(get_logger(), "initializing");
 
-  bool loaded_successfully = true;
+  // this->declare_parameter<std::string>("dummy_param", "cat");
+
+  auto param_sub_node = this->create_sub_node("params");
+  mrs_lib::ParamLoader param_loader{param_sub_node, std::string{this->get_name()}};
   // | --------------------- load parameters -------------------- |
 
-  RCLCPP_INFO(get_logger(), "Loading using Node");
-  loaded_successfully &= utils::load_param("env_var", env_var, *this);
-  loaded_successfully &= utils::load_param("floating_point_number", params.floating_point_number, *this);
-  loaded_successfully &= utils::load_param("some_string", params.some_string, *this);
-  loaded_successfully &= utils::load_param("vec_double", params.vec_double, *this);
-  loaded_successfully &= utils::load_param("vec_str", params.vec_str, *this);
-  loaded_successfully &= utils::load_param("namespace1.str", params.namespaced_str, *this);
+  RCLCPP_INFO_STREAM(get_logger(), "Load the top-level parameters under namespace: " << param_sub_node->get_sub_namespace());
+  // top-level params mostly passed as args to the launch file
+  param_loader.loadParam("env_var", env_var);
   std::string custom_config = "";
-  loaded_successfully &= utils::load_param("custom_config", custom_config, *this);
+  param_loader.loadParam("custom_config", custom_config);
 
-
-  if (!loaded_successfully) {
+  // params mostly stored inside the yaml files
+  param_loader.loadParam("floating_point_number", params.floating_point_number);
+  param_loader.loadParam("some_string", params.some_string);
+  param_loader.loadParam("vec_double", params.vec_double);
+  param_loader.loadParam("vec_str", params.vec_str);
+  std::string tmp_str = "";
+  param_loader.loadParam("namespace1.some_string", tmp_str);
+  
+  if (!param_loader.loadedSuccessfully()) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
     rclcpp::shutdown();
     return;
   }
 
-  RCLCPP_INFO(get_logger(), "Loading using Sub-Node");
-  auto sub_node = this->create_sub_node("params");
-  loaded_successfully &= utils::load_param("env_var", env_var, *sub_node);
-  loaded_successfully &= utils::load_param("floating_point_number", params.floating_point_number, *sub_node);
-  loaded_successfully &= utils::load_param("some_string", params.some_string, *sub_node);
-  loaded_successfully &= utils::load_param("vec_double", params.vec_double, *sub_node);
-  loaded_successfully &= utils::load_param("vec_str", params.vec_str, *sub_node);
-  loaded_successfully &= utils::load_param("namespace1.str", params.namespaced_str, *sub_node);
-  loaded_successfully &= utils::load_param("custom_config", custom_config, *this);
+  // load lower-level namespaces using sub-nodes of the main param_sub_node
+  auto sub_node = param_sub_node->create_sub_node("namespace2");
+  mrs_lib::ParamLoader param_loader2{sub_node, std::string{this->get_name()}};
+  ConfigYAMLParams param_tmp;
 
-  if (!loaded_successfully) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Sub-Node. Shutting down.");
+  // | --------------------- load parameters -------------------- |
+
+  RCLCPP_INFO_STREAM(get_logger(), "Load using sub-node with namespace: " << sub_node->get_sub_namespace());
+  param_loader2.loadParam("floating_point_number", param_tmp.floating_point_number);
+  param_loader2.loadParam("some_string", param_tmp.some_string);
+  param_loader2.loadParam("vec_double", param_tmp.vec_double);
+  param_loader2.loadParam("vec_str", param_tmp.vec_str);
+
+  ConfigYAMLParams param_tmp2;
+  param_loader2.loadParam("namespace3.floating_point_number", param_tmp.floating_point_number);
+  param_loader2.loadParam("namespace3.some_string", param_tmp.some_string);
+  param_loader2.loadParam("namespace3.vec_double", param_tmp.vec_double);
+  param_loader2.loadParam("namespace3.vec_str", param_tmp.vec_str);
+
+  if (!param_loader2.loadedSuccessfully()) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
     rclcpp::shutdown();
     return;
   }

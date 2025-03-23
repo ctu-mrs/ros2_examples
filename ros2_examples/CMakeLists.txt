@@ -20,6 +20,7 @@ set(DEPENDENCIES
   std_srvs
   tf2_ros
   geometry_msgs
+  mrs_lib
   ros2_lib
 )
 
@@ -135,15 +136,12 @@ add_library(params_example SHARED
   src/params_example.cpp
 )
 
-# # TODO WHY IS THIS HERE?
-# target_compile_definitions(params_example
-#   PRIVATE "ros2_examples_BUILDING_DLL")
-
 ament_target_dependencies(params_example
   rclcpp
   rclcpp_components
   std_msgs
   std_srvs
+  mrs_lib
 )
 
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)

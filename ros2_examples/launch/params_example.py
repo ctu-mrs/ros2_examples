@@ -65,8 +65,8 @@ def generate_launch_description():
 
                 parameters=[
                         pkg_share_path + '/config/params_example.yaml',
-                        {'custom_config': custom_config,
-                        'env_var': env_var},
+                        {'params.custom_config': custom_config,
+                        'params.env_var': env_var},
                     ],
 
                 # remappings=[
