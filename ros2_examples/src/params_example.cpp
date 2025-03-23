@@ -39,11 +39,8 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
 
   RCLCPP_INFO(get_logger(), "initializing");
 
-  // this->declare_parameter<std::string>("dummy_param", "cat");
-
-  auto param_sub_node = this->create_sub_node("params");
+  auto param_sub_node = this->create_sub_node("ns1_depth1");
   mrs_lib::ParamLoader param_loader{param_sub_node, std::string{this->get_name()}};
-  // | --------------------- load parameters -------------------- |
 
   RCLCPP_INFO_STREAM(get_logger(), "Load the top-level parameters under namespace: " << param_sub_node->get_sub_namespace());
   // top-level params mostly passed as args to the launch file
@@ -56,8 +53,21 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
   param_loader.loadParam("some_string", params.some_string);
   param_loader.loadParam("vec_double", params.vec_double);
   param_loader.loadParam("vec_str", params.vec_str);
-  std::string tmp_str = "";
-  param_loader.loadParam("namespace1.some_string", tmp_str);
+  
+  if (!param_loader.loadedSuccessfully()) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
+    rclcpp::shutdown();
+    return;
+  }
+
+  param_sub_node = this->create_sub_node("ns2_depth1");
+  param_loader = mrs_lib::ParamLoader{param_sub_node, std::string{this->get_name()}};
+
+  RCLCPP_INFO_STREAM(get_logger(), "Load the top-level parameters under namespace: " << param_sub_node->get_sub_namespace());
+  param_loader.loadParam("floating_point_number", params.floating_point_number);
+  param_loader.loadParam("some_string", params.some_string);
+  param_loader.loadParam("vec_double", params.vec_double);
+  param_loader.loadParam("vec_str", params.vec_str);
   
   if (!param_loader.loadedSuccessfully()) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
@@ -66,23 +76,23 @@ ParamsExample::ParamsExample(const rclcpp::NodeOptions options) : Node("param_ex
   }
 
   // load lower-level namespaces using sub-nodes of the main param_sub_node
-  auto sub_node = param_sub_node->create_sub_node("namespace2");
-  mrs_lib::ParamLoader param_loader2{sub_node, std::string{this->get_name()}};
+  auto child_sub_node = param_sub_node->create_sub_node("ns1_depth2");
+  mrs_lib::ParamLoader param_loader2{child_sub_node, std::string{this->get_name()}};
   ConfigYAMLParams param_tmp;
 
   // | --------------------- load parameters -------------------- |
 
-  RCLCPP_INFO_STREAM(get_logger(), "Load using sub-node with namespace: " << sub_node->get_sub_namespace());
+  RCLCPP_INFO_STREAM(get_logger(), "Load using sub-node with namespace: " << child_sub_node->get_sub_namespace());
   param_loader2.loadParam("floating_point_number", param_tmp.floating_point_number);
   param_loader2.loadParam("some_string", param_tmp.some_string);
   param_loader2.loadParam("vec_double", param_tmp.vec_double);
   param_loader2.loadParam("vec_str", param_tmp.vec_str);
 
   ConfigYAMLParams param_tmp2;
-  param_loader2.loadParam("namespace3.floating_point_number", param_tmp.floating_point_number);
-  param_loader2.loadParam("namespace3.some_string", param_tmp.some_string);
-  param_loader2.loadParam("namespace3.vec_double", param_tmp.vec_double);
-  param_loader2.loadParam("namespace3.vec_str", param_tmp.vec_str);
+  param_loader2.loadParam("ns1_depth3.floating_point_number", param_tmp.floating_point_number);
+  param_loader2.loadParam("ns1_depth3.some_string", param_tmp.some_string);
+  param_loader2.loadParam("ns1_depth3.vec_double", param_tmp.vec_double);
+  param_loader2.loadParam("ns1_depth3.vec_str", param_tmp.vec_str);
 
   if (!param_loader2.loadedSuccessfully()) {
     RCLCPP_ERROR_STREAM(get_logger(), "Could not load all non-optional parameters using Node. Shutting down.");
