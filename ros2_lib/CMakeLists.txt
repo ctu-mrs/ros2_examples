@@ -3,7 +3,6 @@ project(ros2_lib)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_definitions("-Wall")
 add_definitions("-Wextra")
@@ -15,7 +14,6 @@ set(DEPENDENCIES
   rclcpp_components
   Eigen3
 )
-
 
 foreach(DEP IN LISTS DEPENDENCIES)
   find_package(${DEP} REQUIRED)
