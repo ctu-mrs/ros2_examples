@@ -14,7 +14,7 @@ def generate_launch_description():
     ld.add_action(ComposableNodeContainer(
 
         namespace = namespace,
-        name = 'component_publisher_example',
+        name = 'component_image_transport_example',
         package='rclcpp_components',
 
         executable='component_container_mt',
@@ -28,9 +28,9 @@ def generate_launch_description():
                 namespace=namespace,
                 name='example_image_transport',
 
-                # parameters=[
-                #     pkg_share_path + '/config/publisher_example.yaml',
-                #     ],
+                parameters=[
+                    pkg_share_path + '/config/default.yaml',
+                    ],
 
                 remappings=[
                     # topics

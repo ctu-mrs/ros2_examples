@@ -47,14 +47,9 @@ ExampleImageTransport::ExampleImageTransport(rclcpp::NodeOptions options) : Node
 
   RCLCPP_INFO(get_logger(), "Initializing");
 
-  {
-    std::scoped_lock lck(mutex_image_);
-    if(image_) {
-      RCLCPP_ERROR(get_logger(), "Image pointer is assigned before initialization, shutting down");
-      rclcpp::shutdown();
-      return;
-    }
-  }
+  this->declare_parameter("timer.rate", 2.0);
+  double rate = 0;
+  this->get_parameter("timer.rate", rate);
 
   auto sub_node = this->create_sub_node("image_transport");
   image_transport::ImageTransport image_transporter(sub_node);
@@ -67,7 +62,7 @@ ExampleImageTransport::ExampleImageTransport(rclcpp::NodeOptions options) : Node
 
   pub_edited_image_ = image_transporter.advertise("edited_image_out", 1);
 
-  timer_publisher_ = create_timer(std::chrono::duration<double>(1.0 / 2.0), std::bind(&ExampleImageTransport::callback_timer, this));
+  timer_publisher_ = create_timer(std::chrono::duration<double>(1.0 / rate), std::bind(&ExampleImageTransport::callback_timer, this));
 
   is_initialized_ = true;
   RCLCPP_INFO(get_logger(), "Initialized");
