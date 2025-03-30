@@ -200,9 +200,8 @@ rclcpp_components_register_nodes(clock_consumer PLUGIN "ros2_examples::ClockCons
 ## |                           Testing                          |
 ## --------------------------------------------------------------
 
+# BUILD_TESTING is true by default when building with colcon
 if(BUILD_TESTING)
-
-  message(WARNING "Testing enabled.")
 
   add_subdirectory(test)
 
