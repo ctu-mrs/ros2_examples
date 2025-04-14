@@ -1,7 +1,6 @@
-param_namespace:
-
-  # floating_number: "asd" # this will fail to load due to type mismatch
-
-  floating_number: 5.0
-
+floating_point_number: 666.666
 some_string: "dog is barking"
+vec_double: [1.0, 2.0, 3.0, 4.0]
+vec_str: ["Cats", "are", "lovely"]
+namespace1:
+  str: "namespaced str"

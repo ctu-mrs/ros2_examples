@@ -157,8 +157,10 @@ void TimerExample::callback_timer3() {
   const double       rate = cntr.update_rate();
 
   publisher_timer_3_->publish(std_msgs::msg::Float64().set__data(rate));
+
   RCLCPP_INFO_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "[TimerExample]: 0.2Hz timer (5s period) spinning at rate " << rate << "Hz, starting 4s work");
-  rclcpp::sleep_for(std::chrono::milliseconds(4000));
+
+  rclcpp::sleep_for(4s);
 
   RCLCPP_INFO(get_logger(), "[TimerExample]: 0.2 Hz timer stopping work");
 }
@@ -181,7 +183,7 @@ void TimerExample::callback_timer4() {
   }
 
   // this sleep simulates some kind of work done by this thread that can be paralellized
-  rclcpp::sleep_for(std::chrono::milliseconds(4000));
+  rclcpp::sleep_for(4s);
 
   RCLCPP_INFO(get_logger(), "[TimerExample]: 0.5 Hz timer stopping work");
 }

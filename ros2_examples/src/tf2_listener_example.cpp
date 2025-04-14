@@ -42,9 +42,9 @@ Tf2ListenerExample::Tf2ListenerExample(rclcpp::NodeOptions options)
   // to suppress the error message which doesn't apply to this case
   tf_buffer_.setUsingDedicatedThread(true);
 
-  // | -------------------------- timer ------------------------- |
+      // | -------------------------- timer ------------------------- |
 
-  timer_main_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&Tf2ListenerExample::timer_main, this));
+      timer_main_ = create_wall_timer(std::chrono::duration<double>(1.0 / 10.0), std::bind(&Tf2ListenerExample::timer_main, this));
 
   // | --------------------- finish the init -------------------- |
 

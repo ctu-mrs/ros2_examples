@@ -3,26 +3,44 @@ project(ros2_examples)
 
 # set the correct standards
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # set the compile options to show code warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(ros2_lib REQUIRED)
+set(DEPENDENCIES
+  ament_cmake
+  rclcpp
+  rclcpp_components
+  std_msgs
+  std_srvs
+  tf2_ros
+  geometry_msgs
+  ros2_lib
+)
+
+foreach(DEP IN LISTS DEPENDENCIES)
+  find_package(${DEP} REQUIRED)
+endforeach()
+
+set(LIBRARIES
+  params_example
+  subscriber_example
+  publisher_example
+  service_server_example
+  service_client_example
+  timer_example
+  tf2_broadcaster_example
+  tf2_listener_example
+  clock_consumer
+  )
 
 include_directories(
   include
+  ${colcon_INCLUDE_DIRS}
 )
 
 ## --------------------------------------------------------------
@@ -33,6 +51,7 @@ add_library(subscriber_example SHARED
   src/subscriber_example.cpp
 )
 
+# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
 ament_target_dependencies(subscriber_example
   rclcpp
   rclcpp_components
@@ -51,14 +70,12 @@ add_library(publisher_example SHARED
   src/publisher_example.cpp
 )
 
-# ament manages cmake related variables and dependency search (similar to catkin in ROS1)
 ament_target_dependencies(publisher_example
   rclcpp
   rclcpp_components
   std_msgs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(publisher_example PLUGIN "ros2_examples::PublisherExample")
 
 ## --------------------------------------------------------------
@@ -69,14 +86,12 @@ add_library(service_server_example SHARED
   src/service_server_example.cpp
 )
 
-# ament manages cmake related variables and dependecy search (similar to catkin in ROS1)
 ament_target_dependencies(service_server_example
   rclcpp
   rclcpp_components
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(service_server_example PLUGIN "ros2_examples::ServiceServerExample")
 
 ## --------------------------------------------------------------
@@ -87,14 +102,12 @@ add_library(service_client_example SHARED
   src/service_client_example.cpp
 )
 
-# ament manages cmake related variables and dependecy search (similar to catkin in ROS1)
 ament_target_dependencies(service_client_example
   rclcpp
   rclcpp_components
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(service_client_example PLUGIN "ros2_examples::ServiceClientExample")
 
 ## --------------------------------------------------------------
@@ -111,7 +124,6 @@ ament_target_dependencies(timer_example
   std_msgs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(timer_example PLUGIN "ros2_examples::TimerExample" EXECUTABLE timer_example)
 
 ## --------------------------------------------------------------
@@ -133,7 +145,6 @@ ament_target_dependencies(params_example
   std_srvs
 )
 
-# each component (nodelet) needs to be registered to make it discoverable at runtime
 rclcpp_components_register_nodes(params_example PLUGIN "ros2_examples::ParamsExample" EXECUTABLE params_example)
 
 ## --------------------------------------------------------------
@@ -151,7 +162,6 @@ ament_target_dependencies(tf2_broadcaster_example
   geometry_msgs
 )
 
-# TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(tf2_broadcaster_example PLUGIN "ros2_examples::Tf2BroadcasterExample" EXECUTABLE tf2_broadcaster_example)
 
 ## --------------------------------------------------------------
@@ -169,19 +179,22 @@ ament_target_dependencies(tf2_listener_example
   geometry_msgs
 )
 
-# TODO HOW DOES THIS WORK?
 rclcpp_components_register_nodes(tf2_listener_example PLUGIN "ros2_examples::Tf2ListenerExample" EXECUTABLE tf2_listener_example)
 
-############################################################
-# adding libraries both Interface (header-only)
-############################################################
-# add template header-only library for implementing simulators
-add_library(${PROJECT_NAME}_headers INTERFACE)
+## --------------------------------------------------------------
+## |                      clock management                      |
+## --------------------------------------------------------------
 
-# add the header files that will be referenced when this target is used
-target_include_directories(${PROJECT_NAME}_headers INTERFACE
-  "$<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+add_library(clock_consumer SHARED
+  src/clock_consumer.cpp
+)
+
+ament_target_dependencies(clock_consumer
+  rclcpp
+  rclcpp_components
+)
+
+rclcpp_components_register_nodes(clock_consumer PLUGIN "ros2_examples::ClockConsumer" EXECUTABLE clock_consumer)
 
 ## --------------------------------------------------------------
 ## |                           Testing                          |
@@ -199,41 +212,34 @@ endif()
 ## |                           install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS
-  params_example
-  subscriber_example
-  publisher_example
-  service_server_example
-  service_client_example
-  timer_example
-  tf2_broadcaster_example
-  tf2_listener_example
+install(
+  TARGETS ${LIBRARIES}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-)
-
-install(DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
 )
 
 install(
-  TARGETS ${PROJECT_NAME}_headers
-  EXPORT export_${PROJECT_NAME}
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
+  DIRECTORY include
+  DESTINATION .
 )
 
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-
-install(DIRECTORY launch
+install(
+  DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(DIRECTORY config
+install(
+  DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
+)
+
+ament_export_include_directories(
+  include
+)
+
+ament_export_dependencies(
+  ${DEPENDENCIES}
 )
 
 ament_package()

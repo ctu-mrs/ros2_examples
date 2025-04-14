@@ -12,11 +12,12 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
-  <depend>nodelet</depend>
-  <depend>mrs_lib</depend>
+  <depend>pluginlib </depend>
+  <depend>eigen</depend>
   <depend>ros2_examples</depend>
   <depend>example_plugin_manager</depend>
 
