@@ -1,0 +1,50 @@
+# delayed takeoff
+pre_takeoff_sleep: 0.0 # [s]
+
+# A timeout between the takeoff being triggered and the UAV actually taking off
+# while the timeout is counting down, the takeoff can be aborted by switching off
+# the offboard mode.
+# default = 5 sec
+safety_timeout: 5.0 # [s]
+
+# true: will cause the UAV to take off
+# false: will perform all checks and enable control output, but the service
+#     uav_manager/takeoff needs to be called manually.
+handle_takeoff: true
+
+preflight_check:
+
+  # all the conditions must be met for the last <time_window> seconds
+  time_window: 5.0 # [s]
+
+  # takeoff not allowed if UAV's speed exceeds <max_speed>
+  speed_check:
+
+    enabled: true
+    max_speed: 0.3 # [m/s]
+
+  # takeoff not allowed if UAV's height sensor exceeds <max_height>
+  height_check:
+
+    enabled: true
+    max_height: 0.8 # [m]
+
+  # takeoff not allowed if UAV's gyro report motion
+  gyro_check:
+
+    enabled: true
+    max_rate: 1.0 # [rad/s]
+
+  # the node will wait for the following topics and won't allow
+  # takeoff until some data apear on them
+  topic_check:
+
+    enabled: true
+    timeout: 5.0 # [s], allowed timeout for the last accepted message
+
+    # if "/" is provided at the beginning of topic_name, the topic name is considered as written,
+    # if there is no "/" at the beginning, UAV_NAME is automatically added in front of the topic name (e.g., /uav1/topic_name)
+    topics: [
+      "estimation_manager/uav_state:mrs_msgs/msg/UavState",
+      "control_manager/diagnostics:mrs_msgs/msg/ControlManagerDiagnostics",
+    ]

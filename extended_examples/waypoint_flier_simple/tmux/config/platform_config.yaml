@@ -1,0 +1,64 @@
+uav_mass: 2.0
+
+motor_params:
+  n_motors: 4
+  a: 0.28980
+  b: -0.17647
+
+# these model parameters can be used when
+# - 'control group', and/or
+# - 'actuator control'
+# are accepted by the HW API.
+model_params:
+
+  arm_length: 0.25 # [m]
+  body_height: 0.1 # [m]
+
+  propulsion:
+
+    # force [N] = force_constant * rpm^2
+    force_constant: 0.00000027087
+
+    # torque [Nm] = torque_constant * force [N]
+    torque_constant: 0.07
+
+    prop_radius: 0.15 # [m]
+
+    # allocation motors -> torques
+
+    # quadrotor X configuration
+    # hexarotor X configuration
+    # [roll torque,      [            [RPM_1^2,
+    #  pitch torque,  =    Alloc    *  RPM_2^2,
+    #  yaw torque,         Matrix       ...
+    #  thrust force]              ]    RPM_n_motors^2]
+    allocation_matrix: [
+      -0.707, 0.707, 0.707,  -0.707, # *= force_constant*arm_length
+      -0.707, 0.707, -0.707, 0.707,  # *= force_constant*arm_length
+      -1,     -1,    1,      1,      # *= torque_constant*force_constant
+      1,      1,     1,      1,      # *= force_constant
+    ]
+
+    # The UAV's inertia is approximated as a cilinder using the parameters above
+    # Alternatively, you can provide inertia matrix directly using the following parameter:
+    # inertia_matrix: []
+
+    rpm:
+      min: 1170.0 # [revolutions/minute]
+      max: 7800.0 # [revolutions/minute]
+
+mrs_uav_managers:
+
+  constraint_manager:
+
+    default_constraints:
+      gps_garmin: "medium"
+      gps_baro: "medium"
+      rtk: "medium"
+      aloam: "slow"
+      hector_garmin: "slow"
+      vio: "slow"
+      optflow: "slow"
+      other: "slow"
+      ground_truth: "medium"
+
