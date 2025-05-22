@@ -14,10 +14,13 @@
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>rclcpp_lifecycle</depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
 
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>

@@ -62,8 +62,8 @@ private:
   nav_msgs::msg::Odometry         current_odom_;
 
   // | ---------------------- ROS subscribers --------------------- |
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr sub_odom_;
-  void                                                     callbackOdom(const nav_msgs::msg::Odometry::SharedPtr& msg);
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::ConstSharedPtr sub_odom_;
+  void                                                     callbackOdom(const nav_msgs::msg::Odometry::ConstSharedPtr& msg);
 
   // | ---------------------- ROS publishers --------------------- |
   rclcpp::Publisher<mrs_msgs::msg::ReferenceStamped>::SharedPtr pub_reference_;
@@ -126,7 +126,7 @@ void WaypointFlierSimple::timerInitialization() {
   sub_opt.callback_group = cbkgrp_main_;
 
   /* bind the member callback method to a function that can be passed to the subscriber */
-  const std::function<void(const nav_msgs::msg::Odometry::SharedPtr)> odom_callback = std::bind(&WaypointFlierSimple::callbackOdom, this, std::placeholders::_1);
+  const std::function<void(const nav_msgs::msg::Odometry::ConstSharedPtr)> odom_callback = std::bind(&WaypointFlierSimple::callbackOdom, this, std::placeholders::_1);
 
   /* create the subscriber */
   sub_odom_ = create_subscription<nav_msgs::msg::Odometry>("~/odom_in", 10, odom_callback, sub_opt);
@@ -155,7 +155,7 @@ void WaypointFlierSimple::timerInitialization() {
 /* callbackOdom() //{ */
 
 
-void WaypointFlierSimple::callbackOdom(const nav_msgs::msg::Odometry::SharedPtr& msg) {
+void WaypointFlierSimple::callbackOdom(const nav_msgs::msg::Odometry::ConstSharedPtr& msg) {
 
   /* do not continue if the nodelet is not initialized */
   if (!is_initialized_) {

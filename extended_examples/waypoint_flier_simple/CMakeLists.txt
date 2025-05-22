@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(example_waypoint_flier_simple)
 
-set(CMAKE_CXX_STANDARD 17)
+# set the correct standards
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # set the compile options to show code warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -10,7 +13,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 set(DEPENDENCIES
-  ament_cmake
   rclcpp
   rclcpp_components
   std_msgs
@@ -30,6 +32,7 @@ set(LIBRARIES
   )
 
 include_directories(
+  ${rclcpp_INCLUDE_DIRS}
   ${colcon_INCLUDE_DIRS}
   )
 

@@ -5,7 +5,7 @@ socket_name: mrs
 attach: false
 tmux_options: -f /etc/ctu-mrs/tmux.conf
 # you can modify these
-startup_window: waypointflier
+startup_window: waypoint_flier
 pre_window: export UAV_NAME=uav1; export USE_SIM_TIME="true"; export RMW_IMPLEMENTATION=rmw_zenoh_cpp
 windows:
   - router:
@@ -36,7 +36,7 @@ windows:
   - offboard:
       layout: tiled
       panes:
-        - 'history -s ./arm_offboard.sh'
+        - sleep 5; ./arm_offboard.sh
   - rviz:
       layout: tiled
       panes:
