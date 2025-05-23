@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+
+  <name>example_waypoint_flier</name>
+
+  <version>1.0.0</version>
+
+  <description>The Example Waypoint Flier</description>
+
+  <maintainer email="matej.petrlik@fel.cvut.cz">Matej Petrlik</maintainer>
+  <author email="matej.petrlik@fel.cvut.cz">Matej Petrlik</author>
+
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>mrs_msgs</depend>
+  <depend>mrs_lib</depend>
+  <!-- <depend>dynamic_reconfigure</depend> -->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>

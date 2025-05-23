@@ -1,0 +1,356 @@
+[0.070s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '--base-paths', '/home/matej/ws_examples/install/..']
+[0.070s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='list', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['/home/matej/ws_examples/install/..'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], topological_order=False, names_only=False, paths_only=False, topological_graph=False, topological_graph_dot=False, topological_graph_density=False, topological_graph_legend=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7cb774fa2d80>, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x7cb774f4ce60>, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x7cb774f4ce60>>, mixin_verb=('list',))
+[0.096s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.096s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.096s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.096s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.096s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.096s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/matej/ws_examples'
+[0.096s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['ignore', 'ignore_ament_install']
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ignore'
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ignore_ament_install'
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['colcon_pkg']
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'colcon_pkg'
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['colcon_meta']
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'colcon_meta'
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['ros']
+[0.097s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ros'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['cmake', 'python']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'cmake'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'python'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['python_setup_py']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'python_setup_py'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) by extensions ['ignore', 'ignore_ament_install']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) by extension 'ignore'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) ignored
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) by extensions ['ignore', 'ignore_ament_install']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) by extension 'ignore'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) ignored
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) by extensions ['ignore', 'ignore_ament_install']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) by extension 'ignore'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) ignored
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['ignore', 'ignore_ament_install']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ignore'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ignore_ament_install'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['colcon_pkg']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'colcon_pkg'
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['colcon_meta']
+[0.115s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'colcon_meta'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['ros']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ros'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['cmake', 'python']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'cmake'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'python'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['python_setup_py']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'python_setup_py'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ignore'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ignore_ament_install'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['colcon_pkg']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'colcon_pkg'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['colcon_meta']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'colcon_meta'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['ros']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ros'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['cmake', 'python']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'cmake'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'python'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['python_setup_py']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'python_setup_py'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ignore'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ignore_ament_install'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['colcon_pkg']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'colcon_pkg'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['colcon_meta']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'colcon_meta'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['ros']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ros'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['cmake', 'python']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'cmake'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'python'
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['python_setup_py']
+[0.116s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'python_setup_py'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['ignore', 'ignore_ament_install']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ignore'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ignore_ament_install'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['colcon_pkg']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'colcon_pkg'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['colcon_meta']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'colcon_meta'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['ros']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ros'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['cmake', 'python']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'cmake'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'python'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['python_setup_py']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'python_setup_py'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['ignore', 'ignore_ament_install']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ignore'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ignore_ament_install'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['colcon_pkg']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'colcon_pkg'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['colcon_meta']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'colcon_meta'
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['ros']
+[0.117s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ros'
+[0.120s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager' with type 'ros.ament_cmake' and name 'example_plugin_manager'
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['ignore', 'ignore_ament_install']
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ignore'
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ignore_ament_install'
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['colcon_pkg']
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'colcon_pkg'
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['colcon_meta']
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'colcon_meta'
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['ros']
+[0.120s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ros'
+[0.121s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins' with type 'ros.ament_cmake' and name 'example_plugins'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ignore'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ignore_ament_install'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['colcon_pkg']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'colcon_pkg'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['colcon_meta']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'colcon_meta'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['ros']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ros'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['cmake', 'python']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'cmake'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'python'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['python_setup_py']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'python_setup_py'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) by extensions ['ignore', 'ignore_ament_install']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) by extension 'ignore'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) ignored
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) by extensions ['ignore', 'ignore_ament_install']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) by extension 'ignore'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) ignored
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['ignore', 'ignore_ament_install']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ignore'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ignore_ament_install'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['colcon_pkg']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'colcon_pkg'
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['colcon_meta']
+[0.121s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'colcon_meta'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['ros']
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ros'
+[0.122s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier' with type 'ros.ament_cmake' and name 'example_waypoint_flier'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['ignore', 'ignore_ament_install']
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ignore'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ignore_ament_install'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['colcon_pkg']
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'colcon_pkg'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['colcon_meta']
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'colcon_meta'
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['ros']
+[0.122s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ros'
+[0.123s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple' with type 'ros.ament_cmake' and name 'example_waypoint_flier_simple'
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ignore'
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ignore_ament_install'
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['colcon_pkg']
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'colcon_pkg'
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['colcon_meta']
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'colcon_meta'
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['ros']
+[0.123s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ros'
+[0.124s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples' with type 'ros.ament_cmake' and name 'ros2_examples'
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['ignore', 'ignore_ament_install']
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ignore'
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ignore_ament_install'
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['colcon_pkg']
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'colcon_pkg'
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['colcon_meta']
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'colcon_meta'
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['ros']
+[0.124s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ros'
+[0.124s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib' with type 'ros.ament_cmake' and name 'ros2_lib'
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['ignore', 'ignore_ament_install']
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ignore'
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ignore_ament_install'
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['colcon_pkg']
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'colcon_pkg'
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['colcon_meta']
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'colcon_meta'
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['ros']
+[0.125s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ros'
+[0.125s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test' with type 'ros.ament_cmake' and name 'sub_pub_torture_test'
+[0.125s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.077s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '--base-paths', '/home/matej/ws_examples/install/..']
+[0.077s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='list', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['/home/matej/ws_examples/install/..'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], topological_order=False, names_only=False, paths_only=False, topological_graph=False, topological_graph_dot=False, topological_graph_density=False, topological_graph_legend=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x79b71d49ad50>, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x79b71d448d40>, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x79b71d448d40>>, mixin_verb=('list',))
+[0.107s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.108s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/matej/ws_examples'
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['ignore', 'ignore_ament_install']
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ignore'
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ignore_ament_install'
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['colcon_pkg']
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'colcon_pkg'
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['colcon_meta']
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'colcon_meta'
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['ros']
+[0.108s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'ros'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['cmake', 'python']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'cmake'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'python'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extensions ['python_setup_py']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/..) by extension 'python_setup_py'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) by extensions ['ignore', 'ignore_ament_install']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) by extension 'ignore'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../build) ignored
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) by extensions ['ignore', 'ignore_ament_install']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) by extension 'ignore'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../install) ignored
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) by extensions ['ignore', 'ignore_ament_install']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) by extension 'ignore'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../log) ignored
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['ignore', 'ignore_ament_install']
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ignore'
+[0.129s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ignore_ament_install'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['colcon_pkg']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'colcon_pkg'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['colcon_meta']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'colcon_meta'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['ros']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'ros'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['cmake', 'python']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'cmake'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'python'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extensions ['python_setup_py']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src) by extension 'python_setup_py'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ignore'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ignore_ament_install'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['colcon_pkg']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'colcon_pkg'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['colcon_meta']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'colcon_meta'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['ros']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'ros'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['cmake', 'python']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'cmake'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'python'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extensions ['python_setup_py']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples) by extension 'python_setup_py'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ignore'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ignore_ament_install'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['colcon_pkg']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'colcon_pkg'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['colcon_meta']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'colcon_meta'
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['ros']
+[0.130s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'ros'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['cmake', 'python']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'cmake'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'python'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extensions ['python_setup_py']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples) by extension 'python_setup_py'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['ignore', 'ignore_ament_install']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ignore'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ignore_ament_install'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['colcon_pkg']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'colcon_pkg'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['colcon_meta']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'colcon_meta'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['ros']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'ros'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['cmake', 'python']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'cmake'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'python'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extensions ['python_setup_py']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example) by extension 'python_setup_py'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['ignore', 'ignore_ament_install']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ignore'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ignore_ament_install'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['colcon_pkg']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'colcon_pkg'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['colcon_meta']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'colcon_meta'
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extensions ['ros']
+[0.131s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager) by extension 'ros'
+[0.134s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugin_manager' with type 'ros.ament_cmake' and name 'example_plugin_manager'
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['ignore', 'ignore_ament_install']
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ignore'
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ignore_ament_install'
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['colcon_pkg']
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'colcon_pkg'
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['colcon_meta']
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'colcon_meta'
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extensions ['ros']
+[0.134s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins) by extension 'ros'
+[0.135s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/pluginlib_example/example_plugins' with type 'ros.ament_cmake' and name 'example_plugins'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ignore'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ignore_ament_install'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['colcon_pkg']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'colcon_pkg'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['colcon_meta']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'colcon_meta'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['ros']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'ros'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['cmake', 'python']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'cmake'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'python'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extensions ['python_setup_py']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples) by extension 'python_setup_py'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) by extensions ['ignore', 'ignore_ament_install']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) by extension 'ignore'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/example_image_transport) ignored
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) by extensions ['ignore', 'ignore_ament_install']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) by extension 'ignore'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/vision_examples/vision_examples_utils) ignored
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['ignore', 'ignore_ament_install']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ignore'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ignore_ament_install'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['colcon_pkg']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'colcon_pkg'
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['colcon_meta']
+[0.135s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'colcon_meta'
+[0.136s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extensions ['ros']
+[0.136s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier) by extension 'ros'
+[0.136s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier' with type 'ros.ament_cmake' and name 'example_waypoint_flier'
+[0.136s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['ignore', 'ignore_ament_install']
+[0.136s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ignore'
+[0.136s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ignore_ament_install'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['colcon_pkg']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'colcon_pkg'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['colcon_meta']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'colcon_meta'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extensions ['ros']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple) by extension 'ros'
+[0.138s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/extended_examples/waypoint_flier_simple' with type 'ros.ament_cmake' and name 'example_waypoint_flier_simple'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['ignore', 'ignore_ament_install']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ignore'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ignore_ament_install'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['colcon_pkg']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'colcon_pkg'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['colcon_meta']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'colcon_meta'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extensions ['ros']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples) by extension 'ros'
+[0.139s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/ros2_examples' with type 'ros.ament_cmake' and name 'ros2_examples'
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['ignore', 'ignore_ament_install']
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ignore'
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ignore_ament_install'
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['colcon_pkg']
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'colcon_pkg'
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['colcon_meta']
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'colcon_meta'
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extensions ['ros']
+[0.139s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib) by extension 'ros'
+[0.140s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/ros2_lib' with type 'ros.ament_cmake' and name 'ros2_lib'
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['ignore', 'ignore_ament_install']
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ignore'
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ignore_ament_install'
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['colcon_pkg']
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'colcon_pkg'
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['colcon_meta']
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'colcon_meta'
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extensions ['ros']
+[0.140s] Level 1:colcon.colcon_core.package_identification:_identify(/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test) by extension 'ros'
+[0.141s] DEBUG:colcon.colcon_core.package_identification:Package '/home/matej/ws_examples/install/../src/ros2_examples/sub_pub_torture_test' with type 'ros.ament_cmake' and name 'sub_pub_torture_test'
+[0.141s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
