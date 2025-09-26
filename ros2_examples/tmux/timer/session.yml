@@ -8,4 +8,4 @@ windows:
   - main:
       layout: horizontal
       panes:
-        - ros2 launch ros2_examples timer_example.py
+        - ros2 launch ros2_examples timer_example.launch.py

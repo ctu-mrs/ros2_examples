@@ -15,24 +15,24 @@ windows:
   - simulator:
       layout: tiled
       panes:
-        - ros2 launch mrs_multirotor_simulator multirotor_simulator.py custom_config:=./config/simulator.yaml
+        - ros2 launch mrs_multirotor_simulator multirotor_simulator.launch.py custom_config:=./config/simulator.yaml
   - hw_api:
       layout: tiled
       panes:
-        - ros2 launch mrs_multirotor_simulator hw_api.py
+        - ros2 launch mrs_multirotor_simulator hw_api.launch.py
   - core:
       layout: tiled
       panes:
-        - ros2 launch mrs_uav_core core.py platform_config:=./config/platform_config.yaml world_config:=./config/world_config.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
+        - ros2 launch mrs_uav_core core.launch.py platform_config:=./config/platform_config.yaml world_config:=./config/world_config.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
   - waypoint_flier:
       layout: tiled
       panes:
-        - ros2 launch example_waypoint_flier_simple waypoint_flier_simple.py
+        - ros2 launch example_waypoint_flier_simple waypoint_flier_simple.launch.py
         - 'history -s ros2 service call /$UAV_NAME/waypoint_flier_simple/start std_srvs/srv/Trigger'
   - takeoff:
       layout: tiled
       panes:
-        - ros2 launch mrs_uav_autostart automatic_start.py custom_config:=./config/automatic_start.yaml
+        - ros2 launch mrs_uav_autostart automatic_start.launch.py custom_config:=./config/automatic_start.yaml
   - offboard:
       layout: tiled
       panes:

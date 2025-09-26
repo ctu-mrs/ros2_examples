@@ -8,5 +8,5 @@ windows:
   - main:
       layout: horizontal
       panes:
-        - ros2 launch ros2_examples publisher_example.py
-        - ros2 launch ros2_examples subscriber_example.py
+        - ros2 launch ros2_examples publisher_example.launch.py
+        - ros2 launch ros2_examples subscriber_example.launch.py

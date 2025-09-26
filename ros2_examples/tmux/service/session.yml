@@ -8,5 +8,5 @@ windows:
   - main:
       layout: horizontal
       panes:
-        - ros2 launch ros2_examples service_server_example.py
-        - ros2 launch ros2_examples service_client_example.py
+        - ros2 launch ros2_examples service_server_example.launch.py
+        - ros2 launch ros2_examples service_client_example.launch.py

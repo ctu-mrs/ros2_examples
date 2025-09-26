@@ -15,7 +15,7 @@ windows:
   - image_transport:
       layout: tiled
       panes:
-        - ros2 launch vision_examples example_image_transport.py
+        - ros2 launch vision_examples example_image_transport.launch.py
   - rviz:
       layout: tiled
       panes:

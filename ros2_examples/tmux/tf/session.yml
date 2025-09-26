@@ -8,5 +8,5 @@ windows:
   - main:
       layout: horizontal
       panes:
-        - ros2 launch ros2_examples tf2_broadcaster_example.py
-        - ros2 launch ros2_examples tf2_listener_example.py
+        - ros2 launch ros2_examples tf2_broadcaster_example.launch.py
+        - ros2 launch ros2_examples tf2_listener_example.launch.py
