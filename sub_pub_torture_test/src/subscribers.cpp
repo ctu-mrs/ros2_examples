@@ -101,6 +101,7 @@ Subscribers::Subscribers(rclcpp::NodeOptions options) : Node("subscriber_example
 /* callbackSubscriber() //{ */
 
 void Subscribers::callbackSubscriber([[maybe_unused]] const std_msgs::msg::String::SharedPtr msg, [[maybe_unused]] const int subscriber_id) {
+  RCLCPP_INFO(get_logger(), "got msg from sub %d", subscriber_id);
 }
 
 //}
@@ -115,7 +116,7 @@ void Subscribers::callbackTimerMain() {
 
   last_time_timer_ = this->get_clock()->now();
 
-  RCLCPP_INFO(get_logger(), "timer rate %d, dt %.3f", int(round(rate)), dt);
+  RCLCPP_INFO(get_logger(), "timer rate %d, dt %.4f", int(round(rate)), dt);
 }
 
 //}
