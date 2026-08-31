@@ -4,10 +4,10 @@ add_executable(test_${TEST_NAME}
   test.cpp
   )
 
-ament_target_dependencies(test_${TEST_NAME}
-  rclcpp
-  std_msgs
-  ros2_lib
+target_link_libraries(test_${TEST_NAME}
+  rclcpp::rclcpp
+  ${std_msgs_TARGETS}
+  ros2_lib::Ros2Lib_Adder
   )
 
 install(TARGETS

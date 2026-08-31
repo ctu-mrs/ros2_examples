@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.28)
 project(sub_pub_torture_test)
 
 # set the correct standards
@@ -22,6 +22,12 @@ foreach(DEP IN LISTS DEPENDENCIES)
   find_package(${DEP} REQUIRED)
 endforeach()
 
+set(TARGETS
+  rclcpp::rclcpp
+  rclcpp_components::component
+  ${std_msgs_TARGETS}
+)
+
 include_directories(
   include
 )
@@ -29,7 +35,7 @@ include_directories(
 set(LIBRARIES
   subscribers
   publishers
-  )
+)
 
 ## --------------------------------------------------------------
 ## |                         subscribers                        |
@@ -39,8 +45,8 @@ add_library(subscribers SHARED
   src/subscribers.cpp
 )
 
-ament_target_dependencies(subscribers
-  ${DEPENDENCIES}
+target_link_libraries(subscribers
+  ${TARGETS}
 )
 
 rclcpp_components_register_nodes(subscribers PLUGIN "sub_pub_torture_test::Subscribers" EXECUTABLE subscribers)
@@ -53,8 +59,8 @@ add_library(publishers SHARED
   src/publishers.cpp
 )
 
-ament_target_dependencies(publishers
-  ${DEPENDENCIES}
+target_link_libraries(publishers
+  ${TARGETS}
 )
 
 rclcpp_components_register_nodes(publishers PLUGIN "sub_pub_torture_test::Publishers" EXECUTABLE publishers)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.28)
 project(ros2_lib)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -38,8 +38,13 @@ add_library(Ros2Lib_Adder SHARED
   src/adder.cpp
   )
 
-ament_target_dependencies(Ros2Lib_Adder
-  rclcpp
+target_include_directories(Ros2Lib_Adder PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>"
+)
+
+target_link_libraries(Ros2Lib_Adder
+  rclcpp::rclcpp
   ${Eigen_LIBRARIES}
   )
 
@@ -57,19 +62,25 @@ endif()
 ## |                           install                          |
 ## --------------------------------------------------------------
 
-ament_export_libraries(
-  ${LIBRARIES}
-)
-
 install(
   TARGETS ${LIBRARIES}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
-install(DIRECTORY include
-  DESTINATION .
+install(DIRECTORY include/
+  DESTINATION include
+)
+
+ament_export_targets(
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+)
+
+ament_export_libraries(
+  ${LIBRARIES}
 )
 
 ament_export_include_directories(include)

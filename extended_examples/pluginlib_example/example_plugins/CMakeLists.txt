@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.28)
 project(example_plugins)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -45,8 +45,13 @@ add_library(ExamplePlugin_Plugin SHARED
   )
 
 # ament manages cmake related variables and dependency search (similar to catkin in ROS1)
-ament_target_dependencies(ExamplePlugin_Plugin
-  ${DEPENDENCIES}
+target_link_libraries(ExamplePlugin_Plugin
+  rclcpp::rclcpp
+  rclcpp_components::component
+  Eigen3::Eigen
+  pluginlib::pluginlib
+  ros2_examples::params_example
+  example_plugin_manager::ExamplePluginManager_PluginManager
 )
 
 ## --------------------------------------------------------------

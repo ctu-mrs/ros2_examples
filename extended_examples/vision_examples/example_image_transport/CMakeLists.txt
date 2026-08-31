@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.28)
 project(vision_examples)
 
 # set the correct standards
@@ -35,18 +35,19 @@ include_directories(
   include
   ${rclcpp_INCLUDE_DIRS}
   ${ros2_examples_INCLUDE_DIRS}
-  )
+)
 
 add_library(ExampleImageTransport SHARED
   src/example_image_transport.cpp
 )
 
 target_link_libraries(ExampleImageTransport 
+  rclcpp::rclcpp
+  rclcpp_components::component
+  ${sensor_msgs_TARGETS}
+  cv_bridge::cv_bridge
+  image_transport::image_transport
   ${OpenCV_LIBRARIES}
-)
-
-ament_target_dependencies(ExampleImageTransport 
-  ${DEPENDENCIES}
 )
 
 # each component (nodelet) needs to be registered to make it discoverable at runtime

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.28)
 project(example_plugin_manager)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -39,8 +39,12 @@ add_library(ExamplePluginManager_PluginManager SHARED
  )
 
 # ament manages cmake related variables and dependency search (similar to catkin in ROS1)
-ament_target_dependencies(ExamplePluginManager_PluginManager
-  ${DEPENDENCIES}
+target_link_libraries(ExamplePluginManager_PluginManager
+  rclcpp::rclcpp
+  rclcpp_components::component
+  pluginlib::pluginlib
+  Eigen3::Eigen
+  ros2_examples::params_example
 )
 
 # each component (nodelet) needs to be registered to make it discoverable at runtime
